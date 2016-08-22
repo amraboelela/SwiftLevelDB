@@ -43,7 +43,7 @@
 		0C1D154E1D6ABF81007E99F4 = {
 			isa = PBXGroup;
 			children = (
-				0C4F5E711D6B398D00BEE4AE /* CLevelDB.framework */,
+				0C4F5E8A1D6B71A600BEE4AE /* Frameworks */,
 				0C1471441D6B24A900C16920 /* Sources */,
 				0C1D155A1D6ABF81007E99F4 /* SwiftLevelDB */,
 				0C1D15591D6ABF81007E99F4 /* Products */,
@@ -65,6 +65,14 @@
 				0C1D155D1D6ABF81007E99F4 /* Info.plist */,
 			);
 			path = SwiftLevelDB;
+			sourceTree = "<group>";
+		};
+		0C4F5E8A1D6B71A600BEE4AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0C4F5E711D6B398D00BEE4AE /* CLevelDB.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
