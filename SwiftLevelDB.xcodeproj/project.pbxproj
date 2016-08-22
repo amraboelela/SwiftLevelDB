@@ -18,6 +18,8 @@
 		0C1D155D1D6ABF81007E99F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C35C4471D6B379600686F78 /* SwiftLevelDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftLevelDB.h; sourceTree = "<group>"; };
 		0C4F5E711D6B398D00BEE4AE /* CLevelDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CLevelDB.framework; path = "../../Library/Developer/Xcode/DerivedData/SwiftLevelDBApp-hjjomupxthkhxzdlfepaxhwtjvzt/Build/Products/Debug-iphonesimulator/CLevelDB.framework"; sourceTree = "<group>"; };
+		0C4F5EEA1D6B79A700BEE4AE /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		0C4F5EEB1D6B79A700BEE4AE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +45,8 @@
 		0C1D154E1D6ABF81007E99F4 = {
 			isa = PBXGroup;
 			children = (
+				0C4F5EEA1D6B79A700BEE4AE /* Package.swift */,
+				0C4F5EEB1D6B79A700BEE4AE /* README.md */,
 				0C4F5E8A1D6B71A600BEE4AE /* Frameworks */,
 				0C1471441D6B24A900C16920 /* Sources */,
 				0C1D155A1D6ABF81007E99F4 /* SwiftLevelDB */,

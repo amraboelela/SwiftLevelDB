@@ -1,2 +1,2 @@
 # SwiftLevelDB
-Swift wrapper for LevelDB library
+Swift wrapper to CLevelDB, which is a C wrapper to leveldb library
