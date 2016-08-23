@@ -11,122 +11,129 @@
 
 import Foundation
 import CLevelDB
-//#define AssertDBExists(_db_) \
 
-// MARK: - Static functions
-/*func seekToFirstOrKey(iter: Void, key: String) {
-    (key != nil) ? levelDBIteratorSeek(iter, key.UTF8String(), key.length) : levelDBIteratorMoveToFirst(iter)
-}*/
-
-func moveCursor(iter: UnsafeMutablePointer<Void>, backward: Bool) {
-    backward ? levelDBIteratorMoveBackward(iter) : levelDBIteratorMoveForward(iter)
-}
-
-// MARK: - Public functions
-func getLibraryPath() -> String {
-    var paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)
-    return paths[0]
-}
-
-let kLevelDBChangeType = "changeType"
-
-let kLevelDBChangeTypePut = "put"
-
-let kLevelDBChangeTypeDelete = "del"
-
-let kLevelDBChangeValue = "value"
-
-let kLevelDBChangeKey = "key"
-/*
-LevelDBOptions MakeLevelDBOptions() {
-    return (LevelDBOptions) {true, true, false, false, true, 0, 0};
-}
- 
-@interface LevelDB()
-
-@end
-*/
 class LevelDB {
 
-  /*  init(path: String, name: String) {
-        super.init()
+    var name: String
+    var path: String
+    var encoder: (String, AnyObject) -> NSData
+    var decoder: (String, NSData) -> AnyObject
+    var db: UnsafeMutablePointer<Void>?
+    
+    // MARK: - Life cycle
+    
+    required init(path: String, name: String) {
+        self.name = name
+        self.path = path
+        self.encoder = {(key: String, object: AnyObject) -> NSData in
+            #if DEBUG
+                var onceToken: dispatch_once_t
+                dispatch_once(onceToken, {() -> Void in
+                    print("No encoder block was set for this database [\(name)]")
+                    print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
+                })
+            #endif
+            return NSKeyedArchiver.archivedDataWithRootObject(object)
+        }
+        self.decoder = {(key: String, data: NSData) -> AnyObject in
+            return NSKeyedUnarchiver.unarchiveObjectWithData(data)!
+        }
+        let dirpath = path.stringByDeletingLastPathComponent()
+        let fm = NSFileManager.defaultManager()
         do {
-            
-                self.name = name
-                self.path = path
-                var dirpath = path.stringByDeletingLastPathComponent()
-                var fm = NSFileManager.defaultManager()
-                var crError: NSError?
-                var success = (try fm!.createDirectoryAtPath(dirpath, withIntermediateDirectories: true, attributes: nil))
-                if success {
-                    print("Problem creating parent directory: \(crError!)")
-                    return nil
-                }
-                self.db = levelDBOpen(path.UTF8String())
-                self.encoder = {(key: String, object: AnyObject) -> NSData in
-        #if DEBUG
-                    var onceToken: dispatch_once_t
-                    dispatch_once(onceToken, {() -> Void in
-                        print("No encoder block was set for this database [\(name)]")
-                        print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
-                    })
-        #endif
-                    return NSKeyedArchiver.archivedDataWithRootObject(object!)
-                }
-                self.decoder = {(key: String, data: NSData) -> id in
-                    return NSKeyedUnarchiver.unarchiveObjectWithData(data)
-                }
-            
+            try fm.createDirectoryAtPath(dirpath, withIntermediateDirectories:true, attributes:nil)
         }
         catch let error {
+            print("Problem creating parent directory: \(error)")
+            return
         }
+        self.db = levelDBOpen(path.cString)
     }
 
-    class func databaseInLibraryWithName(name: String) -> AnyObject {
-        var path = NSURL(fileURLWithPath: getLibraryPath()).URLByAppendingPathComponent(name).absoluteString
-        var ldb = self.init(path: path, name: name)
-        return ldb!
+    class func databaseInLibraryWithName(_ name: String) -> AnyObject {
+        let path = NSURL(fileURLWithPath:getLibraryPath()).URLByAppendingPathComponent(name).absoluteString
+        return self.init(path:path, name:name)
     }
+
+    // MARK: - Class methods
+    
+    /*class func AssertDBExists(_ db: UnsafeMutablePointer<Void>?) {
+        assert(db != nil, "Database reference is not existent (it has probably been closed)");
+    }*/
+    
+    class func seekToFirstOrKey(_ iter: UnsafeMutablePointer<Void>, _ key: String?) {
+        if let theKey = key {
+            levelDBIteratorSeek(iter, theKey.cString, theKey.length)
+        } else {
+            levelDBIteratorMoveToFirst(iter)
+        }
+    }
+    
+    class func moveCursor(_ iter: UnsafeMutablePointer<Void>, _ backward: Bool) {
+        backward ? levelDBIteratorMoveBackward(iter) : levelDBIteratorMoveForward(iter)
+    }
+    
+    class func getLibraryPath() -> String {
+        var paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)
+        return paths[0]
+    }
+    
+    
 // MARK: - Accessors
 
     func description() -> String {
-        return "<\(self.className()):\(self) path: \(path)>"
+        return "<LevelDB:\(self) path: \(path)>"
     }
-// MARK: - Setters
-
-    func setObject(value: AnyObject, forKey key: String) {
-        AssertDBExists(db)
-        NSParameterAssert(value != nil)
-        var data = encoder(key, value)
-        var status = levelDBItemPut(db!, key.UTF8String(), key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), data!.bytes, data!.length())
-        if status != 0 {
-            print("Problem storing key/value pair in database")
+    
+    func setObject(_ value:AnyObject?, forKey key:String) {
+        guard let db = db else {
+            print("Database reference is not existent (it has probably been closed)")
+            return
+        }
+        if let newValue = value {
+            let data = encoder(key, newValue)
+            let status = levelDBItemPut(db, key.cString, key.length, data.mutableBytes, data.length)
+            if status != 0 {
+                print("Problem storing key/value pair in database")
+            }
+        } else {
+            levelDBItemDelete(db, key.cString, key.length)
+        }
+    }
+    
+    subscript(key: String) -> AnyObject? {
+        get {
+            // return an appropriate subscript value here
+            return objectForKey(key)
+        }
+        set(newValue) {
+            // perform a suitable setting action here
+            setObject(newValue, forKey: key)
         }
     }
 
-    func setObject(value: AnyObject, forKeyedSubscript key: String) {
-        self[key] = value
+    func addEntriesFromDictionary(dictionary: [String : AnyObject]) {
+        for (key, value) in dictionary {
+            self[key] = value
+        }
     }
 
-    func addEntriesFromDictionary(dictionary: [NSObject : AnyObject]) {
-        dictionary.enumerateKeysAndObjectsUsingBlock({(key: AnyObject, obj: AnyObject, stop: Bool) -> Void in
-            self[key] = obj
-        })
-    }
-// MARK: - Getters
-
-    func objectForKey(key: String) -> AnyObject {
-        AssertDBExists(db)
-        var outData
-        var outDataLength: Int
-        var status = levelDBItemGet(db!, key.UTF8String(), key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), outData!, outDataLength)
+    func objectForKey(_ key: String) -> AnyObject? {
+        guard let db = db else {
+            print("Database reference is not existent (it has probably been closed)")
+            return nil
+        }
+        let outData: UnsafeMutablePointer<UnsafeMutablePointer<Void>> = nil
+        let outDataLength: UnsafeMutablePointer<Int> = nil
+        let status = levelDBItemGet(db, key.cString, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), outData, outDataLength)
         if status != 0 {
             return nil
         }
-        var data = NSData(bytes: outData!, length: outDataLength)!
-        return decoder(key, data!)
+        let data = NSData(bytes: outData[0], length: outDataLength[0])
+        return decoder(key, data)
     }
 
+    /*
     func objectForKeyedSubscript(key: AnyObject) -> AnyObject {
         return (self[key] as! String)
     }
@@ -144,10 +151,13 @@ class LevelDB {
     }
 
     func objectExistsForKey(key: String) -> Bool {
-        AssertDBExists(db)
+     guard let db = db else {
+     print("Database reference is not existent (it has probably been closed)")
+     return
+     }
         var outData
         var outDataLength: Int
-        var status = levelDBItemGet(db!, key.UTF8String(), key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), outData!, outDataLength)
+        var status = levelDBItemGet(db!, key.cString, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), outData!, outDataLength)
         if status != 0 {
             return false
         }
@@ -158,8 +168,11 @@ class LevelDB {
 // MARK: - Removers
 
     func removeObjectForKey(key: String) {
-        AssertDBExists(db)
-        var status = levelDBItemDelete(db!, key.UTF8String(), key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
+     guard let db = db else {
+     print("Database reference is not existent (it has probably been closed)")
+     return
+     }
+        var status = levelDBItemDelete(db!, key.cString, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
         if status != 0 {
             print("Problem removing object with key: \(key) in database")
         }
@@ -176,9 +189,12 @@ class LevelDB {
     }
 
     func removeAllObjectsWithPrefix(prefix: String) {
-        AssertDBExists(db)
+     guard let db = db else {
+     print("Database reference is not existent (it has probably been closed)")
+     return
+     }
         var iter = levelDBIteratorNew(db!)
-        let prefixPtr = prefix.UTF8String()
+        let prefixPtr = prefix.cString
         var prefixLen = prefix.length
         seekToFirstOrKey(iter!, prefix)
         while levelDBIteratorIsValid(iter!) {
@@ -238,7 +254,7 @@ class LevelDB {
             if backward {
                 var i: Int64 = len - 1
                 var startingKeyPtr = malloc(len)
-                memcpy(startingKeyPtr, startingKey.UTF8String(), len)
+                memcpy(startingKeyPtr, startingKey.cString, len)
                 var keyChar: [UInt8]
                 while 1 {
                     if i < 0 {
@@ -262,7 +278,7 @@ class LevelDB {
                 var iKeyLength: Int
                 levelDBIteratorGetKey(iter!, iKey, iKeyLength)
                 if len > 0 && prefix != nil {
-                    var cmp = memcmp(iKey, startingKey.UTF8String(), len)
+                    var cmp = memcmp(iKey, startingKey.cString, len)
                     if cmp > 0 {
                         levelDBIteratorMoveBackward(iter)
                     }
@@ -270,11 +286,11 @@ class LevelDB {
             }
             else {
                 // Otherwise, we start at the provided prefix
-                levelDBIteratorSeek(iter!, startingKey.UTF8String(), len)
+                levelDBIteratorSeek(iter!, startingKey.cString, len)
             }
         }
         else if key != "" {
-            levelDBIteratorSeek(iter!, key.UTF8String(), key.length)
+            levelDBIteratorSeek(iter!, key.cString, key.length)
         }
         else if backward {
             levelDBIteratorMoveToLast(iter)
@@ -290,7 +306,10 @@ class LevelDB {
     }
 
     func enumerateKeysBackward(backward: Bool, startingAtKey key: String, filteredByPredicate predicate: NSPredicate, andPrefix prefix: String, usingBlock block: LevelDBKeyBlock) {
-        AssertDBExists(db)
+     guard let db = db else {
+     print("Database reference is not existent (it has probably been closed)")
+     return
+     }
         var iter = levelDBIteratorNew(db!)
         var stop = false
         var iterate = (predicate != nil) ? {(key: String, value: AnyObject, stop: Bool) -> Void in
@@ -305,7 +324,7 @@ class LevelDB {
             var iKey: [Character]
             var iKeyLength: Int
             levelDBIteratorGetKey(iter!, iKey, iKeyLength)
-            if prefix && memcmp(iKey, prefix.UTF8String(), min((prefix.length as! size_t), iKeyLength)) != 0 {
+            if prefix && memcmp(iKey, prefix.cString, min((prefix.length as! size_t), iKeyLength)) != 0 {
 
             }
             var iKeyString = String(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding)
@@ -323,7 +342,10 @@ class LevelDB {
     }
 
     func enumerateKeysAndObjectsBackward(backward: Bool, lazily: Bool, startingAtKey key: String, filteredByPredicate predicate: NSPredicate, andPrefix prefix: String, usingBlock block: AnyObject) {
-        AssertDBExists(db)
+     guard let db = db else {
+     print("Database reference is not existent (it has probably been closed)")
+     return
+     }
         var iter = levelDBIteratorNew(db!)
         var stop = false
         var iterate = (predicate != nil) ? {(key: String, valueGetter: LevelDBValueGetterBlock, stop: Bool) -> Void in
@@ -347,7 +369,9 @@ class LevelDB {
                 }
             }
     }*/
+
 }
+
 /*levelDBIteratorIsValid(iter)
 
 var iKey = [Character]()
