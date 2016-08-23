@@ -248,13 +248,12 @@ class LevelDB {
                 }
             }
             let iKeyString = String(NSString(bytes: iKey[0], length: iKeyLength[0], encoding: NSUTF8StringEncoding))
-            
-            let iData: UnsafeMutablePointer<UnsafeMutablePointer<Void>> = nil
-            let iDataLength: UnsafeMutablePointer<Int> = nil
-            levelDBIteratorGetValue(iterator, iData, iDataLength)
-            let v : AnyObject? = (predicate == nil) ? nil : decoder(iKeyString, NSData(bytes: iData[0], length: iDataLength[0]))
-            if let predicate = predicate, value = v {
-                if predicate.evaluateWithObject(value) {
+            if let predicate = predicate {
+                let iData: UnsafeMutablePointer<UnsafeMutablePointer<Void>> = nil
+                let iDataLength: UnsafeMutablePointer<Int> = nil
+                levelDBIteratorGetValue(iterator, iData, iDataLength)
+                let v = decoder(iKeyString, NSData(bytes: iData[0], length: iDataLength[0]))
+                if predicate.evaluateWithObject(v) {
                     block(iKeyString, &stop)
                 }
             } else {
@@ -348,7 +347,6 @@ class LevelDB {
     func deleteDatabaseFromDisk() {
         self.close()
         let fileManager = NSFileManager.defaultManager()
-        //var error: NSError?
         do {
             try fileManager.removeItemAtPath(path)
         }
@@ -382,12 +380,6 @@ class LevelDB {
                 if key.hasPrefix(prefix) {
                     startingKey = key
                 }
-                /*
-                if let range = key.rangeOfString(prefix) {
-                    if range.startIndex == key.startIndex && range.count > 0 {
-                        startingKey = key
-                    }
-                }*/
             }
             let len = startingKey.length
             // If a prefix is provided and the iteration is backwards
@@ -432,7 +424,6 @@ class LevelDB {
                 // Otherwise, we start at the provided prefix
                 levelDBIteratorSeek(iterator, startingKey.cString, len)
             }
-            //}
         } else if let key = key {
             levelDBIteratorSeek(iterator, key.cString, key.length)
         } else if backward {
@@ -442,22 +433,3 @@ class LevelDB {
         }
     }
 }
-
-/*
-
-
-var iKeyString = String(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding)
-
-func id() {
-    var iData
-    var iDataLength: Int
-    levelDBIteratorGetValue(iterator, iData!, iDataLength)
-    var v = decoder(iKeyString, NSData(bytes: iData!, length: iDataLength)!)
-    return v!
-}
-
-func block() {
-    self.enumerateKeysAndObjectsBackward(false, lazily: false, startingAtKey: nil, filteredByPredicate: nil, andPrefix: nil, usingBlock: block)
-}
-
-*/
