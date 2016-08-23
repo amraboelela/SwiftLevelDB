@@ -20,4 +20,14 @@ extension String {
     func stringByDeletingLastPathComponent() -> String {
         return (self as NSString).stringByDeletingLastPathComponent
     }
+    
+    subscript (i: Int) -> Character {
+        return self[self.startIndex.advancedBy(i)]
+    }
+    
+    subscript (r: Range<Int>) -> String {
+        let start = startIndex.advancedBy(r.startIndex)
+        let end = start.advancedBy(r.endIndex - r.startIndex)
+        return self[Range(start ..< end)]
+    }
 }

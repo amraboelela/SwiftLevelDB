@@ -12,8 +12,12 @@
 import Foundation
 import CLevelDB
 
-class LevelDB {
+typealias LevelDBKeyBlock = (String, UnsafeMutablePointer<Bool>) -> Void
+typealias LevelDBKeyValueBlock = (String, AnyObject, UnsafeMutablePointer<Bool>) -> Void
+typealias LevelDBLazyKeyValueBlock = (String, () -> AnyObject, UnsafeMutablePointer<Bool>) -> Void
 
+class LevelDB {
+    
     var name: String
     var path: String
     var encoder: (String, AnyObject) -> NSData
@@ -49,28 +53,12 @@ class LevelDB {
         }
         self.db = levelDBOpen(path.cString)
     }
-
+    
+    // MARK: - Class methods
+    
     class func databaseInLibraryWithName(_ name: String) -> AnyObject {
         let path = NSURL(fileURLWithPath:getLibraryPath()).URLByAppendingPathComponent(name).absoluteString
         return self.init(path:path, name:name)
-    }
-
-    // MARK: - Class methods
-    
-    /*class func AssertDBExists(_ db: UnsafeMutablePointer<Void>?) {
-        assert(db != nil, "Database reference is not existent (it has probably been closed)");
-    }*/
-    
-    class func seekToFirstOrKey(_ iter: UnsafeMutablePointer<Void>, _ key: String?) {
-        if let theKey = key {
-            levelDBIteratorSeek(iter, theKey.cString, theKey.length)
-        } else {
-            levelDBIteratorMoveToFirst(iter)
-        }
-    }
-    
-    class func moveCursor(_ iter: UnsafeMutablePointer<Void>, _ backward: Bool) {
-        backward ? levelDBIteratorMoveBackward(iter) : levelDBIteratorMoveForward(iter)
     }
     
     class func getLibraryPath() -> String {
@@ -79,8 +67,8 @@ class LevelDB {
     }
     
     
-// MARK: - Accessors
-
+    // MARK: - Accessors
+    
     func description() -> String {
         return "<LevelDB:\(self) path: \(path)>"
     }
@@ -111,316 +99,327 @@ class LevelDB {
             setObject(newValue, forKey: key)
         }
     }
-
+    
     func addEntriesFromDictionary(dictionary: [String : AnyObject]) {
         for (key, value) in dictionary {
             self[key] = value
         }
     }
-
+    
     func objectForKey(_ key: String) -> AnyObject? {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return nil
         }
-        let outData: UnsafeMutablePointer<UnsafeMutablePointer<Void>> = nil
-        let outDataLength: UnsafeMutablePointer<Int> = nil
-        let status = levelDBItemGet(db, key.cString, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), outData, outDataLength)
+        let rawData: UnsafeMutablePointer<UnsafeMutablePointer<Void>> = nil
+        let rawDataLength: UnsafeMutablePointer<Int> = nil
+        let status = levelDBItemGet(db, key.cString, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), rawData, rawDataLength)
         if status != 0 {
             return nil
         }
-        let data = NSData(bytes: outData[0], length: outDataLength[0])
+        let data = NSData(bytes: rawData[0], length: rawDataLength[0])
         return decoder(key, data)
     }
-
-    /*
-    func objectForKeyedSubscript(key: AnyObject) -> AnyObject {
-        return (self[key] as! String)
+    
+    func objectsForKeys(_ keys: [String]) -> [AnyObject?] {
+        var result = [AnyObject?](count: keys.count, repeatedValue: nil)
+        var index = 0
+        for key in keys {
+            result[index] = self[key]
+            index += 1
+        }
+        return result
     }
-
-    func objectsForKeys(keys: [AnyObject], notFoundMarker marker: AnyObject) -> AnyObject {
-        var result = [AnyObject](minimumCapacity: keys.count)
-        keys.enumerateObjectsUsingBlock({(objId: AnyObject, idx: Int, stop: Bool) -> Void in
-            var object = (self[objId] as! AnyObject)
-            if object == nil {
-                object = marker!
-            }
-            result.insert(object!, atIndex: idx)
-        })
-        return [AnyObject](result)
-    }
-
-    func objectExistsForKey(key: String) -> Bool {
-     guard let db = db else {
-     print("Database reference is not existent (it has probably been closed)")
-     return
-     }
-        var outData
-        var outDataLength: Int
-        var status = levelDBItemGet(db!, key.cString, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), outData!, outDataLength)
-        if status != 0 {
+    
+    func objectExistsForKey(_ key: String) -> Bool {
+        guard let db = db else {
+            print("Database reference is not existent (it has probably been closed)")
             return false
         }
-        else {
+        let rawData: UnsafeMutablePointer<UnsafeMutablePointer<Void>> = nil
+        let rawDataLength: UnsafeMutablePointer<Int> = nil
+        let status = levelDBItemGet(db, key.cString, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding), rawData, rawDataLength)
+        if status == 0 {
             return true
+        } else {
+            return false
         }
     }
-// MARK: - Removers
-
-    func removeObjectForKey(key: String) {
-     guard let db = db else {
-     print("Database reference is not existent (it has probably been closed)")
-     return
-     }
-        var status = levelDBItemDelete(db!, key.cString, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
+    
+    func removeObjectForKey(_ key: String) {
+        guard let db = db else {
+            print("Database reference is not existent (it has probably been closed)")
+            return
+        }
+        let status = levelDBItemDelete(db, key.cString, key.length)
         if status != 0 {
             print("Problem removing object with key: \(key) in database")
         }
     }
-
-    func removeObjectsForKeys(keyArray: [AnyObject]) {
-        keyArray.enumerateObjectsUsingBlock({(obj: AnyObject, idx: Int, stop: Bool) -> Void in
-            self.removeObjectForKey(obj)
-        })
-    }
-
-    func removeAllObjects() {
-        self.removeAllObjectsWithPrefix(nil)
-    }
-
-    func removeAllObjectsWithPrefix(prefix: String) {
-     guard let db = db else {
-     print("Database reference is not existent (it has probably been closed)")
-     return
-     }
-        var iter = levelDBIteratorNew(db!)
-        let prefixPtr = prefix.cString
-        var prefixLen = prefix.length
-        seekToFirstOrKey(iter!, prefix)
-        while levelDBIteratorIsValid(iter!) {
-            var iKey: [Character]
-            var iKeyLength: Int
-            levelDBIteratorGetKey(iter!, iKey, iKeyLength)
-            if prefix && memcmp(iKey, prefixPtr!, min(prefixLen, iKeyLength)) != 0 {
-
-            }
-            levelDBItemDelete(db!, iKey, iKeyLength)
-            levelDBIteratorMoveForward(iter!)
+    
+    func removeObjectsForKeys(_ keys: [String]) {
+        for key in keys {
+            removeObjectForKey(key)
         }
-        levelDBIteratorDelete(iter!)
     }
-// MARK: - Selection
-
-    func allKeys() -> [AnyObject] {
-        var keys = [AnyObject]()
-        self.enumerateKeysUsingBlock({(key: String, stop: Bool) -> Void in
+    
+    func removeAllObjects() {
+        self.removeAllObjectsWithPrefix("")
+    }
+    
+    func removeAllObjectsWithPrefix(_ prefix: String) {
+        guard let db = db else {
+            print("Database reference is not existent (it has probably been closed)")
+            return
+        }
+        let iterator = levelDBIteratorNew(db)
+        let prefixPtr = prefix.cString
+        let prefixLen = prefix.length
+        
+        if prefix.length > 0 {
+            levelDBIteratorSeek(iterator, prefix.cString, prefix.length)
+        } else {
+            levelDBIteratorMoveToFirst(iterator)
+        }
+        while levelDBIteratorIsValid(iterator) {
+            let iKey: UnsafeMutablePointer<UnsafeMutablePointer<Int8>> = nil
+            let iKeyLength: UnsafeMutablePointer<Int> = nil
+            levelDBIteratorGetKey(iterator, iKey, iKeyLength)
+            if prefix.length > 0 && memcmp(iKey[0], prefixPtr, min(prefixLen, iKeyLength[0])) != 0 {
+                break;
+            }
+            levelDBItemDelete(db, iKey[0], iKeyLength[0])
+            levelDBIteratorMoveForward(iterator)
+        }
+        levelDBIteratorDelete(iterator)
+    }
+    
+    func allKeys() -> [String] {
+        var keys = [String]()
+        self.enumerateKeysUsingBlock({key, stop in
             keys.append(key)
         })
-        return [AnyObject](keys)
+        return keys
     }
-
-    func keysByFilteringWithPredicate(predicate: NSPredicate) -> [AnyObject] {
-        var keys = [AnyObject]()
-        self.enumerateKeysAndObjectsBackward(false, lazily: false, startingAtKey: nil, filteredByPredicate: predicate!, andPrefix: nil, usingBlock: {(key: String, obj: AnyObject, stop: Bool) -> Void in
+    
+    func keysByFilteringWithPredicate(_ predicate: NSPredicate) -> [String] {
+        var keys = [String]()
+        enumerateKeysAndObjectsWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
             keys.append(key)
         })
-        return [AnyObject](keys)
+        return keys
     }
-
-    func dictionaryByFilteringWithPredicate(predicate: NSPredicate) -> [NSObject : AnyObject] {
+    
+    func dictionaryByFilteringWithPredicate(_ predicate: NSPredicate) -> [NSObject : AnyObject] {
         var results = [NSObject : AnyObject]()
-        self.enumerateKeysAndObjectsBackward(false, lazily: false, startingAtKey: nil, filteredByPredicate: predicate!, andPrefix: nil, usingBlock: {(key: String, obj: AnyObject, stop: Bool) -> Void in
+        
+        enumerateKeysAndObjectsWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
             results[key] = obj
         })
-        return [NSObject : AnyObject](dictionary: results)
+        return results
     }
-// MARK: - Enumeration
-
-    func _startIterator(iter: UnsafeMutablePointer<Void>, backward: Bool, prefix: String, start key: String) {
-        let prefixPtr
-        var prefixLen: size_t
+    
+    func _startIterator(_ iterator: UnsafeMutablePointer<Void>, backward: Bool, prefix: String?, start key: String?) {
         var startingKey: String
-        if prefix != "" {
+        //if let prefix = prefix {
+        if let prefix = prefix {
             startingKey = prefix
-            if key != "" {
-                var range = key.rangeOfString(prefix)
-                if range.length > 0 && range.location == 0 {
-                    startingKey = key
+            if let key = key {
+                if let range = key.rangeOfString(prefix) {
+                    if range.startIndex == key.startIndex && range.count > 0 {
+                        startingKey = key
+                    }
                 }
             }
-            var len = startingKey.length
+            let len = startingKey.length
             // If a prefix is provided and the iteration is backwards
             // we need to start on the next key (maybe discarding the first iteration)
             if backward {
-                var i: Int64 = len - 1
-                var startingKeyPtr = malloc(len)
+                var i: Int = len - 1
+                //var startingKeyCopy = startingKey
+                let startingKeyPtr = UnsafeMutablePointer<Int8>(malloc(len))
                 memcpy(startingKeyPtr, startingKey.cString, len)
-                var keyChar: [UInt8]
-                while 1 {
+                var keyChar: UnsafeMutablePointer<Int8> = startingKeyPtr
+                while true {
                     if i < 0 {
-                        levelDBIteratorMoveToLast(iter)
+                        levelDBIteratorMoveToLast(iterator)
+                        break
                     }
-                    keyChar = UInt8(startingKeyPtr) + i
-                    if keyChar < 255 {
-                        keyChar = keyChar + 1
-                        levelDBIteratorSeek(iter!, startingKeyPtr, len)
-                        if levelDBIteratorIsValid(iter!) {
-                            levelDBIteratorMoveToLast(iter)
+                    keyChar += i
+                    if keyChar[0] < 255 {
+                        keyChar[0] += 1
+                        levelDBIteratorSeek(iterator, startingKeyPtr, len)
+                        if levelDBIteratorIsValid(iterator) {
+                            levelDBIteratorMoveToLast(iterator)
                         }
                     }
                     i -= 1
                 }
                 free(startingKeyPtr)
-                if levelDBIteratorIsValid(iter!) {
+                if levelDBIteratorIsValid(iterator) {
                     return
                 }
-                var iKey: [Character]
-                var iKeyLength: Int
-                levelDBIteratorGetKey(iter!, iKey, iKeyLength)
-                if len > 0 && prefix != nil {
-                    var cmp = memcmp(iKey, startingKey.cString, len)
+                
+                let iKey: UnsafeMutablePointer<UnsafeMutablePointer<Int8>> = nil
+                let iKeyLength: UnsafeMutablePointer<Int> = nil
+                levelDBIteratorGetKey(iterator, iKey, iKeyLength)
+                
+                if len > 0 {
+                    let cmp = memcmp(iKey, startingKey.cString, len)
                     if cmp > 0 {
-                        levelDBIteratorMoveBackward(iter)
+                        levelDBIteratorMoveBackward(iterator)
                     }
                 }
-            }
-            else {
+            } else {
                 // Otherwise, we start at the provided prefix
-                levelDBIteratorSeek(iter!, startingKey.cString, len)
+                levelDBIteratorSeek(iterator, startingKey.cString, len)
             }
+            //}
+        } else if let key = key {
+            levelDBIteratorSeek(iterator, key.cString, key.length)
+        } else if backward {
+            levelDBIteratorMoveToLast(iterator)
+        } else {
+            levelDBIteratorMoveToFirst(iterator)
         }
-        else if key != "" {
-            levelDBIteratorSeek(iter!, key.cString, key.length)
-        }
-        else if backward {
-            levelDBIteratorMoveToLast(iter)
-        }
-        else {
-            levelDBIteratorMoveToFirst(iter)
-        }
-
+        
     }
-
-    func enumerateKeysUsingBlock(block: LevelDBKeyBlock) {
+    
+    func enumerateKeysUsingBlock(_ block: LevelDBKeyBlock) {
         self.enumerateKeysBackward(false, startingAtKey: nil, filteredByPredicate: nil, andPrefix: nil, usingBlock: block)
     }
-
-    func enumerateKeysBackward(backward: Bool, startingAtKey key: String, filteredByPredicate predicate: NSPredicate, andPrefix prefix: String, usingBlock block: LevelDBKeyBlock) {
-     guard let db = db else {
-     print("Database reference is not existent (it has probably been closed)")
-     return
-     }
-        var iter = levelDBIteratorNew(db!)
+    
+    func enumerateKeysBackward(_ backward: Bool, startingAtKey key: String?, filteredByPredicate predicate: NSPredicate?, andPrefix prefix: String?, usingBlock block: LevelDBKeyBlock) {
+        guard let db = db else {
+            print("Database reference is not existent (it has probably been closed)")
+            return
+        }
+        let iterator = levelDBIteratorNew(db)
         var stop = false
-        var iterate = (predicate != nil) ? {(key: String, value: AnyObject, stop: Bool) -> Void in
-                if predicate!.evaluateWithObject(value) {
+        var iterate : LevelDBKeyValueBlock
+        if let predicate = predicate {
+            iterate = {key, value, stop in
+                if predicate.evaluateWithObject(value) {
                     block(key, stop)
                 }
-            } : {(key: String, value: AnyObject, stop: Bool) -> Void in
+            }
+        } else {
+            iterate = {key, value, stop in
                 block(key, stop)
             }
-        self._startIterator(iter!, backward: backward, prefix: prefix, start: key)
-        while levelDBIteratorIsValid(iter!) {
-            var iKey: [Character]
-            var iKeyLength: Int
-            levelDBIteratorGetKey(iter!, iKey, iKeyLength)
-            if prefix && memcmp(iKey, prefix.cString, min((prefix.length as! size_t), iKeyLength)) != 0 {
-
-            }
-            var iKeyString = String(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding)
-            var iData
-            var iDataLength: Int
-            levelDBIteratorGetValue(iter!, iData!, iDataLength)
-            var v = (predicate == nil) ? nil : decoder(iKeyString, NSData(bytes: iData!, length: iDataLength)!)
-            iterate(iKeyString, v!, stop)
-            if stop {
-
-            }
-            moveCursor(iter!, backward)
         }
-        levelDBIteratorDelete(iter!)
-    }
-
-    func enumerateKeysAndObjectsBackward(backward: Bool, lazily: Bool, startingAtKey key: String, filteredByPredicate predicate: NSPredicate, andPrefix prefix: String, usingBlock block: AnyObject) {
-     guard let db = db else {
-     print("Database reference is not existent (it has probably been closed)")
-     return
-     }
-        var iter = levelDBIteratorNew(db!)
-        var stop = false
-        var iterate = (predicate != nil) ? {(key: String, valueGetter: LevelDBValueGetterBlock, stop: Bool) -> Void in
-                    // We need to get the value, whether the `lazily` flag was set or not
-                var value = valueGetter()
-                // If the predicate yields positive, we call the block
-                if predicate!.evaluateWithObject(value!) {
-                    if lazily {
-                        (block as! LevelDBLazyKeyValueBlock)(key, valueGetter, stop)
-                    }
-                    else {
-                        (block as! LevelDBKeyValueBlock)(key, value!, stop)
-                    }
-                }
-            } : {(key: String, valueGetter: LevelDBValueGetterBlock, stop: Bool) -> Void in
-                if lazily {
-                    (block as! LevelDBLazyKeyValueBlock)(key, valueGetter, stop)
-                }
-                else {
-                    (block as! LevelDBKeyValueBlock)(key, valueGetter(), stop)
+        _startIterator(iterator, backward: backward, prefix: prefix, start: key)
+        while levelDBIteratorIsValid(iterator) {
+            
+            let iKey: UnsafeMutablePointer<UnsafeMutablePointer<Int8>> = nil
+            let iKeyLength: UnsafeMutablePointer<Int> = nil
+            levelDBIteratorGetKey(iterator, iKey, iKeyLength)
+            
+            if let prefix = prefix {
+                if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength[0])) != 0 {
+                    break
                 }
             }
+            let iKeyString = String(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding)
+            
+            let iData: UnsafeMutablePointer<UnsafeMutablePointer<Void>> = nil
+            let iDataLength: UnsafeMutablePointer<Int> = nil
+            levelDBIteratorGetValue(iterator, iData, iDataLength)
+            let v : AnyObject? = (predicate == nil) ? nil : decoder(iKeyString, NSData(bytes: iData[0], length: iDataLength[0]))
+            iterate(iKeyString, v!, &stop)
+            if stop {
+                
+            }
+            backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
+        }
+        levelDBIteratorDelete(iterator)
+    }
+    
+    func enumerateKeysAndObjectsLazily(backward backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBLazyKeyValueBlock) {
+        guard let db = db else {
+            print("Database reference is not existent (it has probably been closed)")
+            return
+        }
+        var iterator = levelDBIteratorNew(db)
+        var stop = false
+        var iterate : LevelDBLazyKeyValueBlock
+        
+        
+        /*if let predicate = predicate {
+         iterate = {key, valueGetter, stop in
+         //key, valueGetter, stop in
+         // We need to get the value, whether the `lazily` flag was set or not
+         var value = valueGetter()
+         // If the predicate yields positive, we call the block
+         if predicate.evaluateWithObject(value) {
+         if lazily {
+         block(key, valueGetter, stop)
+         } else {
+         block(key, value, stop)
+         }
+         }
+         }
+         } else {*/
+        //if lazily {
+        //block(key, valueGetter, &stop)
+        /*}
+         else {
+         block(key, valueGetter(), &stop)
+         }*/
+        //}
+    }
+    
+    func deleteDatabaseFromDisk() {
+        self.close()
+        let fileManager = NSFileManager.defaultManager()
+        //var error: NSError?
+        do {
+            try fileManager.removeItemAtPath(path)
+        }
+        catch {
+        }
+    }
+    
+    func close() {
+        if let db = db {
+            levelDBDelete(db)
+            self.db = nil
+        }
+    }
+    
+    func closed() -> Bool {
+        /*if let db = db {
+            levelDBDelete(db)
+            self.db = nil
+        }*/
+        return db == nil
+    }
+    
+    /*
+    func dealloc() {
+        self.close()
+        //name
+        //path
+        super.dealloc()
     }*/
-
+    
 }
 
-/*levelDBIteratorIsValid(iter)
+/*
 
-var iKey = [Character]()
-
-var iKeyLength = 0
-
-MIN(())
 
 var iKeyString = String(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding)
 
 func id() {
     var iData
     var iDataLength: Int
-    levelDBIteratorGetValue(iter!, iData!, iDataLength)
+    levelDBIteratorGetValue(iterator, iData!, iDataLength)
     var v = decoder(iKeyString, NSData(bytes: iData!, length: iDataLength)!)
     return v!
 }
-
-levelDBIteratorDelete(iter)
 
 func block() {
     self.enumerateKeysAndObjectsBackward(false, lazily: false, startingAtKey: nil, filteredByPredicate: nil, andPrefix: nil, usingBlock: block)
 }
 
-func deleteDatabaseFromDisk() {
-    self.close()
-    var fileManager = NSFileManager.defaultManager()
-    var error: NSError?
-    do {
-        try fileManager!.removeItemAtPath(path)
-    }
-    catch let error {
-    }
-}
-
-func close() {
-    if db != nil {
-        levelDBDelete(db)
-        self.db = nil
-    }
-}
-
-func closed() {
-    return db == nil
-}
-
-func dealloc() {
-    self.close()
-    name
-    path
-    super.dealloc()
-}*/
+*/
