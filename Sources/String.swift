@@ -17,6 +17,11 @@ extension String {
         return UnsafeMutablePointer<Int8>((self as NSString).UTF8String)
     }
     
+    func stringByAppendingPathComponent(path: String) -> String {
+        let nsSt = self as NSString
+        return nsSt.stringByAppendingPathComponent(path)
+    }
+    
     func stringByDeletingLastPathComponent() -> String {
         return (self as NSString).stringByDeletingLastPathComponent
     }
