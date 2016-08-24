@@ -13,15 +13,15 @@ import Foundation
 import CLevelDB
 
 public typealias LevelDBKeyBlock = (String, UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBKeyValueBlock = (String, AnyObject, UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBLazyKeyValueBlock = (String, () -> AnyObject?, UnsafeMutablePointer<Bool>) -> Void
+public typealias LevelDBKeyValueBlock = (String, NSObject, UnsafeMutablePointer<Bool>) -> Void
+public typealias LevelDBLazyKeyValueBlock = (String, () -> NSObject?, UnsafeMutablePointer<Bool>) -> Void
 
 public class LevelDB {
     
     var name: String
     var path: String
-    public var encoder: (String, AnyObject) -> NSData?
-    public var decoder: (String, NSData) -> AnyObject?
+    public var encoder: (String, NSObject) -> NSData?
+    public var decoder: (String, NSData) -> NSObject?
     var db: UnsafeMutablePointer<Void>?
     
     // MARK: - Life cycle
@@ -29,7 +29,7 @@ public class LevelDB {
     required public init(path: String, name: String) {
         self.name = name
         self.path = path
-        self.encoder = {(key: String, object: AnyObject) -> NSData in
+        self.encoder = {(key: String, object: NSObject) -> NSData in
             #if DEBUG
                 var onceToken: dispatch_once_t
                 dispatch_once(onceToken, {() -> Void in
@@ -37,10 +37,10 @@ public class LevelDB {
                     print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
                 })
             #endif
-            return NSKeyedArchiver.archivedDataWithRootObject(object)
+            return NSData(bytes: key.cString, length: key.length)
         }
-        self.decoder = {(key: String, data: NSData) -> AnyObject in
-            return NSKeyedUnarchiver.unarchiveObjectWithData(data)!
+        self.decoder = {(key: String, data: NSData) -> NSObject in
+            return data
         }
         let dirpath = path.stringByDeletingLastPathComponent()
         let fm = NSFileManager.defaultManager()
@@ -49,7 +49,6 @@ public class LevelDB {
         }
         catch let error {
             print("Problem creating parent directory: \(error)")
-            //return
         }
         self.db = levelDBOpen(path.cString)
     }
@@ -61,7 +60,7 @@ public class LevelDB {
     // MARK: - Class methods
     
     public class func databaseInLibraryWithName(_ name: String) -> LevelDB {
-        let path = getLibraryPath().stringByAppendingPathComponent(name) //).URLByAppendingPathComponent(name).absoluteString
+        let path = getLibraryPath().stringByAppendingPathComponent(name)
         return self.init(path:path, name:name)
     }
     
@@ -77,7 +76,7 @@ public class LevelDB {
         return "<LevelDB:\(self) path: \(path)>"
     }
     
-    public func setObject(_ value:AnyObject?, forKey key:String) {
+    public func setObject(_ value:NSObject?, forKey key:String) {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return
@@ -96,7 +95,7 @@ public class LevelDB {
         }
     }
     
-    public subscript(key: String) -> AnyObject? {
+    public subscript(key: String) -> NSObject? {
         get {
             // return an appropriate subscript value here
             return objectForKey(key)
@@ -107,13 +106,13 @@ public class LevelDB {
         }
     }
     
-    public func addEntriesFromDictionary(dictionary: [String : AnyObject]) {
+    public func addEntriesFromDictionary(dictionary: [String : NSObject]) {
         for (key, value) in dictionary {
             self[key] = value
         }
     }
     
-    public func objectForKey(_ key: String) -> AnyObject? {
+    public func objectForKey(_ key: String) -> NSObject? {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return nil
@@ -128,8 +127,8 @@ public class LevelDB {
         return decoder(key, data)
     }
     
-    public func objectsForKeys(_ keys: [String]) -> [AnyObject?] {
-        var result = [AnyObject?](count: keys.count, repeatedValue: nil)
+    public func objectsForKeys(_ keys: [String]) -> [NSObject?] {
+        var result = [NSObject?](count: keys.count, repeatedValue: nil)
         var index = 0
         for key in keys {
             result[index] = self[key]
@@ -218,8 +217,8 @@ public class LevelDB {
         return keys
     }
     
-    public func dictionaryByFilteringWithPredicate(_ predicate: NSPredicate) -> [NSObject : AnyObject] {
-        var results = [NSObject : AnyObject]()
+    public func dictionaryByFilteringWithPredicate(_ predicate: NSPredicate) -> [String : NSObject] {
+        var results = [String : NSObject]()
         
         enumerateKeysAndObjectsWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
             results[key] = obj
@@ -228,6 +227,10 @@ public class LevelDB {
     }
     
     // MARK: - Enumeration
+    
+    public func enumerateKeys(backward backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyBlock) {
+        self.enumerateKeysWithPredicate(nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
+    }
     
     public func enumerateKeysUsingBlock(_ block: LevelDBKeyBlock) {
         self.enumerateKeysWithPredicate(nil, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: block)
@@ -251,17 +254,18 @@ public class LevelDB {
                     break
                 }
             }
-            let iKeyString = String(NSString(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding))
-            if let predicate = predicate {
-                var iData: UnsafeMutablePointer<Void> = nil
-                var iDataLength: Int = 0
-                levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength))
-                if predicate.evaluateWithObject(v) {
+            if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding) as? String {
+                if let predicate = predicate {
+                    var iData: UnsafeMutablePointer<Void> = nil
+                    var iDataLength: Int = 0
+                    levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                    let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength))
+                    if predicate.evaluateWithObject(v) {
+                        block(iKeyString, &stop)
+                    }
+                } else {
                     block(iKeyString, &stop)
                 }
-            } else {
-                block(iKeyString, &stop)
             }
             if stop {
                 break
@@ -293,17 +297,18 @@ public class LevelDB {
                     break
                 }
             }
-            let iKeyString = String(NSString(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding))
-            var iData: UnsafeMutablePointer<Void> = nil
-            var iDataLength: Int = 0
-            levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-            if let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength)) {
-                if let predicate = predicate {
-                    if predicate.evaluateWithObject(v) {
+            if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding) as? String {
+                var iData: UnsafeMutablePointer<Void> = nil
+                var iDataLength: Int = 0
+                levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                if let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength)) {
+                    if let predicate = predicate {
+                        if predicate.evaluateWithObject(v) {
+                            block(iKeyString, v, &stop)
+                        }
+                    } else {
                         block(iKeyString, v, &stop)
                     }
-                } else {
-                    block(iKeyString, v, &stop)
                 }
             }
             if (stop) {
@@ -331,14 +336,15 @@ public class LevelDB {
                     break
                 }
             }
-            let iKeyString = String(NSString(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding))
-            let getter : () -> AnyObject? = {
-                var iData: UnsafeMutablePointer<Void> = nil
-                var iDataLength: Int = 0
-                levelDBIteratorGetValue(iterator, &iData, &iDataLength);
-                return self.decoder(iKeyString, NSData(bytes: iData, length: iDataLength));
-            };
-            block(iKeyString, getter, &stop);
+            if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: NSUTF8StringEncoding) as? String {
+                let getter : () -> NSObject? = {
+                    var iData: UnsafeMutablePointer<Void> = nil
+                    var iDataLength: Int = 0
+                    levelDBIteratorGetValue(iterator, &iData, &iDataLength);
+                    return self.decoder(iKeyString, NSData(bytes: iData, length: iDataLength));
+                };
+                block(iKeyString, getter, &stop);
+            }
             if (stop) {
                 break;
             }
