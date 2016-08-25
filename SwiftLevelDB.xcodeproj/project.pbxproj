@@ -8,21 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		0C14714A1D6B2A1000C16920 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1471491D6B2A1000C16920 /* LevelDB.swift */; };
+		0C1FA5931D6FA73A00E036EE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0C1FA5921D6FA73A00E036EE /* Info.plist */; };
 		0C4F5E721D6B398D00BEE4AE /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4F5E711D6B398D00BEE4AE /* CLevelDB.framework */; };
 		0C4F5EEF1D6B826900BEE4AE /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4F5EEE1D6B826900BEE4AE /* String.swift */; };
 		0C4F5EF31D6BCD2E00BEE4AE /* NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4F5EF21D6BCD2E00BEE4AE /* NSData.swift */; };
-		0C9BCDC81D6EA4E9004F32FE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0C9BCDC71D6EA4E9004F32FE /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0C1471491D6B2A1000C16920 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LevelDB.swift; path = Sources/LevelDB.swift; sourceTree = "<group>"; };
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C1FA5921D6FA73A00E036EE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SwiftLevelDB/Info.plist; sourceTree = "<group>"; };
 		0C4F5E711D6B398D00BEE4AE /* CLevelDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CLevelDB.framework; path = "../../Library/Developer/Xcode/DerivedData/SwiftLevelDBApp-hjjomupxthkhxzdlfepaxhwtjvzt/Build/Products/Debug-iphonesimulator/CLevelDB.framework"; sourceTree = "<group>"; };
 		0C4F5EEA1D6B79A700BEE4AE /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0C4F5EEB1D6B79A700BEE4AE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0C4F5EEE1D6B826900BEE4AE /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = Sources/String.swift; sourceTree = "<group>"; };
 		0C4F5EF21D6BCD2E00BEE4AE /* NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSData.swift; path = Sources/NSData.swift; sourceTree = "<group>"; };
-		0C9BCDC71D6EA4E9004F32FE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,11 +50,11 @@
 		0C1D154E1D6ABF81007E99F4 = {
 			isa = PBXGroup;
 			children = (
-				0C9BCDC71D6EA4E9004F32FE /* Info.plist */,
 				0C4F5EEA1D6B79A700BEE4AE /* Package.swift */,
 				0C4F5EEB1D6B79A700BEE4AE /* README.md */,
 				0C4F5E8A1D6B71A600BEE4AE /* Frameworks */,
 				0C1471441D6B24A900C16920 /* Sources */,
+				0C1FA5911D6FA72100E036EE /* SwiftLevelDB */,
 				0C1D15591D6ABF81007E99F4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +65,14 @@
 				0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		0C1FA5911D6FA72100E036EE /* SwiftLevelDB */ = {
+			isa = PBXGroup;
+			children = (
+				0C1FA5921D6FA73A00E036EE /* Info.plist */,
+			);
+			name = SwiftLevelDB;
 			sourceTree = "<group>";
 		};
 		0C4F5E8A1D6B71A600BEE4AE /* Frameworks */ = {
@@ -142,7 +150,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C9BCDC81D6EA4E9004F32FE /* Info.plist in Resources */,
+				0C1FA5931D6FA73A00E036EE /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,7 +271,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = SwiftLevelDB/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
@@ -283,7 +291,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = SwiftLevelDB/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
