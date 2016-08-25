@@ -245,7 +245,6 @@ public class LevelDB {
         var stop = false
         _startIterator(iterator, backward: backward, prefix: prefix, start: key)
         while levelDBIteratorIsValid(iterator) {
-            
             var iKey: UnsafeMutablePointer<Int8> = nil
             var iKeyLength: Int = 0
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
@@ -385,7 +384,6 @@ public class LevelDB {
     
     private func _startIterator(_ iterator: UnsafeMutablePointer<Void>, backward: Bool, prefix: String?, start key: String?) {
         var startingKey: String
-        //if let prefix = prefix {
         if let prefix = prefix {
             startingKey = prefix
             if let key = key {
@@ -398,7 +396,6 @@ public class LevelDB {
             // we need to start on the next key (maybe discarding the first iteration)
             if backward {
                 var i: Int = len - 1
-                //var startingKeyCopy = startingKey
                 let startingKeyPtr = UnsafeMutablePointer<UInt8>(malloc(len))
                 memcpy(startingKeyPtr, startingKey.cString, len)
                 var keyChar: UnsafeMutablePointer<UInt8> = startingKeyPtr
@@ -411,17 +408,17 @@ public class LevelDB {
                     if keyChar[0] < 255 {
                         keyChar[0] += 1
                         levelDBIteratorSeek(iterator, UnsafeMutablePointer<Int8>(startingKeyPtr), len)
-                        if levelDBIteratorIsValid(iterator) {
+                        if !levelDBIteratorIsValid(iterator) {
                             levelDBIteratorMoveToLast(iterator)
                         }
+                        break
                     }
                     i -= 1
                 }
                 free(startingKeyPtr)
-                if levelDBIteratorIsValid(iterator) {
+                if !levelDBIteratorIsValid(iterator) {
                     return
                 }
-                
                 var iKey: UnsafeMutablePointer<Int8> = nil
                 var iKeyLength: Int = 0
                 levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
