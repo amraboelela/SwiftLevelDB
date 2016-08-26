@@ -9,7 +9,8 @@
 import Foundation
 
 extension NSData {
-    var mutableBytes: UnsafeMutablePointer<Void> {
-        return UnsafeMutablePointer<Void>(self.bytes)
+    var mutableBytes: UnsafeMutableRawPointer {
+        //return UnsafeMutablePointer<Void>(self.bytes)
+        return UnsafeMutableRawPointer(mutating:self.bytes)
     }
 }
