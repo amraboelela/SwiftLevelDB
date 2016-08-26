@@ -8,9 +8,16 @@
 
 import Foundation
 
+#if !swift(>=3.0)
+    typealias UnsafeMutableRawPointer = UnsafeMutablePointer<Void>
+#endif
+
 extension NSData {
     var mutableBytes: UnsafeMutableRawPointer {
-        //return UnsafeMutablePointer<Void>(self.bytes)
-        return UnsafeMutableRawPointer(mutating:self.bytes)
+        #if swift(>=3.0)
+            return UnsafeMutableRawPointer(mutating:self.bytes)
+        #else
+            return UnsafeMutableRawPointer(self.bytes)
+        #endif
     }
 }
