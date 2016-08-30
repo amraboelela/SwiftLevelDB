@@ -14,6 +14,10 @@ extension String {
     }
     
     var cString: UnsafeMutablePointer<Int8> {
-        return UnsafeMutablePointer<Int8>((self as NSString).UTF8String)
+        #if swift(>=3.0)        
+            return UnsafeMutablePointer<Int8>(mutating: NSString(string: self).utf8String)!
+        #else
+            return UnsafeMutablePointer<Int8>((self as NSString).UTF8String)
+        #endif
     }
 }
