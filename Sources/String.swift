@@ -16,23 +16,4 @@ extension String {
     var cString: UnsafeMutablePointer<Int8> {
         return UnsafeMutablePointer<Int8>((self as NSString).UTF8String)
     }
-    
-    func stringByAppendingPathComponent(path: String) -> String {
-        let nsSt = self as NSString
-        return nsSt.stringByAppendingPathComponent(path)
-    }
-    
-    func stringByDeletingLastPathComponent() -> String {
-        return (self as NSString).stringByDeletingLastPathComponent
-    }
-    
-    subscript (i: Int) -> Character {
-        return self[self.startIndex.advancedBy(i)]
-    }
-    
-    subscript (r: Range<Int>) -> String {
-        let start = startIndex.advancedBy(r.startIndex)
-        let end = start.advancedBy(r.endIndex - r.startIndex)
-        return self[Range(start ..< end)]
-    }
 }

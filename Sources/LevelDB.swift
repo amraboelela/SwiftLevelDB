@@ -42,7 +42,11 @@ public class LevelDB {
         self.decoder = {(key: String, data: NSData) -> NSObject in
             return data
         }
-        let dirpath = path.stringByDeletingLastPathComponent()
+        #if swift(>=3.0)
+            let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path
+        #else
+            let dirpath =  NSURL(fileURLWithPath:path).URLByDeletingLastPathComponent?.path ?? ""
+        #endif
         let fm = NSFileManager.defaultManager()
         do {
             try fm.createDirectoryAtPath(dirpath, withIntermediateDirectories:true, attributes:nil)
@@ -60,7 +64,11 @@ public class LevelDB {
     // MARK: - Class methods
     
     public class func databaseInLibraryWithName(_ name: String) -> LevelDB {
-        let path = getLibraryPath().stringByAppendingPathComponent(name)
+        #if swift(>=3.0)
+            var path = NSURL(fileURLWithPath: getLibraryPath(), isDirectory: true).appendingPathComponent(name).path ?? ""
+        #else
+            var path = NSURL(fileURLWithPath: getLibraryPath(), isDirectory: true).URLByAppendingPathComponent(name).path ?? ""
+        #endif
         return self.init(path:path, name:name)
     }
     
