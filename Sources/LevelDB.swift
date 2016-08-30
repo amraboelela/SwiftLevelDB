@@ -297,13 +297,13 @@ public class LevelDB {
         let iterator = levelDBIteratorNew(db)
         var stop = false
         #if swift(>=3.0)
-        guard let iteratorPointer = iterator else {
+            guard let iteratorPointer = iterator else {
             print("iterator is nil")
             return
-        }
-        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+            }
+            _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
         #else
-        _startIterator(iterator, backward: backward, prefix: prefix, start: key)
+            _startIterator(iterator, backward: backward, prefix: prefix, start: key)
         #endif
         while levelDBIteratorIsValid(iterator) {
             #if swift(>=3.0)
@@ -379,13 +379,13 @@ public class LevelDB {
         let iterator = levelDBIteratorNew(db)
         var stop = false
         #if swift(>=3.0)
-        guard let iteratorPointer = iterator else {
+            guard let iteratorPointer = iterator else {
             print("iterator is nil")
             return
-        }
-        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+            }
+            _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
         #else
-        _startIterator(iterator, backward: backward, prefix: prefix, start: key)
+            _startIterator(iterator, backward: backward, prefix: prefix, start: key)
         #endif
         while levelDBIteratorIsValid(iterator) {
             #if swift(>=3.0)
@@ -454,13 +454,13 @@ public class LevelDB {
         let iterator = levelDBIteratorNew(db)
         var stop = false
         #if swift(>=3.0)
-        guard let iteratorPointer = iterator else {
+            guard let iteratorPointer = iterator else {
             print("iterator is nil")
             return
-        }
-        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+            }
+            _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
         #else
-        _startIterator(iterator, backward: backward, prefix: prefix, start: key)
+            _startIterator(iterator, backward: backward, prefix: prefix, start: key)
         #endif
         while levelDBIteratorIsValid(iterator) {
             #if swift(>=3.0)
