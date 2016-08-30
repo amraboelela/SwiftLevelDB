@@ -16,6 +16,12 @@ public typealias LevelDBKeyBlock = (String, UnsafeMutablePointer<Bool>) -> Void
 public typealias LevelDBKeyValueBlock = (String, NSObject, UnsafeMutablePointer<Bool>) -> Void
 public typealias LevelDBLazyKeyValueBlock = (String, () -> NSObject?, UnsafeMutablePointer<Bool>) -> Void
 
+#if swift(>=3.0)
+    let stringEncoding = String.Encoding.utf8.rawValue
+#else
+    let stringEncoding = NSUTF8StringEncoding
+#endif
+
 public class LevelDB {
     
     var name: String
@@ -43,15 +49,15 @@ public class LevelDB {
             return data
         }
         do {
-        #if swift(>=3.0)
-            let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
-            let fm = FileManager.default
-            try fm.createDirectory(atPath: dirpath, withIntermediateDirectories:true, attributes:nil)
-        #else
-            let dirpath =  NSURL(fileURLWithPath:path).URLByDeletingLastPathComponent?.path ?? ""
-            let fm = NSFileManager.defaultManager()
-            try fm.createDirectoryAtPath(dirpath, withIntermediateDirectories:true, attributes:nil)
-        #endif
+            #if swift(>=3.0)
+                let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
+                let fm = FileManager.default
+                try fm.createDirectory(atPath: dirpath, withIntermediateDirectories:true, attributes:nil)
+            #else
+                let dirpath =  NSURL(fileURLWithPath:path).URLByDeletingLastPathComponent?.path ?? ""
+                let fm = NSFileManager.defaultManager()
+                try fm.createDirectoryAtPath(dirpath, withIntermediateDirectories:true, attributes:nil)
+            #endif
         }
         catch let error {
             print("Problem creating parent directory: \(error)")
@@ -75,7 +81,11 @@ public class LevelDB {
     }
     
     class func getLibraryPath() -> String {
-        var paths = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
+        #if swift(>=3.0)
+            var paths = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
+        #else
+            var paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)
+        #endif
         return paths[0]
     }
     
@@ -127,14 +137,26 @@ public class LevelDB {
             print("Database reference is not existent (it has probably been closed)")
             return nil
         }
-        var rawData: UnsafeMutableRawPointer? = nil
+        #if swift(>=3.0)
+            var rawData: UnsafeMutableRawPointer? = nil
+        #else
+            var rawData: UnsafeMutableRawPointer = nil
+        #endif
         var rawDataLength: Int = 0
         let status = levelDBItemGet(db, key.cString, key.length, &rawData, &rawDataLength)
         if status != 0 {
             return nil
         }
+        #if swift(>=3.0)
+            if let rawData = rawData {
+        #endif
         let data = NSData(bytes: rawData, length: rawDataLength)
         return decoder(key, data)
+        #if swift(>=3.0)
+            } else {
+            return nil
+            }
+        #endif
     }
     
     public func objectsForKeys(_ keys: [String]) -> [NSObject?] {
@@ -152,12 +174,20 @@ public class LevelDB {
             print("Database reference is not existent (it has probably been closed)")
             return false
         }
-        var rawData: UnsafeMutableRawPointer? = nil
+        #if swift(>=3.0)
+            var rawData: UnsafeMutableRawPointer? = nil
+        #else
+            var rawData: UnsafeMutableRawPointer = nil
+        #endif
         var rawDataLength: Int = 0
         let status = levelDBItemGet(db, key.cString, key.length, &rawData, &rawDataLength)
         if status == 0 {
+            //if let rawData = rawData {
             free(rawData)
             return true
+            //} else {
+            //    return false
+            //}
         } else {
             return false
         }
@@ -199,17 +229,25 @@ public class LevelDB {
             levelDBIteratorMoveToFirst(iterator)
         }
         while levelDBIteratorIsValid(iterator) {
-            var iKey: UnsafeMutablePointer<Int8>? = nil
+            #if swift(>=3.0)
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+            #else
+                var iKey: UnsafeMutablePointer<Int8> = nil
+            #endif
             var iKeyLength: Int = 0
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
-            if let iKey = iKey {
+            #if swift(>=3.0)
+                if let iKey = iKey {
+            #endif
             if prefixLen > 0 {
-            if memcmp(iKey, prefixPtr, min(prefixLen, iKeyLength)) != 0 {
-                break;
-            }
-            }
+                if memcmp(iKey, prefixPtr, min(prefixLen, iKeyLength)) != 0 {
+                    break;
+                }
             }
             levelDBItemDelete(db, iKey, iKeyLength)
+            #if swift(>=3.0)
+                }
+            #endif
             levelDBIteratorMoveForward(iterator)
         }
         levelDBIteratorDelete(iterator)
@@ -255,36 +293,60 @@ public class LevelDB {
             print("Database reference is not existent (it has probably been closed)")
             return
         }
-        guard let iterator = levelDBIteratorNew(db) else {
-            print("iterator is nil")
+        let iterator = levelDBIteratorNew(db)
+        if iterator == nil {
             return
         }
         var stop = false
         _startIterator(iterator, backward: backward, prefix: prefix, start: key)
         while levelDBIteratorIsValid(iterator) {
-            var iKey: UnsafeMutablePointer<Int8>? = nil
+            #if swift(>=3.0)
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+            #else
+                var iKey: UnsafeMutablePointer<Int8> = nil
+            #endif
             var iKeyLength: Int = 0
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
-            if let iKey = iKey {
+            #if swift(>=3.0)
+                if let iKey = iKey {
+            #endif
             if let prefix = prefix {
                 if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
                     break
                 }
             }
-            if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: String.Encoding.utf8.rawValue) as? String {
+            if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
                 if let predicate = predicate {
-                    var iData: UnsafeMutableRawPointer? = nil
+                    #if swift(>=3.0)
+                        var iData: UnsafeMutableRawPointer? = nil
+                    #else
+                        var iData: UnsafeMutableRawPointer = nil
+                    #endif
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                    #if swift(>=3.0)
+                        if let iData = iData {
+                    #endif
                     let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength))
-                    if predicate.evaluate(with: v) {
+                    #if swift(>=3.0)
+                        if predicate.evaluate(with: v) {
                         block(iKeyString, &stop)
-                    }
+                        }
+                    #else
+                        if predicate.evaluateWithObject(v) {
+                            block(iKeyString, &stop)
+                        }
+                    #endif
+                    #if swift(>=3.0)
+                        }
+                    #endif
                 } else {
                     block(iKeyString, &stop)
                 }
             }
-            }
+            #if swift(>=3.0)
+                }
+            #endif
             if stop {
                 break
             }
@@ -307,37 +369,58 @@ public class LevelDB {
             print("Database reference is not existent (it has probably been closed)")
             return
         }
-        guard let iterator = levelDBIteratorNew(db) else {
-            print("iterator is nil")
-            return
-        }
+        let iterator = levelDBIteratorNew(db)
         var stop = false
         _startIterator(iterator, backward: backward, prefix: prefix, start: key)
         while levelDBIteratorIsValid(iterator) {
-            var iKey: UnsafeMutablePointer<Int8>? = nil
+            #if swift(>=3.0)
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+            #else
+                var iKey: UnsafeMutablePointer<Int8> = nil
+            #endif
             var iKeyLength: Int = 0
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
-            if let iKey = iKey {
-                if let prefix = prefix {
-                    if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
-                        break
-                    }
-                }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: String.Encoding.utf8.rawValue) as? String {
-                    var iData: UnsafeMutableRawPointer? = nil
-                    var iDataLength: Int = 0
-                    levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                    if let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength)) {
-                        if let predicate = predicate {
-                            if predicate.evaluate(with: v) {
-                                block(iKeyString, v, &stop)
-                            }
-                        } else {
-                            block(iKeyString, v, &stop)
-                        }
-                    }
+            #if swift(>=3.0)
+                if let iKey = iKey {
+            #endif
+            if let prefix = prefix {
+                if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
+                    break
                 }
             }
+            if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                #if swift(>=3.0)
+                    var iData: UnsafeMutableRawPointer? = nil
+                #else
+                    var iData: UnsafeMutableRawPointer = nil
+                #endif
+                var iDataLength: Int = 0
+                levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                #if swift(>=3.0)
+                    if let iData = iData {
+                #endif
+                if let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength)) {
+                    if let predicate = predicate {
+                        #if swift(>=3.0)
+                            if predicate.evaluate(with: v) {
+                            block(iKeyString, v, &stop)
+                            }
+                        #else
+                            if predicate.evaluateWithObject(v) {
+                                block(iKeyString, v, &stop)
+                            }
+                        #endif
+                    } else {
+                        block(iKeyString, v, &stop)
+                    }
+                }
+                #if swift(>=3.0)
+                    }
+                #endif
+            }
+            #if swift(>=3.0)
+                }
+            #endif
             if (stop) {
                 break;
             }
@@ -351,32 +434,52 @@ public class LevelDB {
             print("Database reference is not existent (it has probably been closed)")
             return
         }
-        guard let iterator = levelDBIteratorNew(db) else {
-            print("iterator is nil")
+        let iterator = levelDBIteratorNew(db)
+        if iterator == nil {
             return
         }
         var stop = false
         _startIterator(iterator, backward: backward, prefix: prefix, start: key)
         while levelDBIteratorIsValid(iterator) {
-            var iKey: UnsafeMutablePointer<Int8>? = nil
+            #if swift(>=3.0)
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+            #else
+                var iKey: UnsafeMutablePointer<Int8> = nil
+            #endif
             var iKeyLength: Int = 0
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
-            if let iKey = iKey {
+            #if swift(>=3.0)
+                if let iKey = iKey {
+            #endif
             if let prefix = prefix {
                 if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
                     break
                 }
             }
-            if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: String.Encoding.utf8.rawValue) as? String {
+            if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
                 let getter : () -> NSObject? = {
-                    var iData: UnsafeMutableRawPointer? = nil
+                    #if swift(>=3.0)
+                        var iData: UnsafeMutableRawPointer? = nil
+                    #else
+                        var iData: UnsafeMutableRawPointer = nil
+                    #endif
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength);
+                    #if swift(>=3.0)
+                        if let iData = iData {
+                    #endif
                     return self.decoder(iKeyString, NSData(bytes: iData, length: iDataLength));
+                    #if swift(>=3.0)
+                        } else {
+                        return nil
+                        }
+                    #endif
                 };
                 block(iKeyString, getter, &stop);
             }
-            }
+            #if swift(>=3.0)
+                }
+            #endif
             if (stop) {
                 break;
             }
@@ -390,13 +493,13 @@ public class LevelDB {
     public func deleteDatabaseFromDisk() {
         self.close()
         do {
-        #if swift(>=3.0)
-            let fileManager = FileManager.default
-            try fileManager.removeItem(atPath: path)
-        #else
-            let fileManager = NSFileManager.defaultManager()
-            try fileManager.removeItemAtPath(path)
-        #endif
+            #if swift(>=3.0)
+                let fileManager = FileManager.default
+                try fileManager.removeItem(atPath: path)
+            #else
+                let fileManager = NSFileManager.defaultManager()
+                try fileManager.removeItemAtPath(path)
+            #endif
         }
         catch let error as NSError {
             print("error deleting database at path \(path), \(error)")
@@ -434,7 +537,11 @@ public class LevelDB {
             // we need to start on the next key (maybe discarding the first iteration)
             if backward {
                 var i: Int = len - 1
-                let startingKeyPtr = malloc(len)!.bindMemory(to: Int8.self, capacity: len) //malloc(len)
+                #if swift(>=3.0)
+                    let startingKeyPtr = malloc(len)!.bindMemory(to: Int8.self, capacity: len)
+                #else
+                    let startingKeyPtr = UnsafeMutablePointer<Int8>(malloc(len))
+                #endif
                 memcpy(startingKeyPtr, startingKey.cString, len)
                 var keyChar = startingKeyPtr
                 while true {
@@ -457,16 +564,25 @@ public class LevelDB {
                 if !levelDBIteratorIsValid(iterator) {
                     return
                 }
-                var iKey: UnsafeMutablePointer<Int8>? = nil
+                #if swift(>=3.0)
+                    var iKey: UnsafeMutablePointer<Int8>? = nil
+                #else
+                    var iKey: UnsafeMutablePointer<Int8> = nil
+                #endif
                 var iKeyLength: Int = 0
                 levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
-                
-                if len > 0, let iKey = iKey {
+                #if swift(>=3.0)
+                    if let iKey = iKey {
+                #endif
+                if len > 0 {
                     let cmp = memcmp(iKey, startingKey.cString, len)
                     if cmp > 0 {
                         levelDBIteratorMoveBackward(iterator)
                     }
                 }
+                #if swift(>=3.0)
+                    }
+                #endif
             } else {
                 // Otherwise, we start at the provided prefix
                 levelDBIteratorSeek(iterator, startingKey.cString, len)
