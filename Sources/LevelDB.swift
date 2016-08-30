@@ -295,11 +295,16 @@ public class LevelDB {
             return
         }
         let iterator = levelDBIteratorNew(db)
-        if iterator == nil {
+        var stop = false
+        #if swift(>=3.0)
+        guard let iteratorPointer = iterator else {
+            print("iterator is nil")
             return
         }
-        var stop = false
+        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+        #else
         _startIterator(iterator, backward: backward, prefix: prefix, start: key)
+        #endif
         while levelDBIteratorIsValid(iterator) {
             #if swift(>=3.0)
                 var iKey: UnsafeMutablePointer<Int8>? = nil
@@ -373,7 +378,15 @@ public class LevelDB {
         }
         let iterator = levelDBIteratorNew(db)
         var stop = false
+        #if swift(>=3.0)
+        guard let iteratorPointer = iterator else {
+            print("iterator is nil")
+            return
+        }
+        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+        #else
         _startIterator(iterator, backward: backward, prefix: prefix, start: key)
+        #endif
         while levelDBIteratorIsValid(iterator) {
             #if swift(>=3.0)
                 var iKey: UnsafeMutablePointer<Int8>? = nil
@@ -439,11 +452,16 @@ public class LevelDB {
             return
         }
         let iterator = levelDBIteratorNew(db)
-        if iterator == nil {
+        var stop = false
+        #if swift(>=3.0)
+        guard let iteratorPointer = iterator else {
+            print("iterator is nil")
             return
         }
-        var stop = false
+        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+        #else
         _startIterator(iterator, backward: backward, prefix: prefix, start: key)
+        #endif
         while levelDBIteratorIsValid(iterator) {
             #if swift(>=3.0)
                 var iKey: UnsafeMutablePointer<Int8>? = nil
