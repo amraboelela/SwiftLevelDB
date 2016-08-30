@@ -320,7 +320,7 @@ public class LevelDB {
                 break
                 }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) { 
                 if let predicate = predicate {
                 var iData: UnsafeMutableRawPointer? = nil
                 var iDataLength: Int = 0
@@ -340,7 +340,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) {
                     if let predicate = predicate {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
@@ -402,7 +402,7 @@ public class LevelDB {
                 break
                 }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: String.Encoding.utf8.rawValue) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) {
                 var iData: UnsafeMutableRawPointer? = nil
                 var iDataLength: Int = 0
                 levelDBIteratorGetValue(iterator, &iData, &iDataLength)
@@ -423,7 +423,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) {
                     var iData: UnsafeMutableRawPointer = nil
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength)
@@ -477,7 +477,7 @@ public class LevelDB {
                 break
                 }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) {
                 let getter : () -> NSObject? = {
                 var iData: UnsafeMutableRawPointer? = nil
                 var iDataLength: Int = 0
@@ -493,7 +493,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) {
                     let getter : () -> NSObject? = {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
