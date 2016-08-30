@@ -126,9 +126,9 @@ public class LevelDB {
         }
     }
     
-    public func addEntriesFromDictionary(_ dictionary: [String : NSObject]) {
+    public func addEntriesFromDictionary(_ dictionary: NSDictionary) {
         for (key, value) in dictionary {
-            self[key] = value
+            self[key as! String] = value as? NSObject
         }
     }
     
