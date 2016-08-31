@@ -22,6 +22,17 @@ public typealias LevelDBLazyKeyValueBlock = (String, () -> NSObject?, UnsafeMuta
     let stringEncoding = NSUTF8StringEncoding
 #endif
 
+public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
+    switch directory {
+    case .libraryDirectory:
+        let fileManager = FileManager.default
+        return [fileManager.currentDirectoryPath + "/Library"]
+    default:
+    break
+    }
+    return [""]
+}
+
 public class LevelDB {
     
     var name: String
@@ -82,7 +93,7 @@ public class LevelDB {
     
     class func getLibraryPath() -> String {
         #if swift(>=3.0)
-            var paths = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
+            var paths = SearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
         #else
             var paths = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)
         #endif
