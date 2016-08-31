@@ -23,12 +23,17 @@ public typealias LevelDBLazyKeyValueBlock = (String, () -> NSObject?, UnsafeMuta
 #endif
 
 public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
-    switch directory {
-    case .libraryDirectory:
-        let fileManager = FileManager.default
-        return [fileManager.currentDirectoryPath + "/Library"]
-    default:
-    break
+    let bundle = Bundle.main
+    let bundlePath = bundle.bundlePath
+    if domainMask == .userDomainMask {
+        switch directory {
+        case .libraryDirectory:
+            return [bundlePath + "/Library"]
+        case .documentDirectory:
+            return [bundlePath + "/Documents"]
+        default:
+            break
+        }
     }
     return [""]
 }
@@ -62,6 +67,7 @@ public class LevelDB {
         do {
             #if swift(>=3.0)
                 let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
+                //print("dirpath: \(dirpath)")
                 let fm = FileManager.default
                 try fm.createDirectory(atPath: dirpath, withIntermediateDirectories:true, attributes:nil)
             #else
@@ -73,6 +79,7 @@ public class LevelDB {
         catch let error {
             print("Problem creating parent directory: \(error)")
         }
+        print("path: \(path)")
         self.db = levelDBOpen(path.cString)
     }
     
@@ -88,7 +95,7 @@ public class LevelDB {
         #else
             let path = NSURL(fileURLWithPath: getLibraryPath(), isDirectory: true).URLByAppendingPathComponent(name).path ?? ""
         #endif
-        return self.init(path:path, name:name)
+        return self.init(path: path, name: name)
     }
     
     class func getLibraryPath() -> String {
