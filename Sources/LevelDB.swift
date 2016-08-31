@@ -42,8 +42,8 @@ public class LevelDB {
     
     var name: String
     var path: String
-    public var encoder: (String, NSObject) -> NSData?
-    public var decoder: (String, NSData) -> NSObject?
+    public var encoder: (String, NSObject) -> Data?
+    public var decoder: (String, Data) -> NSObject?
     var db: UnsafeMutableRawPointer?
     
     // MARK: - Life cycle
@@ -51,7 +51,7 @@ public class LevelDB {
     required public init(path: String, name: String) {
         self.name = name
         self.path = path
-        self.encoder = {(key: String, object: NSObject) -> NSData in
+        self.encoder = {key, value in
             #if DEBUG
                 var onceToken: dispatch_once_t
                 dispatch_once(onceToken, {() -> Void in
@@ -59,15 +59,14 @@ public class LevelDB {
                     print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
                 })
             #endif
-            return NSData(bytes: key.cString, length: key.length)
+            return Data(bytes: key.cString, count: key.length)
         }
-        self.decoder = {(key: String, data: NSData) -> NSObject in
-            return data
+        self.decoder = {key, data in
+            return data as? NSData
         }
         do {
             #if swift(>=3.0)
                 let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
-                //print("dirpath: \(dirpath)")
                 let fm = FileManager.default
                 try fm.createDirectory(atPath: dirpath, withIntermediateDirectories:true, attributes:nil)
             #else
@@ -79,7 +78,7 @@ public class LevelDB {
         catch let error {
             print("Problem creating parent directory: \(error)")
         }
-        print("path: \(path)")
+        //print("path: \(path)")
         self.db = levelDBOpen(path.cString)
     }
     
@@ -120,15 +119,18 @@ public class LevelDB {
             return
         }
         if let newValue = value {
-            if let data = encoder(key, newValue) {
-                let status = levelDBItemPut(db, key.cString, key.length, data.mutableBytes, data.length)
-                if status != 0 {
-                    print("Problem storing key/value pair in database")
+            if var data = encoder(key, newValue) {
+                data.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
+                    let status = levelDBItemPut(db, key.cString, key.length, mutableBytes, data.count)
+                    if status != 0 {
+                        print("setObject: Problem storing key/value pair in database")
+                    }
                 }
             } else {
-                print("Problem storing key/value pair in database")
+                print("Error: setObject: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
             }
         } else {
+            print("setObject: newValue is nil")
             levelDBItemDelete(db, key.cString, key.length)
         }
     }
@@ -167,13 +169,13 @@ public class LevelDB {
         }
         #if swift(>=3.0)
             if let rawData = rawData {
-            let data = NSData(bytes: rawData, length: rawDataLength)
-            return decoder(key, data)
+                let data = Data(bytes: rawData, count: rawDataLength)
+                return decoder(key, data)
             } else {
-            return nil
+                return nil
             }
         #else
-            let data = NSData(bytes: rawData, length: rawDataLength)
+            let data = Data(bytes: rawData, count: rawDataLength)
             return decoder(key, data)
         #endif
     }
@@ -333,24 +335,26 @@ public class LevelDB {
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
             #if swift(>=3.0)
                 if let iKey = iKey {
-                if let prefix = prefix {
-                if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
-                break
-                }
-                }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) { 
-                if let predicate = predicate {
-                var iData: UnsafeMutableRawPointer? = nil
-                var iDataLength: Int = 0
-                levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength))
-                if predicate.evaluate(with: v) {
-                block(iKeyString, &stop)
-                }
-                } else {
-                block(iKeyString, &stop)
-                }
-                }
+                    if let prefix = prefix {
+                        if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
+                        break
+                        }
+                    }
+                    if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) { 
+                        if let predicate = predicate {
+                            var iData: UnsafeMutableRawPointer? = nil
+                            var iDataLength: Int = 0
+                            levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                            if let iData = iData {
+                                let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
+                                if predicate.evaluate(with: v) {
+                                    block(iKeyString, &stop)
+                                }
+                            }
+                        } else {
+                            block(iKeyString, &stop)
+                        }
+                    }
                 }
             #else
                 if let prefix = prefix {
@@ -363,7 +367,7 @@ public class LevelDB {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
                         levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                        let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength))
+                        let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
                         if predicate.evaluateWithObject(v) {
                             block(iKeyString, &stop)
                         }
@@ -415,25 +419,25 @@ public class LevelDB {
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
             #if swift(>=3.0)
                 if let iKey = iKey {
-                if let prefix = prefix {
-                if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
-                break
-                }
-                }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) {
-                var iData: UnsafeMutableRawPointer? = nil
-                var iDataLength: Int = 0
-                levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                if let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength)) {
-                if let predicate = predicate {
-                if predicate.evaluate(with: v) {
-                block(iKeyString, v, &stop)
-                }
-                } else {
-                block(iKeyString, v, &stop)
-                }
-                }
-                }
+                    if let prefix = prefix {
+                        if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
+                        break
+                        }
+                    }
+                    if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) {
+                        var iData: UnsafeMutableRawPointer? = nil
+                        var iDataLength: Int = 0
+                        levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                        if let iData = iData, let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
+                            if let predicate = predicate {
+                                if predicate.evaluate(with: v) {
+                                    block(iKeyString, v, &stop)
+                                }
+                            } else {
+                                block(iKeyString, v, &stop)
+                            }
+                        }
+                    }
                 }
             #else
                 if let prefix = prefix {
@@ -445,7 +449,7 @@ public class LevelDB {
                     var iData: UnsafeMutableRawPointer = nil
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                    if let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength)) {
+                    if let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
                         if let predicate = predicate {
                             if predicate.evaluateWithObject(v) {
                                 block(iKeyString, v, &stop)
@@ -489,22 +493,26 @@ public class LevelDB {
             var iKeyLength: Int = 0
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
             #if swift(>=3.0)
-                if let iKey = iKey {
+            if let iKey = iKey {
                 if let prefix = prefix {
-                if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
-                break
-                }
+                    if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
+                        break
+                    }
                 }
                 if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?.substring(from: 0) {
-                let getter : () -> NSObject? = {
-                var iData: UnsafeMutableRawPointer? = nil
-                var iDataLength: Int = 0
-                levelDBIteratorGetValue(iterator, &iData, &iDataLength);
-                return self.decoder(iKeyString, NSData(bytes: iData, length: iDataLength));
-                };
-                block(iKeyString, getter, &stop);
+                    let getter : () -> NSObject? = {
+                        var iData: UnsafeMutableRawPointer? = nil
+                            var iDataLength: Int = 0
+                            levelDBIteratorGetValue(iterator, &iData, &iDataLength);
+                        if let iData = iData {
+                            return self.decoder(iKeyString, Data(bytes: iData, count: iDataLength));
+                        } else {
+                            return nil
+                        }
+                    };
+                    block(iKeyString, getter, &stop);
                 }
-                }
+            }
             #else
                 if let prefix = prefix {
                     if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
@@ -516,7 +524,7 @@ public class LevelDB {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
                         levelDBIteratorGetValue(iterator, &iData, &iDataLength);
-                        return self.decoder(iKeyString, NSData(bytes: iData, length: iDataLength));
+                        return self.decoder(iKeyString, Data(bytes: iData, count: iDataLength));
                     };
                     block(iKeyString, getter, &stop);
                 }
