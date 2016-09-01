@@ -188,7 +188,7 @@ public class LevelDB {
                 return nil
             }
         #else
-            let data = Data(bytes: rawData, count: rawDataLength)
+            let data = NSData(bytes: rawData, length: rawDataLength)
             return decoder(key, data)
         #endif
     }
@@ -380,7 +380,7 @@ public class LevelDB {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
                         levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                        let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
+                        let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength))
                         if predicate.evaluateWithObject(v) {
                             block(iKeyString, &stop)
                         }
@@ -462,7 +462,7 @@ public class LevelDB {
                     var iData: UnsafeMutableRawPointer = nil
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                    if let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
+                    if let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength)) {
                         if let predicate = predicate {
                             if predicate.evaluateWithObject(v) {
                                 block(iKeyString, v, &stop)
@@ -537,7 +537,7 @@ public class LevelDB {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
                         levelDBIteratorGetValue(iterator, &iData, &iDataLength);
-                        return self.decoder(iKeyString, Data(bytes: iData, count: iDataLength));
+                        return self.decoder(iKeyString, NSData(bytes: iData, length: iDataLength));
                     };
                     block(iKeyString, getter, &stop);
                 }
