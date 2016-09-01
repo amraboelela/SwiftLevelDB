@@ -62,7 +62,7 @@ public class LevelDB {
             return Data(bytes: key.cString, count: key.length)
         }
         self.decoder = {key, data in
-            return data as? NSData
+            return NSString(string:"")
         }
         do {
             #if swift(>=3.0)

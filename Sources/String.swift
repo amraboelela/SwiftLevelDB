@@ -5,6 +5,8 @@
 //  Created by Amr Aboelela on 8/22/16.
 //  Copyright © 2016 Amr Aboelela. All rights reserved.
 //
+//  See LICENCE for details.
+//
 
 import Foundation
 
@@ -27,5 +29,9 @@ extension String {
         } else {
             return ""
         }
+    }
+
+    public static func fromNSObject(_ anObject: NSObject) -> String {
+        return fromNSString(anObject as? NSString)
     }
 }
