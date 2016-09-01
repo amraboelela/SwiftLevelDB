@@ -13,7 +13,7 @@ import Foundation
 extension Data {
 
     public var simpleDescription : String {
-        if let result = String(data: self, encoding: String.Encoding.utf8) {
+        if let result = String(data: self, encoding: stringEncoding) {
             return result
         } else {
             return ""

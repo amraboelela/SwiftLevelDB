@@ -17,11 +17,12 @@ public typealias LevelDBKeyValueBlock = (String, Any, UnsafeMutablePointer<Bool>
 public typealias LevelDBLazyKeyValueBlock = (String, () -> Any?, UnsafeMutablePointer<Bool>) -> Void
 
 #if swift(>=3.0)
-    let stringEncoding = String.Encoding.utf8.rawValue
+    public let stringEncoding = String.Encoding.utf8.rawValue
 #else
-    let stringEncoding = NSUTF8StringEncoding
+    public let stringEncoding = NSUTF8StringEncoding
     typealias UnsafeMutableRawPointer = UnsafeMutablePointer<Void>
     public typealias Data = NSData
+    public typealias Any = AnyObject
 #endif
 
 #if swift(>=3.0)
@@ -373,7 +374,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?._bridgeToSwift() {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
                     if let predicate = predicate {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
@@ -456,7 +457,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?._bridgeToSwift() {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
                     var iData: UnsafeMutableRawPointer = nil
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength)
@@ -530,7 +531,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?._bridgeToSwift() {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
                     let getter : () -> Any? = {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0

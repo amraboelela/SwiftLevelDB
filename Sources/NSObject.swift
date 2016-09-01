@@ -10,10 +10,15 @@
 
 import Foundation
 
+#if swift(>=3.0)
+#else
+    //public typealias AnyHashable = AnyObject
+#endif
+
 extension NSObject {
 
-    public static func fromAny(_ anObject: Any) -> NSObject? {
-        if let aDictionary = anObject as? [AnyHashable: Any] {
+    public static func fromAny(_ anObject: Any?) -> NSObject? {
+        if let aDictionary = anObject as? [String : Any] {
             return aDictionary._bridgeToObjectiveC() 
         } else if let anArray = anObject as? [Any] {
             return anArray._bridgeToObjectiveC() 
@@ -25,6 +30,7 @@ extension NSObject {
         return nil
     }
 
+    /*
     public static func toAny(_ anObject: NSObject?) -> Any? {
         guard let anObject = anObject else {
             return nil
@@ -37,6 +43,5 @@ extension NSObject {
             return aString._bridgeToSwift()
         }
         return nil
-    }
-
+    }*/
 }
