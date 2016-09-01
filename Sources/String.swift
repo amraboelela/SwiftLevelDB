@@ -23,6 +23,11 @@ extension String {
         #endif
     }
 
+/*
+    public init?(bytes: UnsafeRawPointer, length len: Int, encoding: UInt) {
+        return NSString(bytes: bytes, length: len, encoding: encoding)._bridgeToSwift()
+    }
+
     public static func fromNSString(_ aString: NSString?) -> String {
         if let aString = aString {
             return aString.substring(from: 0)
@@ -33,5 +38,6 @@ extension String {
 
     public static func fromNSObject(_ anObject: NSObject) -> String {
         return fromNSString(anObject as? NSString)
-    }
+    }*/
+
 }
