@@ -22,16 +22,4 @@ extension String {
             return UnsafeMutablePointer<Int8>((self as NSString).UTF8String)
         #endif
     }
-
-    public static func fromNSString(_ aString: NSString?) -> String {
-        if let aString = aString {
-            return aString.substring(from: 0)
-        } else {
-            return ""
-        }
-    }
-
-    public static func fromNSObject(_ anObject: NSObject) -> String {
-        return fromNSString(anObject as? NSString)
-    }
 }

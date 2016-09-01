@@ -20,8 +20,11 @@ public typealias LevelDBLazyKeyValueBlock = (String, () -> NSObject?, UnsafeMuta
     let stringEncoding = String.Encoding.utf8.rawValue
 #else
     let stringEncoding = NSUTF8StringEncoding
+    typealias UnsafeMutableRawPointer = UnsafeMutablePointer<Void>
+    public typealias Data = NSData
 #endif
 
+#if swift(>=3.0)
 public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
     let bundle = Bundle.main
     let bundlePath = bundle.bundlePath
@@ -37,6 +40,7 @@ public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPat
     }
     return [""]
 }
+#endif
 
 public class LevelDB {
     
@@ -59,7 +63,11 @@ public class LevelDB {
                     print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
                 })
             #endif
-            return Data(bytes: key.cString, count: key.length)
+            #if swift(>=3.0)
+                return Data(bytes: key.cString, count: key.length)
+            #else
+                return NSData(bytes: key.cString, length: key.length)
+            #endif
         }
         self.decoder = {key, data in
             return NSString(string:"")
@@ -119,12 +127,17 @@ public class LevelDB {
             return
         }
         if let newValue = value {
+            var status = 0
             if var data = encoder(key, newValue) {
-                data.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
-                    let status = levelDBItemPut(db, key.cString, key.length, mutableBytes, data.count)
-                    if status != 0 {
-                        print("setObject: Problem storing key/value pair in database")
+                #if swift(>=3.0)
+                    data.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
+                        status = levelDBItemPut(db, key.cString, key.length, mutableBytes, data.count)
                     }
+                #else
+                    status = levelDBItemPut(db, key.cString, key.length, data.mutableBytes, data.length)
+                #endif
+                if status != 0 {
+                    print("setObject: Problem storing key/value pair in database")
                 }
             } else {
                 print("Error: setObject: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")

@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C07D1921D78DE0000BEFAE4 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C07D1901D78DE0000BEFAE4 /* Int.swift */; };
 		0C14714A1D6B2A1000C16920 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1471491D6B2A1000C16920 /* LevelDB.swift */; };
 		0C1FA5931D6FA73A00E036EE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0C1FA5921D6FA73A00E036EE /* Info.plist */; };
 		0C4F5E721D6B398D00BEE4AE /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4F5E711D6B398D00BEE4AE /* CLevelDB.framework */; };
 		0C4F5EEF1D6B826900BEE4AE /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4F5EEE1D6B826900BEE4AE /* String.swift */; };
-		0C4F5EF31D6BCD2E00BEE4AE /* NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4F5EF21D6BCD2E00BEE4AE /* NSData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C07D1901D78DE0000BEFAE4 /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Int.swift; path = Sources/Int.swift; sourceTree = "<group>"; };
 		0C1471491D6B2A1000C16920 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LevelDB.swift; path = Sources/LevelDB.swift; sourceTree = "<group>"; };
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C1FA5921D6FA73A00E036EE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SwiftLevelDB/Info.plist; sourceTree = "<group>"; };
@@ -22,7 +23,6 @@
 		0C4F5EEA1D6B79A700BEE4AE /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0C4F5EEB1D6B79A700BEE4AE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0C4F5EEE1D6B826900BEE4AE /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = Sources/String.swift; sourceTree = "<group>"; };
-		0C4F5EF21D6BCD2E00BEE4AE /* NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSData.swift; path = Sources/NSData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,8 +40,8 @@
 		0C1471441D6B24A900C16920 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				0C07D1901D78DE0000BEFAE4 /* Int.swift */,
 				0C1471491D6B2A1000C16920 /* LevelDB.swift */,
-				0C4F5EF21D6BCD2E00BEE4AE /* NSData.swift */,
 				0C4F5EEE1D6B826900BEE4AE /* String.swift */,
 			);
 			name = Sources;
@@ -161,8 +161,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C07D1921D78DE0000BEFAE4 /* Int.swift in Sources */,
 				0C4F5EEF1D6B826900BEE4AE /* String.swift in Sources */,
-				0C4F5EF31D6BCD2E00BEE4AE /* NSData.swift in Sources */,
 				0C14714A1D6B2A1000C16920 /* LevelDB.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
