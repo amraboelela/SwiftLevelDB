@@ -17,9 +17,9 @@ public typealias LevelDBKeyValueBlock = (String, Any, UnsafeMutablePointer<Bool>
 public typealias LevelDBLazyKeyValueBlock = (String, () -> Any?, UnsafeMutablePointer<Bool>) -> Void
 
 #if swift(>=3.0)
-    public let stringEncoding = String.Encoding.utf8.rawValue
+    public let stringEncodingRawValue = String.Encoding.utf8.rawValue
 #else
-    public let stringEncoding = NSUTF8StringEncoding
+    public let stringEncodingRawValue = NSUTF8StringEncoding
     typealias UnsafeMutableRawPointer = UnsafeMutablePointer<Void>
     public typealias Data = NSData
     public typealias Any = AnyObject
@@ -352,7 +352,7 @@ public class LevelDB {
                         break
                         }
                     }
-                    if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?._bridgeToSwift() { 
+                    if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue)?._bridgeToSwift() { 
                         if let predicate = predicate {
                             var iData: UnsafeMutableRawPointer? = nil
                             var iDataLength: Int = 0
@@ -374,7 +374,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue) as? String {
                     if let predicate = predicate {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
@@ -436,7 +436,7 @@ public class LevelDB {
                         break
                         }
                     }
-                    if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?._bridgeToSwift() {
+                    if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue)?._bridgeToSwift() {
                         var iData: UnsafeMutableRawPointer? = nil
                         var iDataLength: Int = 0
                         levelDBIteratorGetValue(iterator, &iData, &iDataLength)
@@ -457,7 +457,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue) as? String {
                     var iData: UnsafeMutableRawPointer = nil
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength)
@@ -511,7 +511,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding)?._bridgeToSwift() {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue)?._bridgeToSwift() {
                     let getter : () -> Any? = {
                         var iData: UnsafeMutableRawPointer? = nil
                             var iDataLength: Int = 0
@@ -531,7 +531,7 @@ public class LevelDB {
                         break
                     }
                 }
-                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncoding) as? String {
+                if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue) as? String {
                     let getter : () -> Any? = {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0

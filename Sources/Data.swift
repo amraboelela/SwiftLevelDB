@@ -10,6 +10,12 @@
 
 import Foundation
 
+#if swift(>=3.0)
+    public let stringEncoding = String.Encoding.utf8
+#else
+    public let stringEncoding = NSUTF8StringEncoding
+#endif
+
 extension Data {
 
     public var simpleDescription : String {
