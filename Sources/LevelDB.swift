@@ -353,13 +353,13 @@ public class LevelDB {
                         }
                     }
                     if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue)?._bridgeToSwift() { 
-                        if let predicate = predicate {
+                        if predicate =! nil {
                             var iData: UnsafeMutableRawPointer? = nil
                             var iDataLength: Int = 0
                             levelDBIteratorGetValue(iterator, &iData, &iDataLength)
                             if let iData = iData {
                                 let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
-                                if predicate.evaluate(with: v) {
+                                if predicate!.evaluate(with: v) {
                                     block(iKeyString, &stop)
                                 }
                             }
@@ -375,12 +375,12 @@ public class LevelDB {
                     }
                 }
                 if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue) as? String {
-                    if let predicate = predicate {
+                    if predicate != nil {
                         var iData: UnsafeMutableRawPointer = nil
                         var iDataLength: Int = 0
                         levelDBIteratorGetValue(iterator, &iData, &iDataLength)
                         let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength))
-                        if predicate.evaluateWithObject(v) {
+                        if predicate!.evaluateWithObject(v) {
                             block(iKeyString, &stop)
                         }
                     } else {
@@ -441,8 +441,8 @@ public class LevelDB {
                         var iDataLength: Int = 0
                         levelDBIteratorGetValue(iterator, &iData, &iDataLength)
                         if let iData = iData, let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
-                            if let predicate = predicate {
-                                if predicate.evaluate(with: v) {
+                            if predicate != nil {
+                                if predicate!.evaluate(with: v) {
                                     block(iKeyString, v, &stop)
                                 }
                             } else {
@@ -462,8 +462,8 @@ public class LevelDB {
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength)
                     if let v = decoder(iKeyString, NSData(bytes: iData, length: iDataLength)) {
-                        if let predicate = predicate {
-                            if predicate.evaluateWithObject(v) {
+                        if predicate != nil {
+                            if predicate!.evaluateWithObject(v) {
                                 block(iKeyString, v, &stop)
                             }
                         } else {
