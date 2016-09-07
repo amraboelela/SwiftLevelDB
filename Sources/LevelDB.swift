@@ -353,7 +353,7 @@ public class LevelDB {
                         }
                     }
                     if let iKeyString = NSString(bytes: iKey, length: iKeyLength, encoding: stringEncodingRawValue)?._bridgeToSwift() { 
-                        if predicate =! nil {
+                        if predicate != nil {
                             var iData: UnsafeMutableRawPointer? = nil
                             var iDataLength: Int = 0
                             levelDBIteratorGetValue(iterator, &iData, &iDataLength)
