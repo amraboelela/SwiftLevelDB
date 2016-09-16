@@ -22,12 +22,4 @@ extension String {
             return UnsafeMutablePointer<Int8>((self as NSString).UTF8String)
         #endif
     }
-    
-    public static func fromCString(_ cString: UnsafeMutablePointer<Int8>) -> String {
-        if let result = NSString(bytes: cString, length: Int(strlen(cString)), encoding: String.Encoding.utf8.rawValue)?._bridgeToSwift() {
-            return result
-        } else {
-            return ""
-        }
-    }
 }
