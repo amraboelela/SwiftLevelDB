@@ -34,7 +34,7 @@ public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPat
     return [""]
 }
 
-class LevelDB {
+public class LevelDB {
     
     var name: String
     var path: String
