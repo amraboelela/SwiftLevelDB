@@ -19,7 +19,7 @@ extension String {
         #if swift(>=3.0)        
             return UnsafeMutablePointer<Int8>(mutating: NSString(string: self).utf8String)!
         #else
-            return UnsafeMutablePointer<Int8>((self as NSString).UTF8String)
+            return UnsafeMutablePointer<Int8>((self as NSString).utf8String)
         #endif
     }
 }

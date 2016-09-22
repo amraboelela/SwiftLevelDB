@@ -8,11 +8,11 @@
 
 import Foundation
 
-extension NSData {
+extension Foundation.Data {
     
     #if !swift(>=3.0)
     var mutableBytes: UnsafeMutableRawPointer {
-        return UnsafeMutableRawPointer(self.bytes)
+        return UnsafeMutableRawPointer(mutating: (self as NSData).bytes.bindMemory(to: Void.self, capacity: self.count))
     }
     #endif
 }
