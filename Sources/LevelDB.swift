@@ -286,7 +286,7 @@ public class LevelDB {
                         break
                     }
                 }
-                let iKeyString = String(cString: iKey)
+                let iKeyString = String.fromCString(iKey, length: iKeyLength)
                 if predicate != nil {
                     var iData: UnsafeMutableRawPointer? = nil
                     var iDataLength: Int = 0
@@ -340,7 +340,7 @@ public class LevelDB {
                         break
                     }
                 }
-                let iKeyString = String(cString: iKey)
+                let iKeyString = String.fromCString(iKey, length: iKeyLength)
                 var iData: UnsafeMutableRawPointer? = nil
                 var iDataLength: Int = 0
                 levelDBIteratorGetValue(iterator, &iData, &iDataLength)
@@ -384,7 +384,7 @@ public class LevelDB {
                         break
                     }
                 }
-                let iKeyString = String(cString: iKey)
+                let iKeyString = String.fromCString(iKey, length: iKeyLength)
                 let getter : () -> Any? = {
                     var iData: UnsafeMutableRawPointer? = nil
                     var iDataLength: Int = 0
