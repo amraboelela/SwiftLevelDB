@@ -20,12 +20,14 @@ extension String {
     }
     
     public static func fromCString(_ cString: UnsafeMutablePointer<Int8>, length: Int) -> String {
-        return NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue) as! String;
-        /*
-         if let result = NSString(bytes: cString, length: Int(strlen(cString)), encoding: String.Encoding.utf8.rawValue)?._bridgeToSwift() {
-         return result
-         } else {
-         return ""
-         }*/
-    }
+        #if os(Linux) 
+            if let result =  NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)?._bridgeToSwift() {
+                return result
+            } else {
+                return ""
+            }
+        #else
+            return NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue) as! String;
+        #endif
+   }
 }
