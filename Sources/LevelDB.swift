@@ -449,11 +449,7 @@ public class LevelDB {
             // we need to start on the next key (maybe discarding the first iteration)
             if backward {
                 var i: Int = len - 1
-                #if swift(>=3.0)
-                    let startingKeyPtr = malloc(len)!.bindMemory(to: Int8.self, capacity: len)
-                #else
-                    let startingKeyPtr = UnsafeMutablePointer<Int8>(malloc(len))
-                #endif
+                let startingKeyPtr = malloc(len)!.bindMemory(to: Int8.self, capacity: len)
                 memcpy(startingKeyPtr, startingKey.cString, len)
                 var keyChar = startingKeyPtr
                 while true {

@@ -10,11 +10,7 @@
 
 import Foundation
 
-#if swift(>=3.0)
-    public let stringEncoding = String.Encoding.utf8
-#else
-    public let stringEncoding = String.Encoding.utf8
-#endif
+public let stringEncoding = String.Encoding.utf8
 
 extension Data {
 
