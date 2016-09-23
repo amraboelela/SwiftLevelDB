@@ -16,8 +16,6 @@ public typealias LevelDBKeyBlock = (String, UnsafeMutablePointer<Bool>) -> Void
 public typealias LevelDBKeyValueBlock = (String, Any, UnsafeMutablePointer<Bool>) -> Void
 public typealias LevelDBLazyKeyValueBlock = (String, () -> Any?, UnsafeMutablePointer<Bool>) -> Void
 
-//public let stringEncodingRawValue = String.Encoding.utf8.rawValue
-
 public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
     let bundle = Bundle.main
     let bundlePath = bundle.bundlePath

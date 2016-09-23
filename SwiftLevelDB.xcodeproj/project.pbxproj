@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0C07D1921D78DE0000BEFAE4 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C07D1901D78DE0000BEFAE4 /* Int.swift */; };
-		0C07D1951D78E2E100BEFAE4 /* NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C07D1941D78E2E100BEFAE4 /* NSData.swift */; };
 		0C07D1981D78F1A500BEFAE4 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C07D1961D78F1A500BEFAE4 /* Data.swift */; };
 		0C07D1991D78F1A500BEFAE4 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C07D1971D78F1A500BEFAE4 /* NSObject.swift */; };
 		0C14714A1D6B2A1000C16920 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1471491D6B2A1000C16920 /* LevelDB.swift */; };
@@ -18,8 +16,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0C07D1901D78DE0000BEFAE4 /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Int.swift; path = Sources/Int.swift; sourceTree = "<group>"; };
-		0C07D1941D78E2E100BEFAE4 /* NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSData.swift; path = Sources/NSData.swift; sourceTree = "<group>"; };
 		0C07D1961D78F1A500BEFAE4 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Data.swift; path = Sources/Data.swift; sourceTree = "<group>"; };
 		0C07D1971D78F1A500BEFAE4 /* NSObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSObject.swift; path = Sources/NSObject.swift; sourceTree = "<group>"; };
 		0C1471491D6B2A1000C16920 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LevelDB.swift; path = Sources/LevelDB.swift; sourceTree = "<group>"; };
@@ -47,9 +43,7 @@
 			isa = PBXGroup;
 			children = (
 				0C07D1961D78F1A500BEFAE4 /* Data.swift */,
-				0C07D1901D78DE0000BEFAE4 /* Int.swift */,
 				0C1471491D6B2A1000C16920 /* LevelDB.swift */,
-				0C07D1941D78E2E100BEFAE4 /* NSData.swift */,
 				0C07D1971D78F1A500BEFAE4 /* NSObject.swift */,
 				0C4F5EEE1D6B826900BEE4AE /* String.swift */,
 			);
@@ -171,11 +165,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C07D1921D78DE0000BEFAE4 /* Int.swift in Sources */,
 				0C07D1981D78F1A500BEFAE4 /* Data.swift in Sources */,
 				0C4F5EEF1D6B826900BEE4AE /* String.swift in Sources */,
 				0C07D1991D78F1A500BEFAE4 /* NSObject.swift in Sources */,
-				0C07D1951D78E2E100BEFAE4 /* NSData.swift in Sources */,
 				0C14714A1D6B2A1000C16920 /* LevelDB.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

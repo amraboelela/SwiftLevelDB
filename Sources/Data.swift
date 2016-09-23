@@ -10,12 +10,10 @@
 
 import Foundation
 
-public let stringEncoding = String.Encoding.utf8
-
 extension Data {
 
     public var simpleDescription : String {
-        if let result = String(data: self, encoding: stringEncoding) {
+        if let result = String(data: self, encoding: String.Encoding.utf8) {
             return result
         } else {
             return ""
