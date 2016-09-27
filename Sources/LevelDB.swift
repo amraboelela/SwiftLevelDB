@@ -32,13 +32,13 @@ public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPat
     return [""]
 }
 
-public class LevelDB {
+open class LevelDB {
     
     var name: String
     var path: String
-    open var encoder: (String, Any) -> Data?
-    open var decoder: (String, Data) -> Any?
-    var db: UnsafeMutableRawPointer?
+    public var encoder: (String, Any) -> Data?
+    public var decoder: (String, Data) -> Any?
+    public var db: UnsafeMutableRawPointer?
     
     // MARK: - Life cycle
     
@@ -60,14 +60,19 @@ public class LevelDB {
         }
         do {
             let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
-            let fm = FileManager.default
-            try fm.createDirectory(atPath: dirpath, withIntermediateDirectories:true, attributes:nil)
+            try FileManager.default.createDirectory(atPath: dirpath, withIntermediateDirectories:true, attributes:nil)
         }
-        catch let error {
+        catch {
             print("Problem creating parent directory: \(error)")
         }
+        self.open()
         //print("path: \(path)")
-        self.db = levelDBOpen(path.cString)
+        //self.db = levelDBOpen(path.cString)
+    }
+    
+    convenience public init(name: String) {
+        let path = NSURL(fileURLWithPath: LevelDB.getLibraryPath(), isDirectory: true).appendingPathComponent(name)?.path ?? ""
+        self.init(path: path, name: name)
     }
     
     deinit {
@@ -76,12 +81,7 @@ public class LevelDB {
     
     // MARK: - Class methods
     
-    open class func databaseInLibraryWithName(_ name: String) -> LevelDB {
-        let path = NSURL(fileURLWithPath: getLibraryPath(), isDirectory: true).appendingPathComponent(name)?.path ?? ""
-        return self.init(path: path, name: name)
-    }
-    
-    class func getLibraryPath() -> String {
+    public class func getLibraryPath() -> String {
         var paths = SearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
         return paths[0]
     }
@@ -410,10 +410,13 @@ public class LevelDB {
         do {
             let fileManager = FileManager.default
             try fileManager.removeItem(atPath: path)
-        }
-        catch let error as NSError {
+        } catch {
             print("error deleting database at path \(path), \(error)")
         }
+    }
+    
+    public func open() {
+        self.db = levelDBOpen(path.cString)
     }
     
     open func close() {
