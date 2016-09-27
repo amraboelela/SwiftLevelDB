@@ -428,8 +428,7 @@ open class LevelDB {
     
     open func closed() -> Bool {
         if let db = db {
-            levelDBDelete(db)
-            self.db = nil
+            close()
         }
         return db == nil
     }
