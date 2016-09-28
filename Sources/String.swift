@@ -10,12 +10,12 @@
 
 import Foundation
 
-extension String {
+public extension String {
     var length: Int {
         return characters.count
     }
     
-    var cString: UnsafeMutablePointer<Int8> {
+    public var cString: UnsafeMutablePointer<Int8> {
         return UnsafeMutablePointer<Int8>(mutating: NSString(string: self).utf8String)!
     }
     
