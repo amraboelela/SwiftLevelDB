@@ -126,7 +126,7 @@ open class LevelDB {
         }
     }
     
-    open func addEntriesFromDictionary(_ dictionary: [String: Any]) {
+    open func addEntriesFromDictionary(_ dictionary: [String : Any]) {
         for (key, value) in dictionary {
             self[key] = value
         }
