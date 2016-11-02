@@ -11,7 +11,7 @@ import Foundation
 import Dispatch
 import SwiftLevelDB
 
-@testable import SwiftLevelDBApp
+@testable import SwiftLevelDB
 
 class BaseTestClass: XCTestCase {
     
