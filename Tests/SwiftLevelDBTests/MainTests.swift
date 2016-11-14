@@ -146,21 +146,21 @@ class MainTests: BaseTestClass {
         }
         var pairs = [[Any]]()
         for i in 0..<n {
-            lvldb_test_queue.sync {
-                var r: Int
-                var key: String
-                repeat {
-                    #if os(Linux)
-                        r = Int(random() % (5000 + 1))
-                    #else
-                        r = Int(arc4random_uniform(5000))
-                    #endif
-                    key = "\(r)"
-                } while db.objectExistsForKey(key)
-                let value = [r, i]
-                pairs.append([key, value])
-                db[key] = value
-            }
+            //lvldb_test_queue.sync {
+            var r: Int
+            var key: String
+            repeat {
+                #if os(Linux)
+                    r = Int(random() % (5000 + 1))
+                #else
+                    r = Int(arc4random_uniform(5000))
+                #endif
+                key = "\(r)"
+            } while db.objectExistsForKey(key)
+            let value = [r, i]
+            pairs.append([key, value])
+            db[key] = value
+            //}
         }
         pairs.sort{
             let obj1 = $0[0] as! String

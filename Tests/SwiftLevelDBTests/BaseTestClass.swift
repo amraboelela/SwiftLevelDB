@@ -16,7 +16,7 @@ import SwiftLevelDB
 class BaseTestClass: XCTestCase {
     
     var db : LevelDB?
-    var lvldb_test_queue = DispatchQueue(label: "Create DB")
+    //var lvldb_test_queue = DispatchQueue(label: "Create DB")
     
     override func setUp() {
         super.setUp()
