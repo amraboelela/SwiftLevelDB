@@ -36,8 +36,8 @@ open class LevelDB {
     
     var name: String
     var path: String
-    public var encoder: (String, Any) -> Data?
-    public var decoder: (String, Data) -> Any?
+    public var encoder: (String, [String : Any]) -> Data?
+    public var decoder: (String, Data) -> [String : Any]?
     public var db: UnsafeMutableRawPointer?
     
     // MARK: - Life cycle
@@ -56,7 +56,7 @@ open class LevelDB {
             return Data(bytes: key.cString, count: key.length)
         }
         self.decoder = {key, data in
-            return ""
+            return ["" : ""]
         }
         do {
             let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
@@ -92,7 +92,7 @@ open class LevelDB {
         return "<LevelDB:\(self) path: \(path)>"
     }
     
-    open func setObject(_ value: Any?, forKey key: String) {
+    open func setObject(_ value: [String : Any]?, forKey key: String) {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return
@@ -115,7 +115,7 @@ open class LevelDB {
         }
     }
     
-    open subscript(key: String) -> Any? {
+    open subscript(key: String) -> [String : Any]? {
         get {
             // return an appropriate subscript value here
             return objectForKey(key)
@@ -126,13 +126,13 @@ open class LevelDB {
         }
     }
     
-    open func addEntriesFromDictionary(_ dictionary: [String : Any]) {
+    open func addEntriesFromDictionary(_ dictionary: [String : [String : Any]]) {
         for (key, value) in dictionary {
             self[key] = value
         }
     }
     
-    open func objectForKey(_ key: String) -> Any? {
+    open func objectForKey(_ key: String) -> [String : Any]? {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return nil
