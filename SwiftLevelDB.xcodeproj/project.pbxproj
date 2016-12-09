@@ -16,6 +16,7 @@
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
 		0C4F5E721D6B398D00BEE4AE /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4F5E711D6B398D00BEE4AE /* CLevelDB.framework */; };
 		0C4F5EEF1D6B826900BEE4AE /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4F5EEE1D6B826900BEE4AE /* String.swift */; };
+		0C649CAC1DFA7A6D0072F559 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 0C649CAB1DFA7A6D0072F559 /* LICENSE */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		0C4F5EEA1D6B79A700BEE4AE /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0C4F5EEB1D6B79A700BEE4AE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0C4F5EEE1D6B826900BEE4AE /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = Sources/String.swift; sourceTree = "<group>"; };
+		0C649CAB1DFA7A6D0072F559 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				0C4F5EEA1D6B79A700BEE4AE /* Package.swift */,
 				0C36D3AD1DC996A70081878D /* Info.plist */,
 				0C4F5EEB1D6B79A700BEE4AE /* README.md */,
+				0C649CAB1DFA7A6D0072F559 /* LICENSE */,
 				0C4F5E8A1D6B71A600BEE4AE /* Frameworks */,
 				0C1471441D6B24A900C16920 /* Sources */,
 				0C36D3AF1DC996CD0081878D /* Tests */,
@@ -225,6 +228,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C649CAC1DFA7A6D0072F559 /* LICENSE in Resources */,
 				0C36D3AE1DC996A70081878D /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -466,6 +470,7 @@
 				0C36D3C71DC996EC0081878D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
