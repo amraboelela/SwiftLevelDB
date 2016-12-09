@@ -71,8 +71,8 @@ open class LevelDB {
     }
     
     convenience public init(name: String) {
-        let path = NSURL(fileURLWithPath: LevelDB.getLibraryPath(), isDirectory: true).appendingPathComponent(name)?.path ?? ""
-        self.init(path: path, name: name)
+        //let path = NSURL(fileURLWithPath: LevelDB.getLibraryPath(), isDirectory: true).appendingPathComponent(name)?.path ?? ""
+        self.init(path: name, name: name)
     }
     
     deinit {
