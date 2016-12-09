@@ -1,6 +1,6 @@
 
 import XCTest
-@testable import SwiftLevelDBAppTests
+@testable import SwiftLevelDBTests
 
 XCTMain([
      testCase(MainTests.allTests),
