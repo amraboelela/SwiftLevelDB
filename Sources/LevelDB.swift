@@ -237,7 +237,7 @@ open class LevelDB {
     
     open func keysByFilteringWithPredicate(_ predicate: NSPredicate) -> [String] {
         var keys = [String]()
-        enumerateKeysAndObjectsWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
+        enumerateKeysAndValuesWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
             keys.append(key)
         })
         return keys
@@ -246,7 +246,7 @@ open class LevelDB {
     open func dictionaryByFilteringWithPredicate(_ predicate: NSPredicate) -> [String : Any] {
         var results = [String : Any]()
         
-        enumerateKeysAndObjectsWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
+        enumerateKeysAndValuesWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
             results[key] = obj
         })
         return results
@@ -307,16 +307,16 @@ open class LevelDB {
         levelDBIteratorDelete(iterator)
     }
     
-    open func enumerateKeysAndObjects(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyValueBlock) {
+    open func enumerateKeysAndValues(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyValueBlock) {
         
-        enumerateKeysAndObjectsWithPredicate(nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
+        enumerateKeysAndValuesWithPredicate(nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
     }
     
     open func enumerateKeysAndValuesUsingBlock(_ block: LevelDBKeyValueBlock) {
-        enumerateKeysAndObjectsWithPredicate(nil, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: block)
+        enumerateKeysAndValuesWithPredicate(nil, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: block)
     }
     
-    open func enumerateKeysAndObjectsWithPredicate(_ predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBKeyValueBlock) {
+    open func enumerateKeysAndValuesWithPredicate(_ predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBKeyValueBlock) {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return
@@ -360,7 +360,7 @@ open class LevelDB {
         levelDBIteratorDelete(iterator);
     }
     
-    open func enumerateKeysAndObjectsLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBLazyKeyValueBlock) {
+    open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBLazyKeyValueBlock) {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return
