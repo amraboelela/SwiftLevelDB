@@ -295,7 +295,7 @@ class MainTests: BaseTestClass {
         var pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the whole set yields pairs in the correct orders
         var r = 0
-        db.enumerateKeysAndObjectsUsingBlock({lkey, _value, stop in
+        db.enumerateKeysAndValuesUsingBlock({lkey, _value, stop in
             var pair = pairs[r]
             let key = pair[0]
             let value = pair[1]

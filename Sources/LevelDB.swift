@@ -312,7 +312,7 @@ open class LevelDB {
         enumerateKeysAndObjectsWithPredicate(nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
     }
     
-    open func enumerateKeysAndObjectsUsingBlock(_ block: LevelDBKeyValueBlock) {
+    open func enumerateKeysAndValuesUsingBlock(_ block: LevelDBKeyValueBlock) {
         enumerateKeysAndObjectsWithPredicate(nil, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: block)
     }
     
