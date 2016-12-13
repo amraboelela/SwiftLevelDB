@@ -45,12 +45,12 @@ open class LevelDB {
     required public init(path: String, name: String) {
         self.name = name
         self.path = path
-        self.encoder = {key, value in
+        self.encoder = { key, value in
             #if DEBUG
                 //var onceToken: dispatch_once_t
                 //dispatch_once(onceToken, {() -> Void in
-                    print("No encoder block was set for this database [\(name)]")
-                    print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
+                print("No encoder block was set for this database [\(name)]")
+                print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
                 //})
             #endif
             return Data(bytes: key.cString, count: key.length)
