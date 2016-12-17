@@ -92,7 +92,7 @@ open class LevelDB {
         return "<LevelDB:\(self) path: \(path)>"
     }
     
-    open func setObject(_ value: [String : Any]?, forKey key: String) {
+    open func setValue(_ value: [String : Any]?, forKey key: String) {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return
@@ -104,13 +104,13 @@ open class LevelDB {
                     status = levelDBItemPut(db, key.cString, key.length, mutableBytes, data.count)
                 }
                 if status != 0 {
-                    print("setObject: Problem storing key/value pair in database")
+                    print("setValue: Problem storing key/value pair in database")
                 }
             } else {
-                print("Error: setObject: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
+                print("Error: setValue: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
             }
         } else {
-            print("setObject: newValue is nil")
+            print("setValue: newValue is nil")
             levelDBItemDelete(db, key.cString, key.length)
         }
     }
@@ -118,11 +118,11 @@ open class LevelDB {
     open subscript(key: String) -> [String : Any]? {
         get {
             // return an appropriate subscript value here
-            return objectForKey(key)
+            return valueForKey(key)
         }
         set(newValue) {
             // perform a suitable setting action here
-            setObject(newValue, forKey: key)
+            setValue(newValue, forKey: key)
         }
     }
     
@@ -132,7 +132,7 @@ open class LevelDB {
         }
     }
     
-    open func objectForKey(_ key: String) -> [String : Any]? {
+    open func valueForKey(_ key: String) -> [String : Any]? {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return nil
@@ -151,7 +151,7 @@ open class LevelDB {
         }
     }
     
-    open func objectsForKeys(_ keys: [String]) -> [Any?] {
+    open func valuesForKeys(_ keys: [String]) -> [Any?] {
         var result = [Any?]()
         for key in keys {
             result.append(self[key])
@@ -159,7 +159,7 @@ open class LevelDB {
         return result
     }
     
-    open func objectExistsForKey(_ key: String) -> Bool {
+    open func valueExistsForKey(_ key: String) -> Bool {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return false
@@ -175,28 +175,28 @@ open class LevelDB {
         }
     }
     
-    open func removeObjectForKey(_ key: String) {
+    open func removeValueForKey(_ key: String) {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return
         }
         let status = levelDBItemDelete(db, key.cString, key.length)
         if status != 0 {
-            print("Problem removing object with key: \(key) in database")
+            print("Problem removing value with key: \(key) in database")
         }
     }
     
-    open func removeObjectsForKeys(_ keys: [String]) {
+    open func removeValuesForKeys(_ keys: [String]) {
         for key in keys {
-            removeObjectForKey(key)
+            removeValueForKey(key)
         }
     }
     
-    open func removeAllObjects() {
-        self.removeAllObjectsWithPrefix("")
+    open func removeAllValues() {
+        self.removeAllValuesWithPrefix("")
     }
     
-    open func removeAllObjectsWithPrefix(_ prefix: String) {
+    open func removeAllValuesWithPrefix(_ prefix: String) {
         guard let db = db else {
             print("Database reference is not existent (it has probably been closed)")
             return
