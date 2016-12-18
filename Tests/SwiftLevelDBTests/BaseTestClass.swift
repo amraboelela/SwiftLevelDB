@@ -26,20 +26,25 @@ class BaseTestClass: XCTestCase {
             print("Database reference is not existent, failed to open / create database")
             return
         }
-        db.removeAllObjects()
-        db.encoder = {(key: String, value: Any) -> Data? in
+        db.removeAllValues()
+        db.encoder = {(key: String, value: [String : Any]) -> Data? in
             do {
-                return try JSONSerialization.data(withJSONObject: value)
-            } catch let error {
-                print("Problem encoding data: \(error)")
+                let data = try JSONSerialization.data(withJSONObject: value)
+                return data
+            } catch {
+                NSLog("Problem encoding data: \(error)")
                 return nil
             }
         }
-        db.decoder = {(key: String, data: Data) -> Any? in
+        db.decoder = {(key: String, data: Data) -> [String : Any]? in
             do {
-                return try JSONSerialization.jsonObject(with: data)
-            } catch let error {
-                print("Problem decoding data: \(error)")
+                if let result = try JSONSerialization.jsonObject(with: data) as? [String : Any] {
+                    return result
+                } else {
+                    return nil
+                }
+            } catch {
+                NSLog("Problem decoding data: \(error)")
                 return nil
             }
         }
