@@ -17,6 +17,7 @@
 		0C4F5E721D6B398D00BEE4AE /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4F5E711D6B398D00BEE4AE /* CLevelDB.framework */; };
 		0C4F5EEF1D6B826900BEE4AE /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4F5EEE1D6B826900BEE4AE /* String.swift */; };
 		0C649CAC1DFA7A6D0072F559 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 0C649CAB1DFA7A6D0072F559 /* LICENSE */; };
+		0CD3F78E1E087AE80002A697 /* clean in Resources */ = {isa = PBXBuildFile; fileRef = 0CD3F78D1E087AE80002A697 /* clean */; };
 		63F23A9F1DFCC67500F000E8 /* tag in Resources */ = {isa = PBXBuildFile; fileRef = 63F23A9E1DFCC67500F000E8 /* tag */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		0C4F5EEB1D6B79A700BEE4AE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0C4F5EEE1D6B826900BEE4AE /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = Sources/String.swift; sourceTree = "<group>"; };
 		0C649CAB1DFA7A6D0072F559 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		0CD3F78D1E087AE80002A697 /* clean */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = clean; sourceTree = "<group>"; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				0C36D3AD1DC996A70081878D /* Info.plist */,
+				0CD3F78D1E087AE80002A697 /* clean */,
 				0C4F5EEA1D6B79A700BEE4AE /* Package.swift */,
 				63F23A9E1DFCC67500F000E8 /* tag */,
 				0C4F5EEB1D6B79A700BEE4AE /* README.md */,
@@ -231,6 +234,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CD3F78E1E087AE80002A697 /* clean in Resources */,
 				63F23A9F1DFCC67500F000E8 /* tag in Resources */,
 				0C649CAC1DFA7A6D0072F559 /* LICENSE in Resources */,
 				0C36D3AE1DC996A70081878D /* Info.plist in Resources */,
