@@ -2,4 +2,4 @@
 
 swift package clean
 rm -rf .build
-rm TestDB
+rm -r TestDB
