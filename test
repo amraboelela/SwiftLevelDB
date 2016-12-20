@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PARAM=x$1
+
+if [ $PARAM = "xrelease" ]; then
+    ./build release
+else
+    ./build
+fi
+swift test
