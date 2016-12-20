@@ -3,8 +3,7 @@
 PARAM=x$1
 
 if [ $PARAM = "xrelease" ]; then
-    ./build release
+    swift test
 else
-    ./build
+    swift test -Xswiftc -DDEBUG
 fi
-swift test
