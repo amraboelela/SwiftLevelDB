@@ -13,8 +13,8 @@ import Foundation
 import CLevelDB
 
 public typealias LevelDBKeyBlock = (String, UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBKeyValueBlock = (String, Any, UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBLazyKeyValueBlock = (String, () -> Any?, UnsafeMutablePointer<Bool>) -> Void
+public typealias LevelDBKeyValueBlock = (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void
+public typealias LevelDBLazyKeyValueBlock = (String, () -> [String : Any]?, UnsafeMutablePointer<Bool>) -> Void
 
 public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
     let bundle = Bundle.main
@@ -151,8 +151,8 @@ open class LevelDB {
         }
     }
     
-    open func valuesForKeys(_ keys: [String]) -> [Any?] {
-        var result = [Any?]()
+    open func valuesForKeys(_ keys: [String]) -> [[String : Any]?] {
+        var result = [[String : Any]?]()
         for key in keys {
             result.append(self[key])
         }
@@ -383,7 +383,7 @@ open class LevelDB {
                     }
                 }
                 let iKeyString = String.fromCString(iKey, length: iKeyLength)
-                let getter : () -> Any? = {
+                let getter : () -> [String : Any]? = {
                     var iData: UnsafeMutableRawPointer? = nil
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength);
