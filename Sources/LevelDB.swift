@@ -110,7 +110,7 @@ open class LevelDB {
                 print("Error: setValue: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
             }
         } else {
-            print("setValue: newValue is nil")
+            //print("setValue: newValue is nil")
             levelDBItemDelete(db, key.cString, key.length)
         }
     }
