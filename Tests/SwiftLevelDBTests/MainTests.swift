@@ -238,6 +238,25 @@ class MainTests: BaseTestClass {
         XCTAssertEqual(i, 0, "")
     }
     
+    func testForwardPrefixedEnumerationsWithStartingKey() {
+        guard let db = db else {
+            print("Database reference is not existent, failed to open / create database")
+            return
+        }
+        let valueFor = {(i: Int) -> [String : Int] in
+            return ["key" : i]
+        }
+        let pairs = ["tess:0" : valueFor(0), "tesa:0" : valueFor(0), "test:1" : valueFor(1), "test:2" : valueFor(2), "test:3" : valueFor(3), "test:4" : valueFor(4), "tesy:5" : valueFor(5)]
+        var i = 1
+        db.addEntriesFromDictionary(pairs)
+        db.enumerateKeys(backward: false, startingAtKey: "tesa:0", andPrefix: "test", usingBlock: {lkey, stop in
+            let key = "test:\(i)"
+            XCTAssertEqual(lkey, key, "Keys should be restricted to the prefixed region")
+            i += 1
+        })
+        XCTAssertEqual(i, 5, "")
+    }
+    
     func testPrefixedEnumerations() {
         guard let db = db else {
             print("Database reference is not existent, failed to open / create database")
