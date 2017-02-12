@@ -49,7 +49,6 @@ open class LevelDB {
             #if DEBUG
                 print("No encoder block was set for this database [\(name)]")
                 print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
-                //})
             #endif
             return Data(bytes: key.cString, count: key.length)
         }
