@@ -47,8 +47,6 @@ open class LevelDB {
         self.path = path
         self.encoder = { key, value in
             #if DEBUG
-                //var onceToken: dispatch_once_t
-                //dispatch_once(onceToken, {() -> Void in
                 print("No encoder block was set for this database [\(name)]")
                 print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
                 //})
@@ -58,20 +56,18 @@ open class LevelDB {
         self.decoder = {key, data in
             return ["" : ""]
         }
-        do {
-            let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
-            try FileManager.default.createDirectory(atPath: dirpath, withIntermediateDirectories:true, attributes:nil)
-        }
-        catch {
-            print("Problem creating parent directory: \(error)")
-        }
+        #if os(Linux)
+            do {
+                let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
+                try FileManager.default.createDirectory(atPath: dirpath, withIntermediateDirectories:false, attributes:nil)
+            } catch {
+                print("Problem creating parent directory: \(error)")
+            }
+        #endif
         self.open()
-        //print("path: \(path)")
-        //self.db = levelDBOpen(path.cString)
     }
     
     convenience public init(name: String) {
-        //let path = NSURL(fileURLWithPath: LevelDB.getLibraryPath(), isDirectory: true).appendingPathComponent(name)?.path ?? ""
         self.init(path: name, name: name)
     }
     
@@ -82,8 +78,10 @@ open class LevelDB {
     // MARK: - Class methods
     
     public class func getLibraryPath() -> String {
+        let documentsDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+
         var paths = SearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
-        return paths[0]
+        return documentsDirectory.absoluteString //paths[0]
     }
     
     // MARK: - Accessors
