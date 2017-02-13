@@ -77,10 +77,8 @@ open class LevelDB {
     // MARK: - Class methods
     
     public class func getLibraryPath() -> String {
-        let documentsDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
-
-        var paths = SearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
-        return documentsDirectory.absoluteString //paths[0]
+        let libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+        return libraryDirectory.absoluteString
     }
     
     // MARK: - Accessors
