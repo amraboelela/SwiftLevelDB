@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "6D51C6D006043F4D4BC8BD502F056D391D4C7A56",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "6D51C6D006043F4D4BC8BD502F056D391D4C7A56" : 9223372036854775807,
+    "D8AE9B5952F6EFD0E6063DBD3DC6ABB711A1D308" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6C713EA6-08FB-4D44-A3B8-12BE3A3201AF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "6D51C6D006043F4D4BC8BD502F056D391D4C7A56" : "SwiftLevelDB\/",
+    "D8AE9B5952F6EFD0E6063DBD3DC6ABB711A1D308" : "CLevelDB\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SwiftLevelDB",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "SwiftLevelDB.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/amraboelela\/SwiftLevelDB.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6D51C6D006043F4D4BC8BD502F056D391D4C7A56"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/amraboelela\/CLevelDB.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D8AE9B5952F6EFD0E6063DBD3DC6ABB711A1D308"
+    }
+  ]
+}
