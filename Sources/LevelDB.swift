@@ -256,7 +256,7 @@ open class LevelDB {
     // MARK: - Enumeration
     
     open func enumerateKeys(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyBlock) {
-        NSLog("LevelDB enumerateKeys. backward: \(backward) startingAtKey key: \(key) perfix: \(prefix)")
+        NSLog("LevelDB enumerateKeys. backward: \(backward) startingAtKey key: \(key ?? "") perfix: \(prefix ?? "")")
         self.enumerateKeysWithPredicate(nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
     }
     
