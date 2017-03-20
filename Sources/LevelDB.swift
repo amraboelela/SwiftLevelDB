@@ -47,8 +47,8 @@ open class LevelDB {
         self.path = path
         self.encoder = { key, value in
             #if DEBUG
-                print("No encoder block was set for this database [\(name)]")
-                print("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
+                NSLog("No encoder block was set for this database [\(name)]")
+                NSLog("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
             #endif
             return Data(bytes: key.cString, count: key.length)
         }
@@ -60,7 +60,7 @@ open class LevelDB {
                 let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
                 try FileManager.default.createDirectory(atPath: dirpath, withIntermediateDirectories:false, attributes:nil)
             } catch {
-                print("Problem creating parent directory: \(error)")
+                NSLog("Problem creating parent directory: \(error)")
             }
         #endif
         self.open()
@@ -95,7 +95,7 @@ open class LevelDB {
     
     open func setValue(_ value: [String : Any]?, forKey key: String) {
         guard let db = db else {
-            print("Database reference is not existent (it has probably been closed)")
+            NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
         if let newValue = value {
@@ -105,13 +105,13 @@ open class LevelDB {
                     status = levelDBItemPut(db, key.cString, key.length, mutableBytes, data.count)
                 }
                 if status != 0 {
-                    print("setValue: Problem storing key/value pair in database")
+                    NSLog("setValue: Problem storing key/value pair in database")
                 }
             } else {
-                print("Error: setValue: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
+                NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
             }
         } else {
-            //print("setValue: newValue is nil")
+            //NSLog("setValue: newValue is nil")
             levelDBItemDelete(db, key.cString, key.length)
         }
     }
@@ -135,7 +135,7 @@ open class LevelDB {
     
     open func valueForKey(_ key: String) -> [String : Any]? {
         guard let db = db else {
-            print("Database reference is not existent (it has probably been closed)")
+            NSLog("Database reference is not existent (it has probably been closed)")
             return nil
         }
         var rawData: UnsafeMutableRawPointer? = nil
@@ -162,7 +162,7 @@ open class LevelDB {
     
     open func valueExistsForKey(_ key: String) -> Bool {
         guard let db = db else {
-            print("Database reference is not existent (it has probably been closed)")
+            NSLog("Database reference is not existent (it has probably been closed)")
             return false
         }
         var rawData: UnsafeMutableRawPointer? = nil
@@ -178,12 +178,12 @@ open class LevelDB {
     
     open func removeValueForKey(_ key: String) {
         guard let db = db else {
-            print("Database reference is not existent (it has probably been closed)")
+            NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
         let status = levelDBItemDelete(db, key.cString, key.length)
         if status != 0 {
-            print("Problem removing value with key: \(key) in database")
+            NSLog("Problem removing value with key: \(key) in database")
         }
     }
     
@@ -199,7 +199,7 @@ open class LevelDB {
     
     open func removeAllValuesWithPrefix(_ prefix: String) {
         guard let db = db else {
-            print("Database reference is not existent (it has probably been closed)")
+            NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
         let iterator = levelDBIteratorNew(db)
@@ -256,6 +256,7 @@ open class LevelDB {
     // MARK: - Enumeration
     
     open func enumerateKeys(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyBlock) {
+        NSLog("LevelDB enumerateKeys. backward: \(backward) startingAtKey key: \(key) perfix: \(prefix)")
         self.enumerateKeysWithPredicate(nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
     }
     
@@ -265,13 +266,13 @@ open class LevelDB {
     
     open func enumerateKeysWithPredicate(_ predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyBlock) {
         guard let db = db else {
-            print("Database reference is not existent (it has probably been closed)")
+            NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
         let iterator = levelDBIteratorNew(db)
         var stop = false
         guard let iteratorPointer = iterator else {
-            print("iterator is nil")
+            NSLog("iterator is nil")
             return
         }
         _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
@@ -319,13 +320,13 @@ open class LevelDB {
     
     open func enumerateKeysAndValuesWithPredicate(_ predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBKeyValueBlock) {
         guard let db = db else {
-            print("Database reference is not existent (it has probably been closed)")
+            NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
         let iterator = levelDBIteratorNew(db)
         var stop = false
         guard let iteratorPointer = iterator else {
-            print("iterator is nil")
+            NSLog("iterator is nil")
             return
         }
         _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
@@ -363,13 +364,13 @@ open class LevelDB {
     
     open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBLazyKeyValueBlock) {
         guard let db = db else {
-            print("Database reference is not existent (it has probably been closed)")
+            NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
         let iterator = levelDBIteratorNew(db)
         var stop = false
         guard let iteratorPointer = iterator else {
-            print("iterator is nil")
+            NSLog("iterator is nil")
             return
         }
         _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
@@ -412,7 +413,7 @@ open class LevelDB {
             let fileManager = FileManager.default
             try fileManager.removeItem(atPath: path)
         } catch {
-            print("error deleting database at path \(path), \(error)")
+            NSLog("error deleting database at path \(path), \(error)")
         }
     }
     
