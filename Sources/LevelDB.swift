@@ -43,8 +43,11 @@ open class LevelDB {
     // MARK: - Life cycle
     
     required public init(path: String, name: String) {
+        NSLog("LevelDB init")
         self.name = name
+        NSLog("LevelDB self.name: \(name)")
         self.path = path
+        NSLog("LevelDB path: \(path)")
         self.encoder = { key, value in
             #if DEBUG
                 NSLog("No encoder block was set for this database [\(name)]")
@@ -52,13 +55,17 @@ open class LevelDB {
             #endif
             return Data(bytes: key.cString, count: key.length)
         }
+        NSLog("LevelDB self.encoder")
         self.decoder = {key, data in
             return ["" : ""]
         }
+        NSLog("LevelDB self.decoder")
         #if os(Linux)
             do {
                 let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
+                NSLog("LevelDB dirpath: \(dirpath)")
                 try FileManager.default.createDirectory(atPath: dirpath, withIntermediateDirectories:false, attributes:nil)
+                NSLog("try FileManager.default")
             } catch {
                 NSLog("Problem creating parent directory: \(error)")
             }
