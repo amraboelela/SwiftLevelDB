@@ -64,7 +64,10 @@ open class LevelDB {
             do {
                 let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
                 NSLog("LevelDB dirpath: \(dirpath)")
-                try FileManager.default.createDirectory(atPath: dirpath, withIntermediateDirectories:false, attributes:nil)
+                let fileManager = FileManager.default
+                if !fileManager.fileExists(atPath: dirpath) {
+                    try fileManager.createDirectory(atPath: dirpath, withIntermediateDirectories:false, attributes:nil)
+                }
                 NSLog("try FileManager.default")
             } catch {
                 NSLog("Problem creating parent directory: \(error)")
