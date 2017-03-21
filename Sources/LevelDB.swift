@@ -43,11 +43,11 @@ open class LevelDB {
     // MARK: - Life cycle
     
     required public init(path: String, name: String) {
-        NSLog("LevelDB init")
+        //NSLog("LevelDB init")
         self.name = name
-        NSLog("LevelDB self.name: \(name)")
+        //NSLog("LevelDB self.name: \(name)")
         self.path = path
-        NSLog("LevelDB path: \(path)")
+        //NSLog("LevelDB path: \(path)")
         self.encoder = { key, value in
             #if DEBUG
                 NSLog("No encoder block was set for this database [\(name)]")
@@ -55,20 +55,20 @@ open class LevelDB {
             #endif
             return Data(bytes: key.cString, count: key.length)
         }
-        NSLog("LevelDB self.encoder")
+        //NSLog("LevelDB self.encoder")
         self.decoder = {key, data in
             return ["" : ""]
         }
-        NSLog("LevelDB self.decoder")
+        //NSLog("LevelDB self.decoder")
         #if os(Linux)
             do {
                 let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
-                NSLog("LevelDB dirpath: \(dirpath)")
+                //NSLog("LevelDB dirpath: \(dirpath)")
                 let fileManager = FileManager.default
                 if !fileManager.fileExists(atPath: dirpath) {
                     try fileManager.createDirectory(atPath: dirpath, withIntermediateDirectories:false, attributes:nil)
                 }
-                NSLog("try FileManager.default")
+                //NSLog("try FileManager.default")
             } catch {
                 NSLog("Problem creating parent directory: \(error)")
             }
@@ -266,7 +266,7 @@ open class LevelDB {
     // MARK: - Enumeration
     
     open func enumerateKeys(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyBlock) {
-        NSLog("LevelDB enumerateKeys. backward: \(backward) startingAtKey key: \(key ?? "") perfix: \(prefix ?? "")")
+        //NSLog("LevelDB enumerateKeys. backward: \(backward) startingAtKey key: \(key ?? "") perfix: \(prefix ?? "")")
         self.enumerateKeysWithPredicate(nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
     }
     
