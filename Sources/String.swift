@@ -27,7 +27,19 @@ public extension String {
                 return ""
             }
         #else
-            return NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue) as! String;
+            return NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)! as String;
         #endif
    }
+}
+
+#if DEBUG
+    func DLog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
+        NSLog("%@","[\((filename as NSString).lastPathComponent):\(line)] \(function) - \(message)")
+    }
+#else
+    func DLog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
+    }
+#endif
+func ALog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
+    NSLog("%@","[\((filename as NSString).lastPathComponent):\(line)] \(function) - \(message)")
 }
