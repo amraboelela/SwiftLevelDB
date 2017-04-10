@@ -32,14 +32,12 @@ public extension String {
    }
 }
 
-#if DEBUG
-    func DLog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
-        NSLog("%@","[\((filename as NSString).lastPathComponent):\(line)] \(function) - \(message)")
-    }
-#else
-    func DLog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
-    }
-#endif
+func DLog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
+    #if DEBUG
+        NSLog("[\((filename as NSString).lastPathComponent):\(line)] \(function) - \(message)")
+    #endif
+}
+
 func ALog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
     NSLog("%@","[\((filename as NSString).lastPathComponent):\(line)] \(function) - \(message)")
 }
