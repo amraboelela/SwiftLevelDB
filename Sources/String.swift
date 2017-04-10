@@ -39,5 +39,5 @@ func DLog(message: String, filename: String = #file, function: String = #functio
 }
 
 func ALog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
-    NSLog("%@","[\(NSString(string: filename).lastPathComponent):\(line)] \(function) - \(message)")
+    NSLog("[\(NSString(string: filename).lastPathComponent):\(line)] \(function) - \(message)")
 }
