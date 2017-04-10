@@ -34,10 +34,10 @@ public extension String {
 
 func DLog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
     #if DEBUG
-        NSLog("[\((filename as NSString).lastPathComponent):\(line)] \(function) - \(message)")
+        NSLog("[\(NSString(string: filename).lastPathComponent):\(line)] \(function) - \(message)")
     #endif
 }
 
 func ALog(message: String, filename: String = #file, function: String = #function, line: Int = #line) {
-    NSLog("%@","[\((filename as NSString).lastPathComponent):\(line)] \(function) - \(message)")
+    NSLog("%@","[\(NSString(string: filename).lastPathComponent):\(line)] \(function) - \(message)")
 }
