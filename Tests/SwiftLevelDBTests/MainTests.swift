@@ -112,27 +112,27 @@ class MainTests: BaseTestClass {
             db[numberKey] = ["price": price]
         }
         resultKeys = resultKeys.sorted{$0 < $1}
-        XCTAssertEqual(db.keysByFilteringWithPredicate(predicate), resultKeys, "Filtering db keys with a predicate should return the same list as expected")
-        var allValues = db.dictionaryByFilteringWithPredicate(predicate)
+        XCTAssertEqual(db.keysByFilteringWith(predicate: predicate), resultKeys, "Filtering db keys with a predicate should return the same list as expected")
+        var allValues = db.dictionaryByFilteringWith(predicate: predicate)
         XCTAssertEqual(allValues.keys.sorted{$0 < $1}, resultKeys, "A dictionary obtained by filtering with a predicate should yield the expected list of keys")
         var i = 0
-        db.enumerateKeysWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, stop in
+        db.enumerateKeysWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, stop in
             XCTAssertEqual(key, resultKeys[i], "Enumerating by filtering with a predicate should yield the expected keys")
             i += 1
         })
         i = Int(resultKeys.count) - 1
-        db.enumerateKeysWithPredicate(predicate, backward:true, startingAtKey: nil, andPrefix: nil, usingBlock: {key, stop in
+        db.enumerateKeysWith(predicate: predicate, backward:true, startingAtKey: nil, andPrefix: nil, usingBlock: {key, stop in
             XCTAssertEqual(key, resultKeys[i], "Enumerating backwards by filtering with a predicate should yield the expected keys")
             i -= 1
         })
         i = 0
-        db.enumerateKeysAndValuesWithPredicate(predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, value, stop in
+        db.enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, value, stop in
             XCTAssertEqual(key, resultKeys[i], "Enumerating keys and values by filtering with a predicate should yield the expected keys")
             XCTAssertEqual(NSObject.fromAny(value), NSObject.fromAny(allValues[resultKeys[i]]), "Enumerating keys and values by filtering with a predicate should yield the expected values")
             i += 1
         })
         i = Int(resultKeys.count) - 1
-        db.enumerateKeysAndValuesWithPredicate(predicate, backward: true, startingAtKey: nil, andPrefix: nil, usingBlock: {key, value, stop in
+        db.enumerateKeysAndValuesWith(predicate: predicate, backward: true, startingAtKey: nil, andPrefix: nil, usingBlock: {key, value, stop in
             XCTAssertEqual(key, resultKeys[i], "Enumerating keys and values by filtering with a predicate should yield the expected keys")
             XCTAssertEqual(NSObject.fromAny(value), NSObject.fromAny(allValues[resultKeys[i]]), "Enumerating keys and values by filtering with a predicate should yield the expected values")
             i -= 1
@@ -312,7 +312,7 @@ class MainTests: BaseTestClass {
         var pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the whole set yields pairs in the correct orders
         var r = 0
-        db.enumerateKeysAndValuesUsingBlock({lkey, _value, stop in
+        db.enumerateKeysAndValuesUsing(block: {lkey, _value, stop in
             var pair = pairs[r]
             let key = pair[0]
             let value = pair[1]
