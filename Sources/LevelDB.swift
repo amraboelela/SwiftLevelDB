@@ -12,9 +12,9 @@
 import Foundation
 import CLevelDB
 
-public typealias LevelDBKeyBlock = (String, UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBKeyValueBlock = (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBLazyKeyValueBlock = (String, () -> [String : Any]?, UnsafeMutablePointer<Bool>) -> Void
+public typealias LevelDBKeyCallback = (String, UnsafeMutablePointer<Bool>) -> Void
+public typealias LevelDBKeyValueCallback = (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void
+public typealias LevelDBLazyKeyValueCallback = (String, () -> [String : Any]?, UnsafeMutablePointer<Bool>) -> Void
 
 public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
     let bundle = Bundle.main
@@ -240,15 +240,15 @@ open class LevelDB {
     
     open func allKeys() -> [String] {
         var keys = [String]()
-        self.enumerateKeysUsingBlock({key, stop in
+        self.enumerateKeys() { key, stop in
             keys.append(key)
-        })
+        }
         return keys
     }
     
     open func keysByFilteringWith(predicate: NSPredicate) -> [String] {
         var keys = [String]()
-        enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
+        enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: {key, obj, stop in
             keys.append(key)
         })
         return keys
@@ -257,7 +257,7 @@ open class LevelDB {
     open func dictionaryByFilteringWith(predicate: NSPredicate) -> [String : Any] {
         var results = [String : Any]()
         
-        enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, obj, stop in
+        enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: {key, obj, stop in
             results[key] = obj
         })
         return results
@@ -265,16 +265,16 @@ open class LevelDB {
     
     // MARK: - Enumeration
     
-    open func enumerateKeys(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyBlock) {
+    open func enumerateKeys(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyCallback) {
         //NSLog("LevelDB enumerateKeys. backward: \(backward) startingAtKey key: \(key ?? "") perfix: \(prefix ?? "")")
-        self.enumerateKeysWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
+        self.enumerateKeysWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, callback: callback)
     }
     
-    open func enumerateKeysUsingBlock(_ block: LevelDBKeyBlock) {
-        self.enumerateKeysWith(predicate: nil, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: block)
+    open func enumerateKeys(callback: LevelDBKeyCallback) {
+        self.enumerateKeysWith(predicate: nil, backward: false, startingAtKey: nil, andPrefix: nil, callback: callback)
     }
     
-    open func enumerateKeysWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyBlock) {
+    open func enumerateKeysWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyCallback) {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -304,11 +304,11 @@ open class LevelDB {
                     if let iData = iData {
                         let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
                         if predicate!.evaluate(with: v) {
-                            block(iKeyString, &stop)
+                            callback(iKeyString, &stop)
                         }
                     }
                 } else {
-                    block(iKeyString, &stop)
+                    callback(iKeyString, &stop)
                 }
             }
             if stop {
@@ -319,16 +319,16 @@ open class LevelDB {
         levelDBIteratorDelete(iterator)
     }
     
-    open func enumerateKeysAndValues(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block: LevelDBKeyValueBlock) {
+    open func enumerateKeysAndValues(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyValueCallback) {
         
-        enumerateKeysAndValuesWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, usingBlock: block)
+        enumerateKeysAndValuesWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, callback: callback)
     }
     
-    open func enumerateKeysAndValuesUsing(block: LevelDBKeyValueBlock) {
-        enumerateKeysAndValuesWith(predicate: nil, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: block)
+    open func enumerateKeysAndValues(callback: LevelDBKeyValueCallback) {
+        enumerateKeysAndValuesWith(predicate: nil, backward: false, startingAtKey: nil, andPrefix: nil, callback: callback)
     }
     
-    open func enumerateKeysAndValuesWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBKeyValueBlock) {
+    open func enumerateKeysAndValuesWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback:LevelDBKeyValueCallback) {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -357,10 +357,10 @@ open class LevelDB {
                 if let iData = iData, let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
                     if predicate != nil {
                         if predicate!.evaluate(with: v) {
-                            block(iKeyString, v, &stop)
+                            callback(iKeyString, v, &stop)
                         }
                     } else {
-                        block(iKeyString, v, &stop)
+                        callback(iKeyString, v, &stop)
                     }
                 }
             }
@@ -372,7 +372,7 @@ open class LevelDB {
         levelDBIteratorDelete(iterator);
     }
     
-    open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, usingBlock block:LevelDBLazyKeyValueBlock) {
+    open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBLazyKeyValueCallback) {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -405,7 +405,7 @@ open class LevelDB {
                         return nil
                     }
                 };
-                block(iKeyString, getter, &stop);
+                callback(iKeyString, getter, &stop);
             }
             if (stop) {
                 break;

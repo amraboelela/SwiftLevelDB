@@ -116,23 +116,23 @@ class MainTests: BaseTestClass {
         var allValues = db.dictionaryByFilteringWith(predicate: predicate)
         XCTAssertEqual(allValues.keys.sorted{$0 < $1}, resultKeys, "A dictionary obtained by filtering with a predicate should yield the expected list of keys")
         var i = 0
-        db.enumerateKeysWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, stop in
+        db.enumerateKeysWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: { key, stop in
             XCTAssertEqual(key, resultKeys[i], "Enumerating by filtering with a predicate should yield the expected keys")
             i += 1
         })
         i = Int(resultKeys.count) - 1
-        db.enumerateKeysWith(predicate: predicate, backward:true, startingAtKey: nil, andPrefix: nil, usingBlock: {key, stop in
+        db.enumerateKeysWith(predicate: predicate, backward:true, startingAtKey: nil, andPrefix: nil, callback: { key, stop in
             XCTAssertEqual(key, resultKeys[i], "Enumerating backwards by filtering with a predicate should yield the expected keys")
             i -= 1
         })
         i = 0
-        db.enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, usingBlock: {key, value, stop in
+        db.enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: { key, value, stop in
             XCTAssertEqual(key, resultKeys[i], "Enumerating keys and values by filtering with a predicate should yield the expected keys")
             XCTAssertEqual(NSObject.fromAny(value), NSObject.fromAny(allValues[resultKeys[i]]), "Enumerating keys and values by filtering with a predicate should yield the expected values")
             i += 1
         })
         i = Int(resultKeys.count) - 1
-        db.enumerateKeysAndValuesWith(predicate: predicate, backward: true, startingAtKey: nil, andPrefix: nil, usingBlock: {key, value, stop in
+        db.enumerateKeysAndValuesWith(predicate: predicate, backward: true, startingAtKey: nil, andPrefix: nil, callback: { key, value, stop in
             XCTAssertEqual(key, resultKeys[i], "Enumerating keys and values by filtering with a predicate should yield the expected keys")
             XCTAssertEqual(NSObject.fromAny(value), NSObject.fromAny(allValues[resultKeys[i]]), "Enumerating keys and values by filtering with a predicate should yield the expected values")
             i -= 1
@@ -178,15 +178,15 @@ class MainTests: BaseTestClass {
         var pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the whole set yields keys in the correct orders
         r = 0
-        db.enumerateKeysUsingBlock({lkey, stop in
+        db.enumerateKeys() { lkey, stop in
             var pair = pairs[r]
             let key = pair[0]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
             r += 1
-        })
+        }
         // Test that enumerating the set by starting at an offset yields keys in the correct orders
         r = 432
-        db.enumerateKeys(backward: false, startingAtKey: pairs[r][0] as? String, andPrefix: nil, usingBlock: {lkey, stop in
+        db.enumerateKeys(backward: false, startingAtKey: pairs[r][0] as? String, andPrefix: nil, callback: { lkey, stop in
             var pair = pairs[r]
             let key = pair[0]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
@@ -203,7 +203,7 @@ class MainTests: BaseTestClass {
         var pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the whole set backwards yields keys in the correct orders
         var r = pairs.count - 1
-        db.enumerateKeys(backward: true, startingAtKey: nil, andPrefix: nil, usingBlock: {lkey, stop in
+        db.enumerateKeys(backward: true, startingAtKey: nil, andPrefix: nil, callback: { lkey, stop in
             var pair = pairs[r]
             let key = pair[0]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
@@ -211,7 +211,7 @@ class MainTests: BaseTestClass {
         })
         // Test that enumerating the set backwards at an offset yields keys in the correct orders
         r = 567
-        db.enumerateKeys(backward: true, startingAtKey: pairs[r][0] as? String, andPrefix: nil, usingBlock: {lkey, stop in
+        db.enumerateKeys(backward: true, startingAtKey: pairs[r][0] as? String, andPrefix: nil, callback: { lkey, stop in
             var pair = pairs[r]
             let key = pair[0]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
@@ -230,7 +230,7 @@ class MainTests: BaseTestClass {
         let pairs = ["tess:0" : valueFor(0), "tesa:0" : valueFor(0), "test:1" : valueFor(1), "test:2" : valueFor(2), "test:3" : valueFor(3), "test:4" : valueFor(4)]
         var i = 3
         db.addEntriesFromDictionary(pairs)
-        db.enumerateKeys(backward: true, startingAtKey: "test:3", andPrefix: "test", usingBlock: {lkey, stop in
+        db.enumerateKeys(backward: true, startingAtKey: "test:3", andPrefix: "test", callback: { lkey, stop in
             let key = "test:\(i)"
             XCTAssertEqual(lkey, key, "Keys should be restricted to the prefixed region")
             i -= 1
@@ -249,7 +249,7 @@ class MainTests: BaseTestClass {
         let pairs = ["tess:0" : valueFor(0), "tesa:0" : valueFor(0), "test:1" : valueFor(1), "test:2" : valueFor(2), "test:3" : valueFor(3), "test:4" : valueFor(4), "tesy:5" : valueFor(5)]
         var i = 1
         db.addEntriesFromDictionary(pairs)
-        db.enumerateKeys(backward: false, startingAtKey: "tesa:0", andPrefix: "test", usingBlock: {lkey, stop in
+        db.enumerateKeys(backward: false, startingAtKey: "tesa:0", andPrefix: "test", callback: { lkey, stop in
             let key = "test:\(i)"
             XCTAssertEqual(lkey, key, "Keys should be restricted to the prefixed region")
             i += 1
@@ -268,7 +268,7 @@ class MainTests: BaseTestClass {
         let pairs = ["tess:0" : valueFor(0), "tesa:0" : valueFor(0), "test:1" : valueFor(1), "test:2" : valueFor(2), "test:3" : valueFor(3), "test:4" : valueFor(4)]
         var i = 4
         db.addEntriesFromDictionary(pairs)
-        db.enumerateKeys(backward: true, startingAtKey: nil, andPrefix: "test", usingBlock: {lkey, stop in
+        db.enumerateKeys(backward: true, startingAtKey: nil, andPrefix: "test", callback: { lkey, stop in
             let key = "test:\(i)"
             XCTAssertEqual(lkey, key, "Keys should be restricted to the prefixed region")
             i -= 1
@@ -277,7 +277,7 @@ class MainTests: BaseTestClass {
         db.removeAllValues()
         db.addEntriesFromDictionary(["tess:0": valueFor(0), "test:1": valueFor(1), "test:2": valueFor(2), "test:3": valueFor(3), "test:4": valueFor(4), "tesu:5": valueFor(5)])
         i = 4
-        db.enumerateKeysAndValues(backward: true, startingAtKey: nil, andPrefix: "test", usingBlock: {lkey, value, stop in
+        db.enumerateKeysAndValues(backward: true, startingAtKey: nil, andPrefix: "test", callback: { lkey, value, stop in
             let key = "test:\(i)"
             XCTAssertEqual(lkey, key, "Keys should be restricted to the prefixed region")
             let dic = value as! [String : Int]
@@ -287,14 +287,14 @@ class MainTests: BaseTestClass {
         XCTAssertEqual(i, 0, "")
         i = 1
         db.addEntriesFromDictionary(pairs)
-        db.enumerateKeys(backward: false, startingAtKey: nil, andPrefix: "test", usingBlock: {lkey, stop in
+        db.enumerateKeys(backward: false, startingAtKey: nil, andPrefix: "test", callback: { lkey, stop in
             let key = "test:\(i)"
             XCTAssertEqual(lkey, key, "Keys should be restricted to the prefixed region")
             i += 1
         })
         XCTAssertEqual(i, 5, "")
         i = 1
-        db.enumerateKeysAndValues(backward: false, startingAtKey: nil, andPrefix: "test", usingBlock: {lkey, value, stop in
+        db.enumerateKeysAndValues(backward: false, startingAtKey: nil, andPrefix: "test", callback: { lkey, value, stop in
             let key = "test:\(i)"
             XCTAssertEqual(lkey, key, "Keys should be restricted to the prefixed region")
             let dic = value as! [String : Int]
@@ -312,17 +312,17 @@ class MainTests: BaseTestClass {
         var pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the whole set yields pairs in the correct orders
         var r = 0
-        db.enumerateKeysAndValuesUsing(block: {lkey, _value, stop in
+        db.enumerateKeysAndValues() { lkey, _value, stop in
             var pair = pairs[r]
             let key = pair[0]
             let value = pair[1]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
             XCTAssertEqual(NSObject.fromAny(_value), NSObject.fromAny(value), "Values should be equal, given the ordering worked")
             r += 1
-        })
+        }
         // Test that enumerating the set by starting at an offset yields pairs in the correct orders
         r = 432
-        db.enumerateKeysAndValues(backward: false, startingAtKey: pairs[r][0] as? String, andPrefix: nil, usingBlock: {lkey, _value, stop in
+        db.enumerateKeysAndValues(backward: false, startingAtKey: pairs[r][0] as? String, andPrefix: nil, callback: { lkey, _value, stop in
             var pair = pairs[r]
             let key = pair[0]
             let value = pair[1]
@@ -340,7 +340,7 @@ class MainTests: BaseTestClass {
         var pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the whole set backwards yields pairs in the correct orders
         var r = pairs.count - 1
-        db.enumerateKeysAndValues(backward: true, startingAtKey: nil, andPrefix: nil, usingBlock: {lkey, _value, stop in
+        db.enumerateKeysAndValues(backward: true, startingAtKey: nil, andPrefix: nil, callback: { lkey, _value, stop in
             var pair = pairs[r]
             let key = pair[0]
             let value = pair[1]
@@ -350,7 +350,7 @@ class MainTests: BaseTestClass {
         })
         // Test that enumerating the set backwards at an offset yields pairs in the correct orders
         r = 567
-        db.enumerateKeysAndValues(backward: true, startingAtKey: pairs[r][0] as? String, andPrefix: nil, usingBlock: {lkey, _value, stop in
+        db.enumerateKeysAndValues(backward: true, startingAtKey: pairs[r][0] as? String, andPrefix: nil, callback: { lkey, _value, stop in
             var pair = pairs[r]
             let key = pair[0]
             let value = pair[1]
@@ -368,7 +368,7 @@ class MainTests: BaseTestClass {
         var pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the set backwards and lazily at an offset yields pairs in the correct orders
         var r = 567;
-        db.enumerateKeysAndValuesLazily(backward: true, startingAtKey: pairs[r][0] as? String, andPrefix: nil, usingBlock: {lkey, getter, stop in
+        db.enumerateKeysAndValuesLazily(backward: true, startingAtKey: pairs[r][0] as? String, andPrefix: nil, callback: { lkey, getter, stop in
             var pair = pairs[r]
             let key = pair[0]
             let value = pair[1]
