@@ -6,4 +6,6 @@ if [ $PARAM = "xrelease" ]; then
     swift build -c release
 else
     swift build -Xswiftc -DDEBUG
+
+#	-Xswiftc -emit-library -Xswiftc -o -Xswiftc .build/debug/libSwiftLevelDB.so
 fi
