@@ -1,14 +1,12 @@
 {
   "object": {
-    "autoPin": true,
     "pins": [
       {
         "package": "CLevelDB",
-        "reason": null,
         "repositoryURL": "https://github.com/amraboelela/CLevelDB",
         "state": {
           "branch": null,
-          "revision": "6e35f7337985d1c82c556287b187643283d06248",
+          "revision": "863124c736bafecf20b1df675941afed5c7d3ff3",
           "version": "1.0.0"
         }
       }
