@@ -2,8 +2,11 @@
   "object": {
     "pins": [
       {
-        "package": "CLevelDB",
-        "repositoryURL": "https://github.com/amraboelela/CLevelDB",
+        "reference": {
+          "identity": "cleveldb",
+          "isLocal": false,
+          "path": "https://github.com/amraboelela/CLevelDB"
+        },
         "state": {
           "branch": null,
           "revision": "863124c736bafecf20b1df675941afed5c7d3ff3",
@@ -12,5 +15,5 @@
       }
     ]
   },
-  "version": 1
+  "version": 2
 }
