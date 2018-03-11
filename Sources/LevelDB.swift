@@ -53,7 +53,7 @@ open class LevelDB {
                 NSLog("No encoder block was set for this database [\(name)]")
                 NSLog("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
             #endif
-            return Data(bytes: key.cString, count: key.length)
+            return Data(bytes: key.cString, count: key.count)
         }
         //NSLog("LevelDB self.encoder")
         self.decoder = {key, data in
@@ -112,7 +112,7 @@ open class LevelDB {
             var status = 0
             if var data = encoder(key, newValue) {
                 data.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
-                    status = levelDBItemPut(db, key.cString, key.length, mutableBytes, data.count)
+                    status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
                 }
                 if status != 0 {
                     NSLog("setValue: Problem storing key/value pair in database")
@@ -122,7 +122,7 @@ open class LevelDB {
             }
         } else {
             //NSLog("setValue: newValue is nil")
-            levelDBItemDelete(db, key.cString, key.length)
+            levelDBItemDelete(db, key.cString, key.count)
         }
     }
     
@@ -150,7 +150,7 @@ open class LevelDB {
         }
         var rawData: UnsafeMutableRawPointer? = nil
         var rawDataLength: Int = 0
-        let status = levelDBItemGet(db, key.cString, key.length, &rawData, &rawDataLength)
+        let status = levelDBItemGet(db, key.cString, key.count, &rawData, &rawDataLength)
         if status != 0 {
             return nil
         }
@@ -177,7 +177,7 @@ open class LevelDB {
         }
         var rawData: UnsafeMutableRawPointer? = nil
         var rawDataLength: Int = 0
-        let status = levelDBItemGet(db, key.cString, key.length, &rawData, &rawDataLength)
+        let status = levelDBItemGet(db, key.cString, key.count, &rawData, &rawDataLength)
         if status == 0 {
             free(rawData)
             return true
@@ -191,7 +191,7 @@ open class LevelDB {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
-        let status = levelDBItemDelete(db, key.cString, key.length)
+        let status = levelDBItemDelete(db, key.cString, key.count)
         if status != 0 {
             NSLog("Problem removing value with key: \(key) in database")
         }
@@ -214,7 +214,7 @@ open class LevelDB {
         }
         let iterator = levelDBIteratorNew(db)
         let prefixPtr = prefix.cString
-        let prefixLen = prefix.length
+        let prefixLen = prefix.count
         
         if prefixLen > 0 {
             levelDBIteratorSeek(iterator, prefix.cString, prefixLen)
@@ -292,7 +292,7 @@ open class LevelDB {
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
             if let iKey = iKey {
                 if let prefix = prefix {
-                    if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
+                    if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
                         break
                     }
                 }
@@ -346,7 +346,7 @@ open class LevelDB {
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
             if let iKey = iKey {
                 if let prefix = prefix {
-                    if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
+                    if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
                         break
                     }
                 }
@@ -390,7 +390,7 @@ open class LevelDB {
             levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
             if let iKey = iKey {
                 if let prefix = prefix {
-                    if memcmp(iKey, prefix.cString, min(prefix.length, iKeyLength)) != 0 {
+                    if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
                         break
                     }
                 }
@@ -456,7 +456,7 @@ open class LevelDB {
                     startingKey = key
                 }
             }
-            let len = startingKey.length
+            let len = startingKey.count
             // If a prefix is provided and the iteration is backwards
             // we need to start on the next key (maybe discarding the first iteration)
             if backward {
@@ -498,7 +498,7 @@ open class LevelDB {
                 levelDBIteratorSeek(iterator, startingKey.cString, len)
             }
         } else if let key = key {
-            levelDBIteratorSeek(iterator, key.cString, key.length)
+            levelDBIteratorSeek(iterator, key.cString, key.count)
         } else if backward {
             levelDBIteratorMoveToLast(iterator)
         } else {

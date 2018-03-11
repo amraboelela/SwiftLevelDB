@@ -11,9 +11,6 @@
 import Foundation
 
 public extension String {
-    var length: Int {
-        return characters.count
-    }
     
     public var cString: UnsafeMutablePointer<Int8> {
         return UnsafeMutablePointer<Int8>(mutating: NSString(string: self).utf8String)!
