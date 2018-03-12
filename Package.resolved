@@ -5,9 +5,9 @@
         "package": "CLevelDB",
         "repositoryURL": "https://github.com/amraboelela/CLevelDB",
         "state": {
-          "branch": null,
-          "revision": "863124c736bafecf20b1df675941afed5c7d3ff3",
-          "version": "1.0.0"
+          "branch": "master",
+          "revision": "62ac2e2c16b0355937de7e320f9e32d0802fa9ff",
+          "version": null
         }
       }
     ]

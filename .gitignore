@@ -3,6 +3,7 @@
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
 .DS_Store
+*.log
 
 ## Build generated
 build/
@@ -37,6 +38,7 @@ playground.xcworkspace
 #
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
 Packages/
+Package.resolved
 .build/
 
 # CocoaPods
