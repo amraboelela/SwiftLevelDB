@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0C07D1981D78F1A500BEFAE4 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C07D1961D78F1A500BEFAE4 /* Data.swift */; };
-		0C0C751A1DA58B2300AC1413 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0C75191DA58B2300AC1413 /* NSObject.swift */; };
-		0C14714A1D6B2A1000C16920 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1471491D6B2A1000C16920 /* LevelDB.swift */; };
 		0C36D3C21DC996EC0081878D /* SwiftLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */; };
 		0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B21DC996CD0081878D /* BaseTestClass.swift */; };
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
-		0C4F5EEF1D6B826900BEE4AE /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4F5EEE1D6B826900BEE4AE /* String.swift */; };
 		0C7B4DAE1E5AA40A003AB7F9 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */; };
+		ED33E10A205717A30045DA02 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
+		ED33E10B205717A30045DA02 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
+		ED33E10C205717A30045DA02 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E108205717A30045DA02 /* NSObject.swift */; };
+		ED33E10D205717A30045DA02 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E109205717A30045DA02 /* String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,9 +28,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0C07D1961D78F1A500BEFAE4 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Data.swift; path = Sources/Data.swift; sourceTree = "<group>"; };
-		0C0C75191DA58B2300AC1413 /* NSObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSObject.swift; path = Sources/NSObject.swift; sourceTree = "<group>"; };
-		0C1471491D6B2A1000C16920 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LevelDB.swift; path = Sources/LevelDB.swift; sourceTree = "<group>"; };
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C36D3AD1DC996A70081878D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C36D3B01DC996CD0081878D /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
@@ -40,13 +37,16 @@
 		0C36D3BD1DC996EC0081878D /* SwiftLevelDBTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftLevelDBTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C4F5EEA1D6B79A700BEE4AE /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0C4F5EEB1D6B79A700BEE4AE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		0C4F5EEE1D6B826900BEE4AE /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = String.swift; path = Sources/String.swift; sourceTree = "<group>"; };
 		0C649CAB1DFA7A6D0072F559 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CLevelDB.framework; path = "../CLevelDB/build/Debug-iphoneos/CLevelDB.framework"; sourceTree = "<group>"; };
 		0CD3F78D1E087AE80002A697 /* clean */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = clean; sourceTree = "<group>"; };
 		0CD3F79C1E08DAF40002A697 /* build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build; sourceTree = "<group>"; };
 		0CD3F79D1E08DAF40002A697 /* test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test; sourceTree = "<group>"; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
+		ED33E106205717A30045DA02 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		ED33E107205717A30045DA02 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
+		ED33E108205717A30045DA02 /* NSObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
+		ED33E109205717A30045DA02 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,15 +69,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0C1471441D6B24A900C16920 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				0CFEF8471D9D9EF600D0BB3E /* Extensions */,
-				0C1471491D6B2A1000C16920 /* LevelDB.swift */,
-			);
-			name = Sources;
-			sourceTree = "<group>";
-		};
 		0C1D154E1D6ABF81007E99F4 = {
 			isa = PBXGroup;
 			children = (
@@ -89,7 +80,7 @@
 				63F23A9E1DFCC67500F000E8 /* tag */,
 				0C4F5EEB1D6B79A700BEE4AE /* README.md */,
 				0C649CAB1DFA7A6D0072F559 /* LICENSE */,
-				0C1471441D6B24A900C16920 /* Sources */,
+				ED33E104205717A30045DA02 /* Sources */,
 				0C36D3AF1DC996CD0081878D /* Tests */,
 				0C1D15591D6ABF81007E99F4 /* Products */,
 				0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */,
@@ -132,14 +123,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0CFEF8471D9D9EF600D0BB3E /* Extensions */ = {
+		ED33E104205717A30045DA02 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				0C0C75191DA58B2300AC1413 /* NSObject.swift */,
-				0C07D1961D78F1A500BEFAE4 /* Data.swift */,
-				0C4F5EEE1D6B826900BEE4AE /* String.swift */,
+				ED33E105205717A30045DA02 /* SwiftLevelDB */,
 			);
-			name = Extensions;
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		ED33E105205717A30045DA02 /* SwiftLevelDB */ = {
+			isa = PBXGroup;
+			children = (
+				ED33E106205717A30045DA02 /* Data.swift */,
+				ED33E107205717A30045DA02 /* LevelDB.swift */,
+				ED33E108205717A30045DA02 /* NSObject.swift */,
+				ED33E109205717A30045DA02 /* String.swift */,
+			);
+			path = SwiftLevelDB;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,10 +252,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C07D1981D78F1A500BEFAE4 /* Data.swift in Sources */,
-				0C0C751A1DA58B2300AC1413 /* NSObject.swift in Sources */,
-				0C4F5EEF1D6B826900BEE4AE /* String.swift in Sources */,
-				0C14714A1D6B2A1000C16920 /* LevelDB.swift in Sources */,
+				ED33E10C205717A30045DA02 /* NSObject.swift in Sources */,
+				ED33E10B205717A30045DA02 /* LevelDB.swift in Sources */,
+				ED33E10D205717A30045DA02 /* String.swift in Sources */,
+				ED33E10A205717A30045DA02 /* Data.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +441,7 @@
 		0C36D3C61DC996EC0081878D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
@@ -458,6 +459,7 @@
 		0C36D3C71DC996EC0081878D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
