@@ -32,6 +32,8 @@ public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPat
     return [""]
 }
 
+public let levelDBQueue = DispatchQueue(label: "com.twister.leveldb")
+
 open class LevelDB {
     
     var name: String
@@ -104,25 +106,27 @@ open class LevelDB {
     }
     
     open func setValue(_ value: [String : Any]?, forKey key: String) {
-        guard let db = db else {
-            NSLog("Database reference is not existent (it has probably been closed)")
-            return
-        }
-        if let newValue = value {
-            var status = 0
-            if var data = encoder(key, newValue) {
-                data.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
-                    status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
-                }
-                if status != 0 {
-                    NSLog("setValue: Problem storing key/value pair in database")
+        levelDBQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            if let newValue = value {
+                var status = 0
+                if var data = encoder(key, newValue) {
+                    data.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
+                        status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
+                    }
+                    if status != 0 {
+                        NSLog("setValue: Problem storing key/value pair in database")
+                    }
+                } else {
+                    NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
                 }
             } else {
-                NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
+                //NSLog("setValue: newValue is nil")
+                levelDBItemDelete(db, key.cString, key.count)
             }
-        } else {
-            //NSLog("setValue: newValue is nil")
-            levelDBItemDelete(db, key.cString, key.count)
         }
     }
     
@@ -144,22 +148,24 @@ open class LevelDB {
     }
     
     open func valueForKey(_ key: String) -> [String : Any]? {
-        guard let db = db else {
-            NSLog("Database reference is not existent (it has probably been closed)")
-            return nil
+        var result: [String : Any]?
+        levelDBQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            var rawData: UnsafeMutableRawPointer? = nil
+            var rawDataLength: Int = 0
+            let status = levelDBItemGet(db, key.cString, key.count, &rawData, &rawDataLength)
+            if status != 0 {
+                return
+            }
+            if let rawData = rawData {
+                let data = Data(bytes: rawData, count: rawDataLength)
+                result = decoder(key, data)
+            }
         }
-        var rawData: UnsafeMutableRawPointer? = nil
-        var rawDataLength: Int = 0
-        let status = levelDBItemGet(db, key.cString, key.count, &rawData, &rawDataLength)
-        if status != 0 {
-            return nil
-        }
-        if let rawData = rawData {
-            let data = Data(bytes: rawData, count: rawDataLength)
-            return decoder(key, data)
-        } else {
-            return nil
-        }
+        return result
     }
     
     open func valuesForKeys(_ keys: [String]) -> [[String : Any]?] {
@@ -171,29 +177,33 @@ open class LevelDB {
     }
     
     open func valueExistsForKey(_ key: String) -> Bool {
-        guard let db = db else {
-            NSLog("Database reference is not existent (it has probably been closed)")
-            return false
+        var result = false
+        levelDBQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            var rawData: UnsafeMutableRawPointer? = nil
+            var rawDataLength: Int = 0
+            let status = levelDBItemGet(db, key.cString, key.count, &rawData, &rawDataLength)
+            if status == 0 {
+                free(rawData)
+                result = true
+            }
         }
-        var rawData: UnsafeMutableRawPointer? = nil
-        var rawDataLength: Int = 0
-        let status = levelDBItemGet(db, key.cString, key.count, &rawData, &rawDataLength)
-        if status == 0 {
-            free(rawData)
-            return true
-        } else {
-            return false
-        }
+        return result
     }
     
     open func removeValueForKey(_ key: String) {
-        guard let db = db else {
-            NSLog("Database reference is not existent (it has probably been closed)")
-            return
-        }
-        let status = levelDBItemDelete(db, key.cString, key.count)
-        if status != 0 {
-            NSLog("Problem removing value with key: \(key) in database")
+        levelDBQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            let status = levelDBItemDelete(db, key.cString, key.count)
+            if status != 0 {
+                NSLog("Problem removing value with key: \(key) in database")
+            }
         }
     }
     
@@ -208,34 +218,36 @@ open class LevelDB {
     }
     
     open func removeAllValuesWithPrefix(_ prefix: String) {
-        guard let db = db else {
-            NSLog("Database reference is not existent (it has probably been closed)")
-            return
-        }
-        let iterator = levelDBIteratorNew(db)
-        let prefixPtr = prefix.cString
-        let prefixLen = prefix.count
-        
-        if prefixLen > 0 {
-            levelDBIteratorSeek(iterator, prefix.cString, prefixLen)
-        } else {
-            levelDBIteratorMoveToFirst(iterator)
-        }
-        while levelDBIteratorIsValid(iterator) {
-            var iKey: UnsafeMutablePointer<Int8>? = nil
-            var iKeyLength: Int = 0
-            levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
-            if let iKey = iKey {
-                if prefixLen > 0 {
-                    if memcmp(iKey, prefixPtr, min(prefixLen, iKeyLength)) != 0 {
-                        break;
+        levelDBQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            let iterator = levelDBIteratorNew(db)
+            let prefixPtr = prefix.cString
+            let prefixLen = prefix.count
+            
+            if prefixLen > 0 {
+                levelDBIteratorSeek(iterator, prefix.cString, prefixLen)
+            } else {
+                levelDBIteratorMoveToFirst(iterator)
+            }
+            while levelDBIteratorIsValid(iterator) {
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+                var iKeyLength: Int = 0
+                levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
+                if let iKey = iKey {
+                    if prefixLen > 0 {
+                        if memcmp(iKey, prefixPtr, min(prefixLen, iKeyLength)) != 0 {
+                            break;
+                        }
                     }
                 }
+                levelDBItemDelete(db, iKey, iKeyLength)
+                levelDBIteratorMoveForward(iterator)
             }
-            levelDBItemDelete(db, iKey, iKeyLength)
-            levelDBIteratorMoveForward(iterator)
+            levelDBIteratorDelete(iterator)
         }
-        levelDBIteratorDelete(iterator)
     }
     
     open func allKeys() -> [String] {
@@ -275,48 +287,50 @@ open class LevelDB {
     }
     
     open func enumerateKeysWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyCallback) {
-        guard let db = db else {
-            NSLog("Database reference is not existent (it has probably been closed)")
-            return
-        }
-        let iterator = levelDBIteratorNew(db)
-        var stop = false
-        guard let iteratorPointer = iterator else {
-            NSLog("iterator is nil")
-            return
-        }
-        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
-        while levelDBIteratorIsValid(iterator) {
-            var iKey: UnsafeMutablePointer<Int8>? = nil
-            var iKeyLength: Int = 0
-            levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
-            if let iKey = iKey {
-                if let prefix = prefix {
-                    if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
-                        break
-                    }
-                }
-                let iKeyString = String.fromCString(iKey, length: iKeyLength)
-                if predicate != nil {
-                    var iData: UnsafeMutableRawPointer? = nil
-                    var iDataLength: Int = 0
-                    levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                    if let iData = iData {
-                        let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
-                        if predicate!.evaluate(with: v) {
-                            callback(iKeyString, &stop)
+        levelDBQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            let iterator = levelDBIteratorNew(db)
+            var stop = false
+            guard let iteratorPointer = iterator else {
+                NSLog("iterator is nil")
+                return
+            }
+            _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+            while levelDBIteratorIsValid(iterator) {
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+                var iKeyLength: Int = 0
+                levelDBIteratorGetKey(iterator, &iKey, &iKeyLength)
+                if let iKey = iKey {
+                    if let prefix = prefix {
+                        if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
+                            break
                         }
                     }
-                } else {
-                    callback(iKeyString, &stop)
+                    let iKeyString = String.fromCString(iKey, length: iKeyLength)
+                    if predicate != nil {
+                        var iData: UnsafeMutableRawPointer? = nil
+                        var iDataLength: Int = 0
+                        levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                        if let iData = iData {
+                            let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
+                            if predicate!.evaluate(with: v) {
+                                callback(iKeyString, &stop)
+                            }
+                        }
+                    } else {
+                        callback(iKeyString, &stop)
+                    }
                 }
+                if stop {
+                    break
+                }
+                backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
             }
-            if stop {
-                break
-            }
-            backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
+            levelDBIteratorDelete(iterator)
         }
-        levelDBIteratorDelete(iterator)
     }
     
     open func enumerateKeysAndValues(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyValueCallback) {
@@ -329,112 +343,122 @@ open class LevelDB {
     }
     
     open func enumerateKeysAndValuesWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback:LevelDBKeyValueCallback) {
-        guard let db = db else {
-            NSLog("Database reference is not existent (it has probably been closed)")
-            return
-        }
-        let iterator = levelDBIteratorNew(db)
-        var stop = false
-        guard let iteratorPointer = iterator else {
-            NSLog("iterator is nil")
-            return
-        }
-        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
-        while levelDBIteratorIsValid(iterator) {
-            var iKey: UnsafeMutablePointer<Int8>? = nil
-            var iKeyLength: Int = 0
-            levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
-            if let iKey = iKey {
-                if let prefix = prefix {
-                    if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
-                        break
+        levelDBQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            let iterator = levelDBIteratorNew(db)
+            var stop = false
+            guard let iteratorPointer = iterator else {
+                NSLog("iterator is nil")
+                return
+            }
+            _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+            while levelDBIteratorIsValid(iterator) {
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+                var iKeyLength: Int = 0
+                levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
+                if let iKey = iKey {
+                    if let prefix = prefix {
+                        if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
+                            break
+                        }
                     }
-                }
-                let iKeyString = String.fromCString(iKey, length: iKeyLength)
-                var iData: UnsafeMutableRawPointer? = nil
-                var iDataLength: Int = 0
-                levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                if let iData = iData, let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
-                    if predicate != nil {
-                        if predicate!.evaluate(with: v) {
+                    let iKeyString = String.fromCString(iKey, length: iKeyLength)
+                    var iData: UnsafeMutableRawPointer? = nil
+                    var iDataLength: Int = 0
+                    levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                    if let iData = iData, let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
+                        if predicate != nil {
+                            if predicate!.evaluate(with: v) {
+                                callback(iKeyString, v, &stop)
+                            }
+                        } else {
                             callback(iKeyString, v, &stop)
                         }
-                    } else {
-                        callback(iKeyString, v, &stop)
                     }
                 }
+                if (stop) {
+                    break;
+                }
+                backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
             }
-            if (stop) {
-                break;
-            }
-            backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
+            levelDBIteratorDelete(iterator);
         }
-        levelDBIteratorDelete(iterator);
     }
     
     open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBLazyKeyValueCallback) {
-        guard let db = db else {
-            NSLog("Database reference is not existent (it has probably been closed)")
-            return
-        }
-        let iterator = levelDBIteratorNew(db)
-        var stop = false
-        guard let iteratorPointer = iterator else {
-            NSLog("iterator is nil")
-            return
-        }
-        _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
-        while levelDBIteratorIsValid(iterator) {
-            var iKey: UnsafeMutablePointer<Int8>? = nil
-            var iKeyLength: Int = 0
-            levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
-            if let iKey = iKey {
-                if let prefix = prefix {
-                    if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
-                        break
+        levelDBQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            let iterator = levelDBIteratorNew(db)
+            var stop = false
+            guard let iteratorPointer = iterator else {
+                NSLog("iterator is nil")
+                return
+            }
+            _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+            while levelDBIteratorIsValid(iterator) {
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+                var iKeyLength: Int = 0
+                levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
+                if let iKey = iKey {
+                    if let prefix = prefix {
+                        if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
+                            break
+                        }
                     }
+                    let iKeyString = String.fromCString(iKey, length: iKeyLength)
+                    let getter : () -> [String : Any]? = {
+                        var iData: UnsafeMutableRawPointer? = nil
+                        var iDataLength: Int = 0
+                        levelDBIteratorGetValue(iterator, &iData, &iDataLength);
+                        if let iData = iData {
+                            return self.decoder(iKeyString, Data(bytes: iData, count: iDataLength));
+                        } else {
+                            return nil
+                        }
+                    };
+                    callback(iKeyString, getter, &stop);
                 }
-                let iKeyString = String.fromCString(iKey, length: iKeyLength)
-                let getter : () -> [String : Any]? = {
-                    var iData: UnsafeMutableRawPointer? = nil
-                    var iDataLength: Int = 0
-                    levelDBIteratorGetValue(iterator, &iData, &iDataLength);
-                    if let iData = iData {
-                        return self.decoder(iKeyString, Data(bytes: iData, count: iDataLength));
-                    } else {
-                        return nil
-                    }
-                };
-                callback(iKeyString, getter, &stop);
+                if (stop) {
+                    break;
+                }
+                backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
             }
-            if (stop) {
-                break;
-            }
-            backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
+            levelDBIteratorDelete(iterator);
         }
-        levelDBIteratorDelete(iterator);
     }
     
     // MARK: - Helper methods
     
     open func deleteDatabaseFromDisk() {
         self.close()
-        do {
-            let fileManager = FileManager.default
-            try fileManager.removeItem(atPath: path)
-        } catch {
-            NSLog("error deleting database at path \(path), \(error)")
+        levelDBQueue.sync {
+            do {
+                let fileManager = FileManager.default
+                try fileManager.removeItem(atPath: path)
+            } catch {
+                NSLog("error deleting database at path \(path), \(error)")
+            }
         }
     }
     
     public func open() {
-        self.db = levelDBOpen(path.cString)
+        levelDBQueue.sync {
+            self.db = levelDBOpen(path.cString)
+        }
     }
     
     open func close() {
-        if let db = db {
-            levelDBDelete(db)
-            self.db = nil
+        levelDBQueue.sync {
+            if let db = db {
+                levelDBDelete(db)
+                self.db = nil
+            }
         }
     }
     
