@@ -106,14 +106,14 @@ open class LevelDB {
     }
     
     open func setValue(_ value: [String : Any]?, forKey key: String) {
-        levelDBQueue.sync {
-            guard let db = db else {
+        levelDBQueue.async {
+            guard let db = self.db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
             }
             if let newValue = value {
                 var status = 0
-                if var data = encoder(key, newValue) {
+                if var data = self.encoder(key, newValue) {
                     data.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
                         status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
                     }
