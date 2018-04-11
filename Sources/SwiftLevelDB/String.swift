@@ -28,7 +28,7 @@ public extension String {
         #endif
     }
     
-    public var dataWithHexString: Data {
+    public var dataFromHexadecimal: Data {
         var hex = self
         var data = Data()
         while(hex.count > 0) {
