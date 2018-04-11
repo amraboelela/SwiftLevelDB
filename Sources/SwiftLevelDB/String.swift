@@ -28,19 +28,21 @@ public extension String {
         #endif
     }
     
-    public var dataFromHexadecimal: Data? {
-        var data = Data(capacity: self.count / 2)
-        
-        let regex = try! NSRegularExpression(pattern: "[0-9a-f]{1,2}", options: .caseInsensitive)
-        regex.enumerateMatches(in: self, range: NSMakeRange(0, utf16.count)) { match, flags, stop in
-            let byteString = (self as NSString).substring(with: match!.range)
-            var num = UInt8(byteString, radix: 16)!
-            data.append(&num, count: 1)
+    public var dataWithHexString: Data {
+        var hex = self
+        var data = Data()
+        while(hex.count > 0) {
+            let subIndex = hex.index(hex.startIndex, offsetBy: 2)
+            let c = String(hex[..<subIndex])
+            hex = String(hex[subIndex...])
+            var ch: UInt32 = 0
+            Scanner(string: c).scanHexInt32(&ch)
+            var char = UInt8(ch)
+            data.append(&char, count: 1)
         }
-        
-        guard data.count > 0 else { return nil }
         return data
     }
+    
 }
 
 func DLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
