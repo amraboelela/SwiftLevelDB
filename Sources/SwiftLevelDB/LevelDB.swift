@@ -32,7 +32,7 @@ public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPat
     return [""]
 }
 
-public let levelDBQueue = DispatchQueue(label: "com.twister.leveldb")
+public let levelDBQueue = DispatchQueue(label: "com.amr.leveldb")
 
 open class LevelDB {
     
