@@ -20,7 +20,7 @@ class MainTests: BaseTestClass {
     
     func testContentIntegrity() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         let key = "dict1"
@@ -38,7 +38,7 @@ class MainTests: BaseTestClass {
     
     func testKeysManipulation() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         let value = ["foo": "bar"]
@@ -54,7 +54,7 @@ class MainTests: BaseTestClass {
     
     func testRemovingKeysWithPrefix() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         let value = ["foo": "bar"]
@@ -68,7 +68,7 @@ class MainTests: BaseTestClass {
     
     func testDictionaryManipulations() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         let values: [String : [String : Any]] = ["key1": ["array" : [1, 2]], "key2": ["foo": "bar"], "key3": [:]]
@@ -86,7 +86,7 @@ class MainTests: BaseTestClass {
     
     func testPredicateFiltering() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         let predicate = NSPredicate { (obj, bindings) -> Bool in
@@ -141,7 +141,7 @@ class MainTests: BaseTestClass {
     
     func nPairs(_ n: Int) -> [[Any]] {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return [[]]
         }
         var pairs = [[Any]]()
@@ -171,7 +171,7 @@ class MainTests: BaseTestClass {
     
     func testForwardKeyEnumerations() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         var r: Int
@@ -196,7 +196,7 @@ class MainTests: BaseTestClass {
     
     func testBackwardKeyEnumerations() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         //var r: Int
@@ -221,7 +221,7 @@ class MainTests: BaseTestClass {
     
     func testBackwardPrefixedEnumerationsWithStartingKey() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         let valueFor = {(i: Int) -> [String : Int] in
@@ -240,7 +240,7 @@ class MainTests: BaseTestClass {
     
     func testForwardPrefixedEnumerationsWithStartingKey() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         let valueFor = {(i: Int) -> [String : Int] in
@@ -259,7 +259,7 @@ class MainTests: BaseTestClass {
     
     func testPrefixedEnumerations() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         let valueFor = {(i: Int) -> [String : Int] in
@@ -306,7 +306,7 @@ class MainTests: BaseTestClass {
     
     func testForwardKeyAndValueEnumerations() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         var pairs = self.nPairs(numberOfIterations)
@@ -334,7 +334,7 @@ class MainTests: BaseTestClass {
     
     func testBackwardKeyAndValueEnumerations() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         var pairs = self.nPairs(numberOfIterations)
@@ -362,7 +362,7 @@ class MainTests: BaseTestClass {
     
     func testBackwardLazyKeyAndValueEnumerations() {
         guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
+            print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
         var pairs = self.nPairs(numberOfIterations)
