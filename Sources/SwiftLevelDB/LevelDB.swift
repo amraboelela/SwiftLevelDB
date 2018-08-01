@@ -469,7 +469,7 @@ open class LevelDB {
         return db == nil
     }
     
-    // MARK: - Private methods
+    // MARK: - Private functions
     
     fileprivate func _startIterator(_ iterator: UnsafeMutableRawPointer, backward: Bool, prefix: String?, start key: String?) {
         var startingKey: String
