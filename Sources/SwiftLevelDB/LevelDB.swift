@@ -113,8 +113,9 @@ open class LevelDB {
             }
             if let newValue = value {
                 var status = 0
-                if var data = self.encoder(key, newValue) {
-                    data.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
+                if let data = self.encoder(key, newValue) {
+                    var localData = data
+                    localData.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
                         status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
                     }
                     if status != 0 {
@@ -124,7 +125,6 @@ open class LevelDB {
                     NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
                 }
             } else {
-                //NSLog("setValue: newValue is nil")
                 levelDBItemDelete(db, key.cString, key.count)
             }
         }
@@ -334,7 +334,6 @@ open class LevelDB {
     }
     
     open func enumerateKeysAndValues(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyValueCallback) {
-        
         enumerateKeysAndValuesWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, callback: callback)
     }
     
