@@ -96,7 +96,6 @@ open class LevelDB {
             let libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
             return libraryDirectory.absoluteString
         #endif
-        
     }
     
     // MARK: - Accessors
