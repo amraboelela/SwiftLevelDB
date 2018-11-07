@@ -23,7 +23,7 @@ class BaseTestClass: XCTestCase {
         
         db = LevelDB(name: "TestDB")
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("Database reference is not existent, failed to open / create database")
             return
         }
         db.removeAllValues()
