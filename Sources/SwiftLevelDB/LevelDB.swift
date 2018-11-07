@@ -32,9 +32,8 @@ public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPat
     return [""]
 }
 
-public let levelDBQueue = DispatchQueue(label: "com.amr.leveldb")
-
 open class LevelDB {
+    public let serialQueue = DispatchQueue(label: "org.amr.leveldb")
     
     var name: String
     var path: String
@@ -105,7 +104,7 @@ open class LevelDB {
     }
     
     open func setValue(_ value: [String : Any]?, forKey key: String) {
-        levelDBQueue.async {
+        serialQueue.async {
             guard let db = self.db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -148,7 +147,7 @@ open class LevelDB {
     
     open func valueForKey(_ key: String) -> [String : Any]? {
         var result: [String : Any]?
-        levelDBQueue.sync {
+        serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -177,7 +176,7 @@ open class LevelDB {
     
     open func valueExistsForKey(_ key: String) -> Bool {
         var result = false
-        levelDBQueue.sync {
+        serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -194,7 +193,7 @@ open class LevelDB {
     }
     
     open func removeValueForKey(_ key: String) {
-        levelDBQueue.sync {
+        serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -217,7 +216,7 @@ open class LevelDB {
     }
     
     open func removeAllValuesWithPrefix(_ prefix: String) {
-        levelDBQueue.sync {
+        serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -286,7 +285,7 @@ open class LevelDB {
     }
     
     open func enumerateKeysWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyCallback) {
-        levelDBQueue.sync {
+        serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -341,7 +340,7 @@ open class LevelDB {
     }
     
     open func enumerateKeysAndValuesWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback:LevelDBKeyValueCallback) {
-        levelDBQueue.sync {
+        serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -387,7 +386,7 @@ open class LevelDB {
     }
     
     open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBLazyKeyValueCallback) {
-        levelDBQueue.sync {
+        serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -435,7 +434,7 @@ open class LevelDB {
     
     open func deleteDatabaseFromDisk() {
         self.close()
-        levelDBQueue.sync {
+        serialQueue.sync {
             do {
                 let fileManager = FileManager.default
                 try fileManager.removeItem(atPath: path)
@@ -446,13 +445,13 @@ open class LevelDB {
     }
     
     public func open() {
-        levelDBQueue.sync {
+        serialQueue.sync {
             self.db = levelDBOpen(path.cString)
         }
     }
     
     open func close() {
-        levelDBQueue.sync {
+        serialQueue.sync {
             if let db = db {
                 levelDBDelete(db)
                 self.db = nil
