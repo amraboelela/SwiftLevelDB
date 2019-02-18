@@ -12,11 +12,11 @@ import Foundation
 
 public extension String {
     
-    public var cString: UnsafeMutablePointer<Int8> {
+    var cString: UnsafeMutablePointer<Int8> {
         return UnsafeMutablePointer<Int8>(mutating: NSString(string: self).utf8String)!
     }
     
-    public static func fromCString(_ cString: UnsafeRawPointer, length: Int) -> String {
+    static func fromCString(_ cString: UnsafeRawPointer, length: Int) -> String {
         #if os(Linux) 
             if let result =  NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)?._bridgeToSwift() {
                 return result
