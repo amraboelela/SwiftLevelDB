@@ -10,7 +10,7 @@
 		0C36D3C21DC996EC0081878D /* SwiftLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */; };
 		0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B21DC996CD0081878D /* BaseTestClass.swift */; };
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
-		0C7B4DAE1E5AA40A003AB7F9 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */; };
+		EDA108F422A1A3B20009DF7E /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDA108F322A1A3B20009DF7E /* CLevelDB.framework */; };
 		EDAC2003205B7CEB00F16989 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC1FFF205B7CEB00F16989 /* Data.swift */; };
 		EDAC2004205B7CEB00F16989 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC2000205B7CEB00F16989 /* LevelDB.swift */; };
 		EDAC2005205B7CEB00F16989 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC2001205B7CEB00F16989 /* NSObject.swift */; };
@@ -43,6 +43,7 @@
 		0CD3F79C1E08DAF40002A697 /* build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build; sourceTree = "<group>"; };
 		0CD3F79D1E08DAF40002A697 /* test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test; sourceTree = "<group>"; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
+		EDA108F322A1A3B20009DF7E /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDAC1FFF205B7CEB00F16989 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		EDAC2000205B7CEB00F16989 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
 		EDAC2001205B7CEB00F16989 /* NSObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
@@ -54,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C7B4DAE1E5AA40A003AB7F9 /* CLevelDB.framework in Frameworks */,
+				EDA108F422A1A3B20009DF7E /* CLevelDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +127,7 @@
 		0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EDA108F322A1A3B20009DF7E /* CLevelDB.framework */,
 				0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */,
 			);
 			name = Frameworks;
@@ -218,6 +220,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 0C1D154E1D6ABF81007E99F4;
