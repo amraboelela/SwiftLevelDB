@@ -13,7 +13,7 @@ import Foundation
 import CLevelDB
 
 public typealias LevelDBKeyCallback = (String, UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBKeyValueCallback = (String, Data, UnsafeMutablePointer<Bool>) -> Void
+//public typealias LevelDBKeyValueCallback = (String, <T:Codable>, UnsafeMutablePointer<Bool>) -> Void
 //public typealias LevelDBLazyKeyValueCallback = (String, () -> [String : Any]?, UnsafeMutablePointer<Bool>) -> Void
 
 public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
@@ -103,15 +103,17 @@ open class LevelDB {
         return "<LevelDB:\(self) path: \(path)>"
     }
     
-    open func setValue(_ value: Data?, forKey key: String) {
+    open func setValue<T: Codable>(_ value: T, forKey key: String) {
         serialQueue.async {
             guard let db = self.db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
             }
-            if let newValue = value {
+            //if let newValue = value {
+            do {
+                let newData = try JSONEncoder().encode(value)
                 var status = 0
-                if let data = self.encoder(key, newValue) {
+                if let data = self.encoder(key, newData) {
                     var localData = data
                     localData.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
                         status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
@@ -120,33 +122,36 @@ open class LevelDB {
                         NSLog("setValue: Problem storing key/value pair in database")
                     }
                 } else {
-                    NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), newValue: \(newValue)")
+                    NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), value: \(value)")
                 }
-            } else {
-                levelDBItemDelete(db, key.cString, key.count)
+            } catch {
+                NSLog("LevelDB setValue error: \(error)")
             }
+            /*} else {
+             levelDBItemDelete(db, key.cString, key.count)
+             }*/
         }
     }
     
-    open subscript(key: String) -> Data? {
+    open subscript<T:Codable>(key: String) -> T? {
         get {
             // return an appropriate subscript value here
             return valueForKey(key)
         }
-        set(newValue) {
+        set (newValue) {
             // perform a suitable setting action here
             setValue(newValue, forKey: key)
         }
     }
     
-    open func addEntriesFromDictionary(_ dictionary: [String : Data]) {
+    open func addEntriesFromDictionary<T: Codable>(_ dictionary: [String : T]) {
         for (key, value) in dictionary {
             self[key] = value
         }
     }
     
-    open func valueForKey(_ key: String) -> Data? {
-        var result: Data?
+    open func valueForKey<T: Codable>(_ key: String) -> T? {
+        var result: T?
         serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
@@ -160,14 +165,16 @@ open class LevelDB {
             }
             if let rawData = rawData {
                 let data = Data(bytes: rawData, count: rawDataLength)
-                result = decoder(key, data)
+                if let decodedData = decoder(key, data) {
+                    result = try? JSONDecoder().decode(T.self, from: decodedData)
+                }
             }
         }
         return result
     }
     
-    open func valuesForKeys(_ keys: [String]) -> [Data?] {
-        var result = [Data?]()
+    open func valuesForKeys<T: Codable>(_ keys: [String]) -> [T?] {
+        var result = [T?]()
         for key in keys {
             result.append(self[key])
         }
@@ -256,7 +263,7 @@ open class LevelDB {
         return keys
     }
     
-    open func keysByFilteringWith(predicate: NSPredicate) -> [String] {
+    /*open func keysByFilteringWith(predicate: NSPredicate) -> [String] {
         var keys = [String]()
         enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: {key, obj, stop in
             keys.append(key)
@@ -264,7 +271,7 @@ open class LevelDB {
         return keys
     }
     
-    /*open func dictionaryByFilteringWith(predicate: NSPredicate) -> [String : Any] {
+    open func dictionaryByFilteringWith(predicate: NSPredicate) -> [String : Any] {
         var results = [String : Any]()
         
         enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: {key, obj, stop in
@@ -331,15 +338,15 @@ open class LevelDB {
         }
     }
     
-    open func enumerateKeysAndValues(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyValueCallback) {
+    open func enumerateKeysAndValues<T:Codable>(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
         enumerateKeysAndValuesWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, callback: callback)
     }
     
-    open func enumerateKeysAndValues(callback: LevelDBKeyValueCallback) {
+    open func enumerateKeysAndValues<T:Codable>(callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
         enumerateKeysAndValuesWith(predicate: nil, backward: false, startingAtKey: nil, andPrefix: nil, callback: callback)
     }
     
-    open func enumerateKeysAndValuesWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback:LevelDBKeyValueCallback) {
+    open func enumerateKeysAndValuesWith<T:Codable>(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
         serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
@@ -366,7 +373,7 @@ open class LevelDB {
                     var iData: UnsafeMutableRawPointer? = nil
                     var iDataLength: Int = 0
                     levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                    if let iData = iData, let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
+                    if let iData = iData, let data = decoder(iKeyString, Data(bytes: iData, count: iDataLength)), let v = try? JSONDecoder().decode(T.self, from: data) {
                         if predicate != nil {
                             if predicate!.evaluate(with: v) {
                                 callback(iKeyString, v, &stop)
@@ -384,51 +391,6 @@ open class LevelDB {
             levelDBIteratorDelete(iterator);
         }
     }
-    
-    /*open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBLazyKeyValueCallback) {
-        serialQueue.sync {
-            guard let db = db else {
-                NSLog("Database reference is not existent (it has probably been closed)")
-                return
-            }
-            let iterator = levelDBIteratorNew(db)
-            var stop = false
-            guard let iteratorPointer = iterator else {
-                NSLog("iterator is nil")
-                return
-            }
-            _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
-            while levelDBIteratorIsValid(iterator) {
-                var iKey: UnsafeMutablePointer<Int8>? = nil
-                var iKeyLength: Int = 0
-                levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
-                if let iKey = iKey {
-                    if let prefix = prefix {
-                        if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
-                            break
-                        }
-                    }
-                    let iKeyString = String.fromCString(iKey, length: iKeyLength)
-                    let getter : () -> [String : Any]? = {
-                        var iData: UnsafeMutableRawPointer? = nil
-                        var iDataLength: Int = 0
-                        levelDBIteratorGetValue(iterator, &iData, &iDataLength);
-                        if let iData = iData {
-                            return self.decoder(iKeyString, Data(bytes: iData, count: iDataLength));
-                        } else {
-                            return nil
-                        }
-                    };
-                    callback(iKeyString, getter, &stop);
-                }
-                if (stop) {
-                    break;
-                }
-                backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
-            }
-            levelDBIteratorDelete(iterator);
-        }
-    }*/
     
     // MARK: - Helper methods
     
