@@ -13,8 +13,8 @@ import Foundation
 import CLevelDB
 
 public typealias LevelDBKeyCallback = (String, UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBKeyValueCallback = (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void
-public typealias LevelDBLazyKeyValueCallback = (String, () -> [String : Any]?, UnsafeMutablePointer<Bool>) -> Void
+public typealias LevelDBKeyValueCallback = (String, Data, UnsafeMutablePointer<Bool>) -> Void
+//public typealias LevelDBLazyKeyValueCallback = (String, () -> [String : Any]?, UnsafeMutablePointer<Bool>) -> Void
 
 public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
     let bundle = Bundle.main
@@ -37,8 +37,8 @@ open class LevelDB {
     
     var name: String
     var path: String
-    public var encoder: (String, [String : Any]) -> Data?
-    public var decoder: (String, Data) -> [String : Any]?
+    public var encoder: (String, Data) -> Data?
+    public var decoder: (String, Data) -> Data?
     public var db: UnsafeMutableRawPointer?
     
     // MARK: - Life cycle
@@ -58,7 +58,7 @@ open class LevelDB {
         }
         //NSLog("LevelDB self.encoder")
         self.decoder = {key, data in
-            return ["" : ""]
+            return Data()
         }
         //NSLog("LevelDB self.decoder")
         #if os(Linux)
@@ -103,7 +103,7 @@ open class LevelDB {
         return "<LevelDB:\(self) path: \(path)>"
     }
     
-    open func setValue(_ value: [String : Any]?, forKey key: String) {
+    open func setValue(_ value: Data?, forKey key: String) {
         serialQueue.async {
             guard let db = self.db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
@@ -128,7 +128,7 @@ open class LevelDB {
         }
     }
     
-    open subscript(key: String) -> [String : Any]? {
+    open subscript(key: String) -> Data? {
         get {
             // return an appropriate subscript value here
             return valueForKey(key)
@@ -139,14 +139,14 @@ open class LevelDB {
         }
     }
     
-    open func addEntriesFromDictionary(_ dictionary: [String : [String : Any]]) {
+    open func addEntriesFromDictionary(_ dictionary: [String : Data]) {
         for (key, value) in dictionary {
             self[key] = value
         }
     }
     
-    open func valueForKey(_ key: String) -> [String : Any]? {
-        var result: [String : Any]?
+    open func valueForKey(_ key: String) -> Data? {
+        var result: Data?
         serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
@@ -166,8 +166,8 @@ open class LevelDB {
         return result
     }
     
-    open func valuesForKeys(_ keys: [String]) -> [[String : Any]?] {
-        var result = [[String : Any]?]()
+    open func valuesForKeys(_ keys: [String]) -> [Data?] {
+        var result = [Data?]()
         for key in keys {
             result.append(self[key])
         }
@@ -264,14 +264,14 @@ open class LevelDB {
         return keys
     }
     
-    open func dictionaryByFilteringWith(predicate: NSPredicate) -> [String : Any] {
+    /*open func dictionaryByFilteringWith(predicate: NSPredicate) -> [String : Any] {
         var results = [String : Any]()
         
         enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: {key, obj, stop in
             results[key] = obj
         })
         return results
-    }
+    }*/
     
     // MARK: - Enumeration
     
@@ -385,7 +385,7 @@ open class LevelDB {
         }
     }
     
-    open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBLazyKeyValueCallback) {
+    /*open func enumerateKeysAndValuesLazily(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBLazyKeyValueCallback) {
         serialQueue.sync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
@@ -428,7 +428,7 @@ open class LevelDB {
             }
             levelDBIteratorDelete(iterator);
         }
-    }
+    }*/
     
     // MARK: - Helper methods
     
