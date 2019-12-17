@@ -13,8 +13,6 @@ import Foundation
 import CLevelDB
 
 public typealias LevelDBKeyCallback = (String, UnsafeMutablePointer<Bool>) -> Void
-//public typealias LevelDBKeyValueCallback = (String, <T:Codable>, UnsafeMutablePointer<Bool>) -> Void
-//public typealias LevelDBLazyKeyValueCallback = (String, () -> [String : Any]?, UnsafeMutablePointer<Bool>) -> Void
 
 public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPathDirectory, _ domainMask: FileManager.SearchPathDomainMask, _ expandTilde: Bool) -> [String] {
     let bundle = Bundle.main
@@ -127,9 +125,6 @@ open class LevelDB {
             } catch {
                 NSLog("LevelDB setValue error: \(error)")
             }
-            /*} else {
-             levelDBItemDelete(db, key.cString, key.count)
-             }*/
         }
     }
     
