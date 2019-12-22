@@ -35,6 +35,8 @@ open class LevelDB {
     
     var name: String
     var path: String
+	public var dictionaryEncoder: (String, [String : Any]) -> Data?
+    public var dictionaryDecoder: (String, Data) -> [String : Any]?
     public var encoder: (String, Data) -> Data?
     public var decoder: (String, Data) -> Data?
     public var db: UnsafeMutableRawPointer?
@@ -47,6 +49,17 @@ open class LevelDB {
         //NSLog("LevelDB self.name: \(name)")
         self.path = path
         //NSLog("LevelDB path: \(path)")
+		self.dictionaryEncoder = { key, value in
+				#if DEBUG
+					NSLog("No encoder block was set for this database [\(name)]")
+					NSLog("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
+				#endif
+				return Data(bytes: key.cString, count: key.count)
+			}
+			//NSLog("LevelDB self.encoder")
+		self.dictionaryDecoder = {key, data in
+			return ["" : ""]
+		}
         self.encoder = { key, value in
             #if DEBUG
                 NSLog("No encoder block was set for this database [\(name)]")
@@ -258,23 +271,6 @@ open class LevelDB {
         return keys
     }
     
-    /*open func keysByFilteringWith(predicate: NSPredicate) -> [String] {
-        var keys = [String]()
-        enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: {key, obj, stop in
-            keys.append(key)
-        })
-        return keys
-    }
-    
-    open func dictionaryByFilteringWith(predicate: NSPredicate) -> [String : Any] {
-        var results = [String : Any]()
-        
-        enumerateKeysAndValuesWith(predicate: predicate, backward: false, startingAtKey: nil, andPrefix: nil, callback: {key, obj, stop in
-            results[key] = obj
-        })
-        return results
-    }*/
-    
     // MARK: - Enumeration
     
     open func enumerateKeys(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyCallback) {
@@ -333,14 +329,68 @@ open class LevelDB {
         }
     }
     
+	open func enumerateKeysAndDictionaries(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void) {
+        enumerateKeysAndDictionariesWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, callback: callback)
+    }
+	
     open func enumerateKeysAndValues<T:Codable>(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
         enumerateKeysAndValuesWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, callback: callback)
     }
     
+	open func enumerateKeysAndDictionaries(callback: (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void) {
+        enumerateKeysAndDictionariesWith(predicate: nil, backward: false, startingAtKey: nil, andPrefix: nil, callback: callback)
+    }
+	
     open func enumerateKeysAndValues<T:Codable>(callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
         enumerateKeysAndValuesWith(predicate: nil, backward: false, startingAtKey: nil, andPrefix: nil, callback: callback)
     }
     
+	open func enumerateKeysAndDictionariesWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void) {
+        serialQueue.sync {
+            guard let db = db else {
+                NSLog("Database reference is not existent (it has probably been closed)")
+                return
+            }
+            let iterator = levelDBIteratorNew(db)
+            var stop = false
+            guard let iteratorPointer = iterator else {
+                NSLog("iterator is nil")
+                return
+            }
+            _startIterator(iteratorPointer, backward: backward, prefix: prefix, start: key)
+            while levelDBIteratorIsValid(iterator) {
+                var iKey: UnsafeMutablePointer<Int8>? = nil
+                var iKeyLength: Int = 0
+                levelDBIteratorGetKey(iterator, &iKey, &iKeyLength);
+                if let iKey = iKey {
+                    if let prefix = prefix {
+                        if memcmp(iKey, prefix.cString, min(prefix.count, iKeyLength)) != 0 {
+                            break
+                        }
+                    }
+                    let iKeyString = String.fromCString(iKey, length: iKeyLength)
+                    var iData: UnsafeMutableRawPointer? = nil
+                    var iDataLength: Int = 0
+                    levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                    if let iData = iData, let v = dictionaryDecoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
+                        if predicate != nil {
+                            if predicate!.evaluate(with: v) {
+                                callback(iKeyString, v, &stop)
+                            }
+                        } else {
+                            callback(iKeyString, v, &stop)
+                        }
+                    }
+                }
+                if (stop) {
+                    break;
+                }
+                backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
+            }
+            levelDBIteratorDelete(iterator);
+        }
+    }
+	
     open func enumerateKeysAndValuesWith<T:Codable>(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
         serialQueue.sync {
             guard let db = db else {
