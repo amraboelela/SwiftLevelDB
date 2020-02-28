@@ -27,4 +27,12 @@ public extension String {
             return NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)! as String;
         #endif
     }
+
+    func truncate(length: Int, trailing: String = "…") -> String {
+        if self.count > length {
+            return String(self.prefix(length)) + trailing
+        } else {
+            return self
+        }
+    }
 }

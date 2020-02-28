@@ -14,7 +14,7 @@ extension Data {
 
     public var simpleDescription : String {
         if let result = String(data: self, encoding: String.Encoding.utf8) {
-            return result
+            return result.truncate(length:500)
         } else {
             return ""
         }
