@@ -10,7 +10,9 @@
 		0C36D3C21DC996EC0081878D /* SwiftLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */; };
 		0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B21DC996CD0081878D /* BaseTestClass.swift */; };
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
-		0C7B4DAE1E5AA40A003AB7F9 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */; };
+		602E69B7240C45E800CB9AF0 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 602E69B6240C45E800CB9AF0 /* CLevelDB.framework */; };
+		602E69B8240C460600CB9AF0 /* CLevelDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 602E69B6240C45E800CB9AF0 /* CLevelDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		602E69BA240C47F700CB9AF0 /* SwiftLevelDB-bridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */; };
 		ED33E10A205717A30045DA02 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
 		ED33E10B205717A30045DA02 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		ED33E10C205717A30045DA02 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E108205717A30045DA02 /* NSObject.swift */; };
@@ -28,6 +30,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		602E69B5240C454600CB9AF0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				602E69B8240C460600CB9AF0 /* CLevelDB.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C36D3AD1DC996A70081878D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -39,10 +55,11 @@
 		0C4F5EEA1D6B79A700BEE4AE /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0C4F5EEB1D6B79A700BEE4AE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0C649CAB1DFA7A6D0072F559 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CLevelDB.framework; path = "../CLevelDB/build/Debug-iphoneos/CLevelDB.framework"; sourceTree = "<group>"; };
 		0CD3F78D1E087AE80002A697 /* clean */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = clean; sourceTree = "<group>"; };
 		0CD3F79C1E08DAF40002A697 /* build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build; sourceTree = "<group>"; };
 		0CD3F79D1E08DAF40002A697 /* test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test; sourceTree = "<group>"; };
+		602E69B6240C45E800CB9AF0 /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwiftLevelDB-bridge.h"; sourceTree = "<group>"; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
 		ED33E106205717A30045DA02 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		ED33E107205717A30045DA02 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
@@ -56,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C7B4DAE1E5AA40A003AB7F9 /* CLevelDB.framework in Frameworks */,
+				602E69B7240C45E800CB9AF0 /* CLevelDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +93,7 @@
 			children = (
 				0C36D3AD1DC996A70081878D /* Info.plist */,
 				0CD3F78D1E087AE80002A697 /* clean */,
+				602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */,
 				0CD3F79C1E08DAF40002A697 /* build */,
 				0CD3F79D1E08DAF40002A697 /* test */,
 				0C4F5EEA1D6B79A700BEE4AE /* Package.swift */,
@@ -123,7 +141,7 @@
 		0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */,
+				602E69B6240C45E800CB9AF0 /* CLevelDB.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -154,6 +172,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				602E69BA240C47F700CB9AF0 /* SwiftLevelDB-bridge.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,6 +187,7 @@
 				0C1D15541D6ABF81007E99F4 /* Frameworks */,
 				0C1D15551D6ABF81007E99F4 /* Headers */,
 				0C1D15561D6ABF81007E99F4 /* Resources */,
+				602E69B5240C454600CB9AF0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -401,7 +421,6 @@
 		0C1D15611D6ABF81007E99F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -414,19 +433,21 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftLevelDB-bridge.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				VALID_ARCHS = "arm64 arm64e";
 			};
 			name = Debug;
 		};
 		0C1D15621D6ABF81007E99F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -439,11 +460,14 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SwiftLevelDB-bridge.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_VERSION = 5.0;
+				VALID_ARCHS = "arm64 arm64e";
 			};
 			name = Release;
 		};
