@@ -120,7 +120,6 @@ open class LevelDB {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
             }
-            //if let newValue = value {
             do {
                 let newData = try JSONEncoder().encode(value)
                 var status = 0
