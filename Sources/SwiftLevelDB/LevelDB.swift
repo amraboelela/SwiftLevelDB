@@ -522,6 +522,9 @@ open class LevelDB {
             } else {
                 // Otherwise, we start at the provided prefix
                 levelDBIteratorSeek(iterator, startingKey.cString, len)
+                if !levelDBIteratorIsValid(iterator) {
+                    levelDBIteratorMoveToFirst(iterator)
+                }
             }
         } else if let key = key {
             levelDBIteratorSeek(iterator, key.cString, key.count)
