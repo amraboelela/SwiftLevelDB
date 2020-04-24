@@ -49,23 +49,23 @@ open class LevelDB {
         //NSLog("LevelDB self.name: \(name)")
         self.path = path
         //NSLog("LevelDB path: \(path)")
-		self.dictionaryEncoder = { key, value in
-				#if DEBUG
-					NSLog("No encoder block was set for this database [\(name)]")
-					NSLog("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
-				#endif
-				return Data(bytes: key.cString, count: key.count)
-			}
-			//NSLog("LevelDB self.encoder")
-		self.dictionaryDecoder = {key, data in
-			return ["" : ""]
-		}
+        self.dictionaryEncoder = { key, value in
+            #if DEBUG
+            NSLog("No encoder block was set for this database [\(name)]")
+            NSLog("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
+            #endif
+            return key.data(using: .utf8)
+        }
+        //NSLog("LevelDB self.encoder")
+        self.dictionaryDecoder = {key, data in
+            return ["" : ""]
+        }
         self.encoder = { key, value in
             #if DEBUG
-                NSLog("No encoder block was set for this database [\(name)]")
-                NSLog("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
+            NSLog("No encoder block was set for this database [\(name)]")
+            NSLog("Using a convenience encoder/decoder pair using NSKeyedArchiver.")
             #endif
-            return Data(bytes: key.cString, count: key.count)
+            return key.data(using: .utf8)
         }
         //NSLog("LevelDB self.encoder")
         self.decoder = {key, data in
@@ -73,17 +73,17 @@ open class LevelDB {
         }
         //NSLog("LevelDB self.decoder")
         #if os(Linux)
-            do {
-                let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
-                //NSLog("LevelDB dirpath: \(dirpath)")
-                let fileManager = FileManager.default
-                if !fileManager.fileExists(atPath: dirpath) {
-                    try fileManager.createDirectory(atPath: dirpath, withIntermediateDirectories:false, attributes:nil)
-                }
-                //NSLog("try FileManager.default")
-            } catch {
-                NSLog("Problem creating parent directory: \(error)")
+        do {
+            let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
+            //NSLog("LevelDB dirpath: \(dirpath)")
+            let fileManager = FileManager.default
+            if !fileManager.fileExists(atPath: dirpath) {
+                try fileManager.createDirectory(atPath: dirpath, withIntermediateDirectories:false, attributes:nil)
             }
+            //NSLog("try FileManager.default")
+        } catch {
+            NSLog("Problem creating parent directory: \(error)")
+        }
         #endif
         self.open()
     }
@@ -313,6 +313,8 @@ open class LevelDB {
                             if predicate!.evaluate(with: v) {
                                 callback(iKeyString, &stop)
                             }
+                        } else {
+                            callback(iKeyString, &stop)
                         }
                     } else {
                         callback(iKeyString, &stop)

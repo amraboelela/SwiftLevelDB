@@ -21,10 +21,16 @@ public extension String {
             if let result =  NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)?._bridgeToSwift() {
                 return result
             } else {
-                return ""
+                let data = Data(bytes: cString, count: length)
+                return String(decoding: data, as: UTF8.self)
             }
         #else
-            return NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)! as String;
+        if let result = NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue) {
+            return result as String
+        } else {
+            let data = Data(bytes: cString, count: length)
+            return String(decoding: data, as: UTF8.self)
+        }
         #endif
     }
 
