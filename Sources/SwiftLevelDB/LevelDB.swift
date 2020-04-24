@@ -313,8 +313,6 @@ open class LevelDB {
                             if predicate!.evaluate(with: v) {
                                 callback(iKeyString, &stop)
                             }
-                        } else {
-                            callback(iKeyString, &stop)
                         }
                     } else {
                         callback(iKeyString, &stop)
