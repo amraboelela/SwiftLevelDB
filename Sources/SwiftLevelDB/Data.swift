@@ -16,7 +16,7 @@ extension Data {
         if let result = String(data: self, encoding: .utf8) {
             return result.truncate(length:500)
         } else {
-            return ""
+            return String(decoding: self, as: UTF8.self).truncate(length:500)
         }
     }
 

@@ -29,7 +29,9 @@ public extension String {
             return result as String
         } else {
             let data = Data(bytes: cString, count: length)
-            return String(decoding: data, as: UTF8.self)
+            let result = String(decoding: data, as: UTF8.self)
+            NSLog("fromCString error result: \(result)")
+            return result
         }
         #endif
     }
