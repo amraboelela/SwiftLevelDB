@@ -16,7 +16,6 @@
 		ED33E10B205717A30045DA02 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		ED33E10C205717A30045DA02 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E108205717A30045DA02 /* NSObject.swift */; };
 		ED33E10D205717A30045DA02 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E109205717A30045DA02 /* String.swift */; };
-		EDB4041A21684DD100E7C686 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB4041821684DCE00E7C686 /* Date.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +49,6 @@
 		ED33E107205717A30045DA02 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
 		ED33E108205717A30045DA02 /* NSObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		ED33E109205717A30045DA02 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		EDB4041821684DCE00E7C686 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,7 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				0C36D3B21DC996CD0081878D /* BaseTestClass.swift */,
-				EDB4041821684DCE00E7C686 /* Date.swift */,
 				0C36D3B31DC996CD0081878D /* Info.plist */,
 				0C36D3B41DC996CD0081878D /* MainTests.swift */,
 			);
@@ -274,7 +271,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */,
-				EDB4041A21684DD100E7C686 /* Date.swift in Sources */,
 				0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -16,7 +16,6 @@ import SwiftLevelDB
 class BaseTestClass: XCTestCase {
     
     var db : LevelDB?
-    //var lvldb_test_queue = DispatchQueue(label: "Create DB")
     
     override func setUp() {
         super.setUp()
@@ -27,24 +26,33 @@ class BaseTestClass: XCTestCase {
             return
         }
         db.removeAllValues()
-        db.encoder = {(key: String, value: [String : Any]) -> Data? in
+
+        db.encoder = {(key: String, value: Data) -> Data? in
             do {
-                let data = try JSONSerialization.data(withJSONObject: value)
+                let data = value
+                #if TwisterServer || DEBUG
                 return data
+                #else
+                return try data.encryptedWithSaltUsing(key: myDevice.id)
+                #endif
             } catch {
                 NSLog("Problem encoding data: \(error)")
                 return nil
             }
         }
-        db.decoder = {(key: String, data: Data) -> [String : Any]? in
+        db.decoder = {(key: String, data: Data) -> Data? in
             do {
-                if let result = try JSONSerialization.jsonObject(with: data) as? [String : Any] {
-                    return result
+                #if TwisterServer || DEBUG
+                return data
+                #else
+                if let decryptedData = try data.decryptedWithSaltUsing(key: myDevice.id) {
+                    return decryptedData
                 } else {
                     return nil
                 }
+                #endif
             } catch {
-                NSLog("Problem decoding data: \(error)")
+                NSLog("Problem decoding data: \(data.simpleDescription) key: \(key) error: \(error)")
                 return nil
             }
         }
