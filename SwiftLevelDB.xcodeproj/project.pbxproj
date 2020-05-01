@@ -18,7 +18,6 @@
 		60B7E907245A4955008DE608 /* SwiftLevelDB-bridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */; };
 		60B7E913245A4ABA008DE608 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B7E912245A4ABA008DE608 /* CLevelDB.framework */; };
 		60B7E966245B48F6008DE608 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B7E965245B48F6008DE608 /* CLevelDB.framework */; };
-		60B7E967245B48F6008DE608 /* CLevelDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60B7E965245B48F6008DE608 /* CLevelDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ED33E10A205717A30045DA02 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
 		ED33E10B205717A30045DA02 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		ED33E10C205717A30045DA02 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E108205717A30045DA02 /* NSObject.swift */; };
@@ -34,20 +33,6 @@
 			remoteInfo = SwiftLevelDB;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		60B7E968245B48F8008DE608 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				60B7E967245B48F6008DE608 /* CLevelDB.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -248,7 +233,6 @@
 				60B7E905245A4955008DE608 /* Frameworks */,
 				60B7E906245A4955008DE608 /* Headers */,
 				60B7E908245A4955008DE608 /* Resources */,
-				60B7E968245B48F8008DE608 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

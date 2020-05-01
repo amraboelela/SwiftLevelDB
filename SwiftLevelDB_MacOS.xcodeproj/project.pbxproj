@@ -10,7 +10,8 @@
 		0C36D3C21DC996EC0081878D /* SwiftLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */; };
 		0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B21DC996CD0081878D /* BaseTestClass.swift */; };
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
-		EDA108F422A1A3B20009DF7E /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDA108F322A1A3B20009DF7E /* CLevelDB.framework */; };
+		60C74B24245C9CE800DB41BD /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60C74B23245C9CE800DB41BD /* CLevelDB.framework */; };
+		60C74B25245C9CE800DB41BD /* CLevelDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60C74B23245C9CE800DB41BD /* CLevelDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EDAC2003205B7CEB00F16989 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC1FFF205B7CEB00F16989 /* Data.swift */; };
 		EDAC2004205B7CEB00F16989 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC2000205B7CEB00F16989 /* LevelDB.swift */; };
 		EDAC2005205B7CEB00F16989 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC2001205B7CEB00F16989 /* NSObject.swift */; };
@@ -27,6 +28,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		60C74B26245C9CE800DB41BD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				60C74B25245C9CE800DB41BD /* CLevelDB.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C36D3AD1DC996A70081878D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -42,8 +57,8 @@
 		0CD3F78D1E087AE80002A697 /* clean */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = clean; sourceTree = "<group>"; };
 		0CD3F79C1E08DAF40002A697 /* build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build; sourceTree = "<group>"; };
 		0CD3F79D1E08DAF40002A697 /* test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test; sourceTree = "<group>"; };
+		60C74B23245C9CE800DB41BD /* CLevelDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = "<group>"; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
-		EDA108F322A1A3B20009DF7E /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDAC1FFF205B7CEB00F16989 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		EDAC2000205B7CEB00F16989 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
 		EDAC2001205B7CEB00F16989 /* NSObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
@@ -55,7 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDA108F422A1A3B20009DF7E /* CLevelDB.framework in Frameworks */,
+				60C74B24245C9CE800DB41BD /* CLevelDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +144,7 @@
 		0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EDA108F322A1A3B20009DF7E /* CLevelDB.framework */,
+				60C74B23245C9CE800DB41BD /* CLevelDB.framework */,
 				0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */,
 			);
 			name = Frameworks;
@@ -168,6 +183,7 @@
 				0C1D15541D6ABF81007E99F4 /* Frameworks */,
 				0C1D15551D6ABF81007E99F4 /* Headers */,
 				0C1D15561D6ABF81007E99F4 /* Resources */,
+				60C74B26245C9CE800DB41BD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -226,6 +242,8 @@
 				Base,
 			);
 			mainGroup = 0C1D154E1D6ABF81007E99F4;
+			packageReferences = (
+			);
 			productRefGroup = 0C1D15591D6ABF81007E99F4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -402,7 +420,6 @@
 		0C1D15611D6ABF81007E99F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -411,6 +428,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -431,7 +452,6 @@
 		0C1D15621D6ABF81007E99F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -440,6 +460,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
