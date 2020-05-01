@@ -1,6 +1,0 @@
-framework module CLevelDB {
-  umbrella header "CLevelDB.h"
-
-  export *
-  module * { export * }
-}
