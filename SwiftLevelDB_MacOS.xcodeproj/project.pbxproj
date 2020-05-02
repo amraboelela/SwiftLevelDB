@@ -3,15 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0C36D3C21DC996EC0081878D /* SwiftLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */; };
 		0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B21DC996CD0081878D /* BaseTestClass.swift */; };
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
-		60C74B24245C9CE800DB41BD /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60C74B23245C9CE800DB41BD /* CLevelDB.framework */; };
-		60C74B25245C9CE800DB41BD /* CLevelDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 60C74B23245C9CE800DB41BD /* CLevelDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		604E7A08245D02A300953BE9 /* CLevelDB in Frameworks */ = {isa = PBXBuildFile; productRef = 604E7A07245D02A300953BE9 /* CLevelDB */; };
 		EDAC2003205B7CEB00F16989 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC1FFF205B7CEB00F16989 /* Data.swift */; };
 		EDAC2004205B7CEB00F16989 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC2000205B7CEB00F16989 /* LevelDB.swift */; };
 		EDAC2005205B7CEB00F16989 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC2001205B7CEB00F16989 /* NSObject.swift */; };
@@ -28,20 +27,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		60C74B26245C9CE800DB41BD /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				60C74B25245C9CE800DB41BD /* CLevelDB.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C36D3AD1DC996A70081878D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -53,11 +38,9 @@
 		0C4F5EEA1D6B79A700BEE4AE /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		0C4F5EEB1D6B79A700BEE4AE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0C649CAB1DFA7A6D0072F559 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CLevelDB.framework; path = "../CLevelDB/build/Debug-iphoneos/CLevelDB.framework"; sourceTree = "<group>"; };
 		0CD3F78D1E087AE80002A697 /* clean */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = clean; sourceTree = "<group>"; };
 		0CD3F79C1E08DAF40002A697 /* build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build; sourceTree = "<group>"; };
 		0CD3F79D1E08DAF40002A697 /* test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test; sourceTree = "<group>"; };
-		60C74B23245C9CE800DB41BD /* CLevelDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = "<group>"; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
 		EDAC1FFF205B7CEB00F16989 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		EDAC2000205B7CEB00F16989 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
@@ -70,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60C74B24245C9CE800DB41BD /* CLevelDB.framework in Frameworks */,
+				604E7A08245D02A300953BE9 /* CLevelDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,8 +127,6 @@
 		0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				60C74B23245C9CE800DB41BD /* CLevelDB.framework */,
-				0C7B4DAD1E5AA40A003AB7F9 /* CLevelDB.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -183,13 +164,15 @@
 				0C1D15541D6ABF81007E99F4 /* Frameworks */,
 				0C1D15551D6ABF81007E99F4 /* Headers */,
 				0C1D15561D6ABF81007E99F4 /* Resources */,
-				60C74B26245C9CE800DB41BD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = SwiftLevelDB;
+			packageProductDependencies = (
+				604E7A07245D02A300953BE9 /* CLevelDB */,
+			);
 			productName = SwiftLevelDB;
 			productReference = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */;
 			productType = "com.apple.product-type.framework";
@@ -243,6 +226,7 @@
 			);
 			mainGroup = 0C1D154E1D6ABF81007E99F4;
 			packageReferences = (
+				604E7A06245D018200953BE9 /* XCRemoteSwiftPackageReference "CLevelDB" */,
 			);
 			productRefGroup = 0C1D15591D6ABF81007E99F4 /* Products */;
 			projectDirPath = "";
@@ -409,7 +393,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -435,7 +420,11 @@
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -445,7 +434,7 @@
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -467,7 +456,11 @@
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -476,7 +469,7 @@
 				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -489,7 +482,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				INFOPLIST_FILE = Tests/SwiftLevelDBTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDBTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -507,10 +504,15 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				INFOPLIST_FILE = Tests/SwiftLevelDBTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDBTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 			};
@@ -547,6 +549,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		604E7A06245D018200953BE9 /* XCRemoteSwiftPackageReference "CLevelDB" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amraboelela/CLevelDB.git";
+			requirement = {
+				branch = spm;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		604E7A07245D02A300953BE9 /* CLevelDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 604E7A06245D018200953BE9 /* XCRemoteSwiftPackageReference "CLevelDB" */;
+			productName = CLevelDB;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0C1D154F1D6ABF81007E99F4 /* Project object */;
 }

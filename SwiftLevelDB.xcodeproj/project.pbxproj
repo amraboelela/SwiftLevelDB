@@ -11,13 +11,12 @@
 		0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B21DC996CD0081878D /* BaseTestClass.swift */; };
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
 		602E69BA240C47F700CB9AF0 /* SwiftLevelDB-bridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */; };
+		604E7A0F245D16E800953BE9 /* WatchSwiftLevelDB-bridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 604E7A0D245D16C200953BE9 /* WatchSwiftLevelDB-bridge.h */; };
+		604E7A11245D17DD00953BE9 /* WatchCLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604E7A10245D17DD00953BE9 /* WatchCLevelDB.framework */; };
 		60B7E901245A4955008DE608 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E108205717A30045DA02 /* NSObject.swift */; };
 		60B7E902245A4955008DE608 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		60B7E903245A4955008DE608 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E109205717A30045DA02 /* String.swift */; };
 		60B7E904245A4955008DE608 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
-		60B7E907245A4955008DE608 /* SwiftLevelDB-bridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */; };
-		60B7E913245A4ABA008DE608 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B7E912245A4ABA008DE608 /* CLevelDB.framework */; };
-		60B7E966245B48F6008DE608 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60B7E965245B48F6008DE608 /* CLevelDB.framework */; };
 		ED33E10A205717A30045DA02 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
 		ED33E10B205717A30045DA02 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		ED33E10C205717A30045DA02 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E108205717A30045DA02 /* NSObject.swift */; };
@@ -49,10 +48,9 @@
 		0CD3F79C1E08DAF40002A697 /* build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build; sourceTree = "<group>"; };
 		0CD3F79D1E08DAF40002A697 /* test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test; sourceTree = "<group>"; };
 		602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwiftLevelDB-bridge.h"; sourceTree = "<group>"; };
-		60B7E90C245A4955008DE608 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		60B7E912245A4ABA008DE608 /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		60B7E916245A4AC7008DE608 /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		60B7E965245B48F6008DE608 /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		604E7A0D245D16C200953BE9 /* WatchSwiftLevelDB-bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WatchSwiftLevelDB-bridge.h"; sourceTree = "<group>"; };
+		604E7A10245D17DD00953BE9 /* WatchCLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WatchCLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		60B7E90C245A4955008DE608 /* WatchSwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WatchSwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
 		ED33E106205717A30045DA02 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		ED33E107205717A30045DA02 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
@@ -65,7 +63,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60B7E913245A4ABA008DE608 /* CLevelDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,7 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60B7E966245B48F6008DE608 /* CLevelDB.framework in Frameworks */,
+				604E7A11245D17DD00953BE9 /* WatchCLevelDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +91,7 @@
 				0C36D3AD1DC996A70081878D /* Info.plist */,
 				0CD3F78D1E087AE80002A697 /* clean */,
 				602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */,
+				604E7A0D245D16C200953BE9 /* WatchSwiftLevelDB-bridge.h */,
 				0CD3F79C1E08DAF40002A697 /* build */,
 				0CD3F79D1E08DAF40002A697 /* test */,
 				0C4F5EEA1D6B79A700BEE4AE /* Package.swift */,
@@ -114,7 +112,7 @@
 			children = (
 				0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */,
 				0C36D3BD1DC996EC0081878D /* SwiftLevelDBTests.xctest */,
-				60B7E90C245A4955008DE608 /* SwiftLevelDB.framework */,
+				60B7E90C245A4955008DE608 /* WatchSwiftLevelDB.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,9 +139,7 @@
 		0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				60B7E965245B48F6008DE608 /* CLevelDB.framework */,
-				60B7E916245A4AC7008DE608 /* CLevelDB.framework */,
-				60B7E912245A4ABA008DE608 /* CLevelDB.framework */,
+				604E7A10245D17DD00953BE9 /* WatchCLevelDB.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -182,7 +178,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60B7E907245A4955008DE608 /* SwiftLevelDB-bridge.h in Headers */,
+				604E7A0F245D16E800953BE9 /* WatchSwiftLevelDB-bridge.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,9 +221,9 @@
 			productReference = 0C36D3BD1DC996EC0081878D /* SwiftLevelDBTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		60B7E8FF245A4955008DE608 /* SwiftLevelDB.watchOS */ = {
+		60B7E8FF245A4955008DE608 /* WatchSwiftLevelDB */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 60B7E909245A4955008DE608 /* Build configuration list for PBXNativeTarget "SwiftLevelDB.watchOS" */;
+			buildConfigurationList = 60B7E909245A4955008DE608 /* Build configuration list for PBXNativeTarget "WatchSwiftLevelDB" */;
 			buildPhases = (
 				60B7E900245A4955008DE608 /* Sources */,
 				60B7E905245A4955008DE608 /* Frameworks */,
@@ -238,9 +234,9 @@
 			);
 			dependencies = (
 			);
-			name = SwiftLevelDB.watchOS;
+			name = WatchSwiftLevelDB;
 			productName = SwiftLevelDB;
-			productReference = 60B7E90C245A4955008DE608 /* SwiftLevelDB.framework */;
+			productReference = 60B7E90C245A4955008DE608 /* WatchSwiftLevelDB.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -279,7 +275,7 @@
 			targets = (
 				0C1D15571D6ABF81007E99F4 /* SwiftLevelDB */,
 				0C36D3BC1DC996EC0081878D /* SwiftLevelDBTests */,
-				60B7E8FF245A4955008DE608 /* SwiftLevelDB.watchOS */,
+				60B7E8FF245A4955008DE608 /* WatchSwiftLevelDB */,
 			);
 		};
 /* End PBXProject section */
@@ -570,10 +566,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
-				PRODUCT_NAME = SwiftLevelDB;
+				PRODUCT_NAME = WatchSwiftLevelDB;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftLevelDB-bridge.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "WatchSwiftLevelDB-bridge.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -600,10 +596,10 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
-				PRODUCT_NAME = SwiftLevelDB;
+				PRODUCT_NAME = WatchSwiftLevelDB;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "SwiftLevelDB-bridge.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "WatchSwiftLevelDB-bridge.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -641,7 +637,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		60B7E909245A4955008DE608 /* Build configuration list for PBXNativeTarget "SwiftLevelDB.watchOS" */ = {
+		60B7E909245A4955008DE608 /* Build configuration list for PBXNativeTarget "WatchSwiftLevelDB" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				60B7E90A245A4955008DE608 /* Debug */,
