@@ -10,6 +10,7 @@
 		0C36D3C21DC996EC0081878D /* SwiftLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */; };
 		0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B21DC996CD0081878D /* BaseTestClass.swift */; };
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
+		6024744C2460B6390088354C /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6024744B2460B6390088354C /* CLevelDB.framework */; };
 		602E69BA240C47F700CB9AF0 /* SwiftLevelDB-bridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */; };
 		604E7A0F245D16E800953BE9 /* WatchSwiftLevelDB-bridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 604E7A0D245D16C200953BE9 /* WatchSwiftLevelDB-bridge.h */; };
 		604E7A11245D17DD00953BE9 /* WatchCLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 604E7A10245D17DD00953BE9 /* WatchCLevelDB.framework */; };
@@ -47,6 +48,7 @@
 		0CD3F78D1E087AE80002A697 /* clean */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = clean; sourceTree = "<group>"; };
 		0CD3F79C1E08DAF40002A697 /* build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build; sourceTree = "<group>"; };
 		0CD3F79D1E08DAF40002A697 /* test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test; sourceTree = "<group>"; };
+		6024744B2460B6390088354C /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		602E69B9240C47F600CB9AF0 /* SwiftLevelDB-bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SwiftLevelDB-bridge.h"; sourceTree = "<group>"; };
 		604E7A0D245D16C200953BE9 /* WatchSwiftLevelDB-bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WatchSwiftLevelDB-bridge.h"; sourceTree = "<group>"; };
 		604E7A10245D17DD00953BE9 /* WatchCLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WatchCLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6024744C2460B6390088354C /* CLevelDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +142,7 @@
 		0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6024744B2460B6390088354C /* CLevelDB.framework */,
 				604E7A10245D17DD00953BE9 /* WatchCLevelDB.framework */,
 			);
 			name = Frameworks;
