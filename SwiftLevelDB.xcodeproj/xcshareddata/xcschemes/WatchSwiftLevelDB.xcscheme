@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "60B7E8FF245A4955008DE608"
-               BuildableName = "SwiftLevelDB.framework"
-               BlueprintName = "SwiftLevelDB.watchOS"
+               BuildableName = "WatchSwiftLevelDB.framework"
+               BlueprintName = "WatchSwiftLevelDB"
                ReferencedContainer = "container:SwiftLevelDB.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,8 +51,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "60B7E8FF245A4955008DE608"
-            BuildableName = "SwiftLevelDB.framework"
-            BlueprintName = "SwiftLevelDB.watchOS"
+            BuildableName = "WatchSwiftLevelDB.framework"
+            BlueprintName = "WatchSwiftLevelDB"
             ReferencedContainer = "container:SwiftLevelDB.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
