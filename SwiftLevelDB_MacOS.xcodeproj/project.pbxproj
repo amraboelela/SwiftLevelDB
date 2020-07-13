@@ -10,7 +10,7 @@
 		0C36D3C21DC996EC0081878D /* SwiftLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */; };
 		0C36D3C81DC99AE90081878D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B21DC996CD0081878D /* BaseTestClass.swift */; };
 		0C36D3C91DC99AEE0081878D /* MainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C36D3B41DC996CD0081878D /* MainTests.swift */; };
-		603220752464C9CE00235700 /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 603220742464C9CE00235700 /* CLevelDB.framework */; };
+		6072FBA824BD1B740091C97B /* CLevelDB in Frameworks */ = {isa = PBXBuildFile; productRef = 6072FBA724BD1B740091C97B /* CLevelDB */; settings = {ATTRIBUTES = (Required, ); }; };
 		EDAC2003205B7CEB00F16989 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC1FFF205B7CEB00F16989 /* Data.swift */; };
 		EDAC2004205B7CEB00F16989 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC2000205B7CEB00F16989 /* LevelDB.swift */; };
 		EDAC2005205B7CEB00F16989 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAC2001205B7CEB00F16989 /* NSObject.swift */; };
@@ -41,7 +41,6 @@
 		0CD3F78D1E087AE80002A697 /* clean */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = clean; sourceTree = "<group>"; };
 		0CD3F79C1E08DAF40002A697 /* build */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build; sourceTree = "<group>"; };
 		0CD3F79D1E08DAF40002A697 /* test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = test; sourceTree = "<group>"; };
-		603220742464C9CE00235700 /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
 		EDAC1FFF205B7CEB00F16989 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		EDAC2000205B7CEB00F16989 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
@@ -54,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				603220752464C9CE00235700 /* CLevelDB.framework in Frameworks */,
+				6072FBA824BD1B740091C97B /* CLevelDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,7 +127,6 @@
 		0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				603220742464C9CE00235700 /* CLevelDB.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -173,6 +171,7 @@
 			);
 			name = SwiftLevelDB;
 			packageProductDependencies = (
+				6072FBA724BD1B740091C97B /* CLevelDB */,
 			);
 			productName = SwiftLevelDB;
 			productReference = 0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */;
@@ -227,7 +226,7 @@
 			);
 			mainGroup = 0C1D154E1D6ABF81007E99F4;
 			packageReferences = (
-				604E7A06245D018200953BE9 /* XCRemoteSwiftPackageReference "CLevelDB" */,
+				6072FBA624BD1B650091C97B /* XCRemoteSwiftPackageReference "CLevelDB" */,
 			);
 			productRefGroup = 0C1D15591D6ABF81007E99F4 /* Products */;
 			projectDirPath = "";
@@ -552,15 +551,23 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		604E7A06245D018200953BE9 /* XCRemoteSwiftPackageReference "CLevelDB" */ = {
+		6072FBA624BD1B650091C97B /* XCRemoteSwiftPackageReference "CLevelDB" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/amraboelela/CLevelDB.git";
 			requirement = {
-				branch = spm;
+				branch = spm2;
 				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6072FBA724BD1B740091C97B /* CLevelDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6072FBA624BD1B650091C97B /* XCRemoteSwiftPackageReference "CLevelDB" */;
+			productName = CLevelDB;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0C1D154F1D6ABF81007E99F4 /* Project object */;
 }
