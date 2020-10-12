@@ -9,7 +9,7 @@
 import XCTest
 import Foundation
 import Dispatch
-import SwiftLevelDB
+/*import SwiftLevelDB
 
 @testable import SwiftLevelDB
 
@@ -64,3 +64,4 @@ class BaseTestClass: XCTestCase {
         super.tearDown()
     }
 }
+*/

@@ -22,7 +22,7 @@ struct Foo: Codable, Equatable {
     }
 }
 
-class MainTests: BaseTestClass {
+/*class MainTests: BaseTestClass {
     
     var numberOfIterations = 2500
     
@@ -431,3 +431,4 @@ extension Date {
         return Int(Date().timeIntervalSince1970)
     }
 }
+*/
