@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,10 +16,6 @@
 		60B7E902245A4955008DE608 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		60B7E903245A4955008DE608 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E109205717A30045DA02 /* String.swift */; };
 		60B7E904245A4955008DE608 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
-		C5B97C492533FDFD00D042F2 /* CLevelDB.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5B97C482533FDFD00D042F2 /* CLevelDB.xcframework */; };
-		C5B97C4A2533FDFD00D042F2 /* CLevelDB.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5B97C482533FDFD00D042F2 /* CLevelDB.xcframework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C5B97C642533FF1E00D042F2 /* CLevelDB.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5B97C482533FDFD00D042F2 /* CLevelDB.xcframework */; };
-		C5B97C652533FF1E00D042F2 /* CLevelDB.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5B97C482533FDFD00D042F2 /* CLevelDB.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ED33E10A205717A30045DA02 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
 		ED33E10B205717A30045DA02 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		ED33E10C205717A30045DA02 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E108205717A30045DA02 /* NSObject.swift */; };
@@ -35,31 +31,6 @@
 			remoteInfo = SwiftLevelDB;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		C5B97C4B2533FDFD00D042F2 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				C5B97C4A2533FDFD00D042F2 /* CLevelDB.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C5B97C662533FF1E00D042F2 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				C5B97C652533FF1E00D042F2 /* CLevelDB.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,7 +62,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5B97C492533FDFD00D042F2 /* CLevelDB.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +77,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5B97C642533FF1E00D042F2 /* CLevelDB.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,7 +191,6 @@
 				0C1D15541D6ABF81007E99F4 /* Frameworks */,
 				0C1D15551D6ABF81007E99F4 /* Headers */,
 				0C1D15561D6ABF81007E99F4 /* Resources */,
-				C5B97C4B2533FDFD00D042F2 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -259,7 +227,6 @@
 				60B7E905245A4955008DE608 /* Frameworks */,
 				60B7E906245A4955008DE608 /* Headers */,
 				60B7E908245A4955008DE608 /* Resources */,
-				C5B97C662533FF1E00D042F2 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -485,8 +452,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -508,11 +474,7 @@
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -539,11 +501,7 @@
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -564,11 +522,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				INFOPLIST_FILE = Tests/SwiftLevelDBTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDBTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -586,15 +540,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				INFOPLIST_FILE = Tests/SwiftLevelDBTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDBTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 			};
@@ -617,11 +566,7 @@
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
 				PRODUCT_NAME = WatchSwiftLevelDB;
@@ -655,11 +600,7 @@
 				HEADER_SEARCH_PATHS = $SRCROOT/../CLevelDB/include;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amr.SwiftLevelDB;
 				PRODUCT_NAME = WatchSwiftLevelDB;
