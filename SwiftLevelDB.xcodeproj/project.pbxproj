@@ -16,6 +16,10 @@
 		60B7E902245A4955008DE608 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		60B7E903245A4955008DE608 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E109205717A30045DA02 /* String.swift */; };
 		60B7E904245A4955008DE608 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
+		C5BBE89D2534B4BD00D947ED /* CLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5BBE89C2534B4BD00D947ED /* CLevelDB.framework */; };
+		C5BBE89E2534B4BD00D947ED /* CLevelDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5BBE89C2534B4BD00D947ED /* CLevelDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C5BBE8A52534B4FF00D947ED /* WatchCLevelDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5BBE8A42534B4FF00D947ED /* WatchCLevelDB.framework */; };
+		C5BBE8A62534B4FF00D947ED /* WatchCLevelDB.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5BBE8A42534B4FF00D947ED /* WatchCLevelDB.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ED33E10A205717A30045DA02 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E106205717A30045DA02 /* Data.swift */; };
 		ED33E10B205717A30045DA02 /* LevelDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E107205717A30045DA02 /* LevelDB.swift */; };
 		ED33E10C205717A30045DA02 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33E108205717A30045DA02 /* NSObject.swift */; };
@@ -31,6 +35,31 @@
 			remoteInfo = SwiftLevelDB;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C5BBE89F2534B4BE00D947ED /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C5BBE89E2534B4BD00D947ED /* CLevelDB.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C5BBE8A32534B4C600D947ED /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C5BBE8A62534B4FF00D947ED /* WatchCLevelDB.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0C1D15581D6ABF81007E99F4 /* SwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,7 +79,8 @@
 		604E7A0D245D16C200953BE9 /* WatchSwiftLevelDB-bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WatchSwiftLevelDB-bridge.h"; sourceTree = "<group>"; };
 		60B7E90C245A4955008DE608 /* WatchSwiftLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WatchSwiftLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63F23A9E1DFCC67500F000E8 /* tag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tag; sourceTree = "<group>"; };
-		C5B97C482533FDFD00D042F2 /* CLevelDB.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = CLevelDB.xcframework; path = ../CLevelDB/CLevelDB.xcframework; sourceTree = "<group>"; };
+		C5BBE89C2534B4BD00D947ED /* CLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C5BBE8A42534B4FF00D947ED /* WatchCLevelDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = WatchCLevelDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED33E106205717A30045DA02 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		ED33E107205717A30045DA02 /* LevelDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelDB.swift; sourceTree = "<group>"; };
 		ED33E108205717A30045DA02 /* NSObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
@@ -62,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5BBE89D2534B4BD00D947ED /* CLevelDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +108,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5BBE8A52534B4FF00D947ED /* WatchCLevelDB.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,7 +169,8 @@
 		0C7B4DAC1E5AA40A003AB7F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C5B97C482533FDFD00D042F2 /* CLevelDB.xcframework */,
+				C5BBE8A42534B4FF00D947ED /* WatchCLevelDB.framework */,
+				C5BBE89C2534B4BD00D947ED /* CLevelDB.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -191,6 +224,7 @@
 				0C1D15541D6ABF81007E99F4 /* Frameworks */,
 				0C1D15551D6ABF81007E99F4 /* Headers */,
 				0C1D15561D6ABF81007E99F4 /* Resources */,
+				C5BBE89F2534B4BE00D947ED /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -227,6 +261,7 @@
 				60B7E905245A4955008DE608 /* Frameworks */,
 				60B7E906245A4955008DE608 /* Headers */,
 				60B7E908245A4955008DE608 /* Resources */,
+				C5BBE8A32534B4C600D947ED /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
