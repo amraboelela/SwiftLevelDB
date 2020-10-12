@@ -29,5 +29,5 @@ let package = Package(
 )
 
 #if os(Linux)
-package.dependencies.append(.package(url: "https://github.com/amraboelela/CLevelDB", .branch("master")))
+//package.dependencies.append(.package(url: "https://github.com/amraboelela/CLevelDB", .branch("master")))
 #endif
