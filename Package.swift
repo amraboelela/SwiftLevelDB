@@ -22,9 +22,9 @@ let package = Package(
         .target(
             name: "SwiftLevelDB",
             dependencies: ["CLevelDB"]),
-        .testTarget(
+        /*.testTarget(
             name: "SwiftLevelDBTests",
-            dependencies: ["SwiftLevelDB"]),
+            dependencies: ["SwiftLevelDB"]),*/
     ]
 )
 
