@@ -133,7 +133,7 @@ open class LevelDB {
                         status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
                     }
                     if status != 0 {
-                        NSLog("setValue: Problem storing key/value pair in database")
+                        NSLog("setValue: Problem storing key/value pair in database, key: \(key), value: \(value)")
                     }
                 } else {
                     NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), value: \(value)")
