@@ -10,11 +10,7 @@
 //
 
 import Foundation
-#if os(watchOS)
-import WatchCLevelDB
-#else
 import CLevelDB
-#endif
 
 public typealias LevelDBKeyCallback = (String, UnsafeMutablePointer<Bool>) -> Void
 
