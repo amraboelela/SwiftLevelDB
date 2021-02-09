@@ -22,7 +22,7 @@ struct Foo: Codable, Equatable {
     }
 }
 
-/*class MainTests: BaseTestClass {
+class MainTests: BaseTestClass {
     
     var numberOfIterations = 2500
     
@@ -45,7 +45,7 @@ struct Foo: Codable, Equatable {
         XCTAssertNil(fooValue, "A deleted key should return nil")
         let value2 = Foo(foo: "bar")
         db[key] = FooContainer(foo: value2) //["array" : value2]
-        var fooContainerValue: FooContainer? = db[key]
+        let fooContainerValue: FooContainer? = db[key]
         XCTAssertEqual(fooContainerValue?.foo, value2, "Saving and retrieving should keep an array intact")
         //db.removeValuesForKeys(["array1"])
         //XCTAssertNil(db["array1"], "A key that was deleted in batch should return nil")
@@ -190,11 +190,11 @@ struct Foo: Codable, Equatable {
             return
         }
         var r: Int
-        var pairs = self.nPairs(numberOfIterations)
+        let pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the whole set yields keys in the correct orders
         r = 0
         db.enumerateKeys() { lkey, stop in
-            var pair = pairs[r]
+            let pair = pairs[r]
             let key = pair[0]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
             r += 1
@@ -202,7 +202,7 @@ struct Foo: Codable, Equatable {
         // Test that enumerating the set by starting at an offset yields keys in the correct orders
         r = 432
         db.enumerateKeys(backward: false, startingAtKey: pairs[r][0] as? String, andPrefix: nil, callback: { lkey, stop in
-            var pair = pairs[r]
+            let pair = pairs[r]
             let key = pair[0]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
             r += 1
@@ -215,11 +215,11 @@ struct Foo: Codable, Equatable {
             return
         }
         //var r: Int
-        var pairs = self.nPairs(numberOfIterations)
+        let pairs = self.nPairs(numberOfIterations)
         // Test that enumerating the whole set backwards yields keys in the correct orders
         var r = pairs.count - 1
         db.enumerateKeys(backward: true, startingAtKey: nil, andPrefix: nil, callback: { lkey, stop in
-            var pair = pairs[r]
+            let pair = pairs[r]
             let key = pair[0]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
             r -= 1
@@ -227,7 +227,7 @@ struct Foo: Codable, Equatable {
         // Test that enumerating the set backwards at an offset yields keys in the correct orders
         r = 567
         db.enumerateKeys(backward: true, startingAtKey: pairs[r][0] as? String, andPrefix: nil, callback: { lkey, stop in
-            var pair = pairs[r]
+            let pair = pairs[r]
             let key = pair[0]
             XCTAssertEqual(key as? String, lkey, "Keys should be equal, given the ordering worked")
             r -= 1
@@ -272,7 +272,7 @@ struct Foo: Codable, Equatable {
         XCTAssertEqual(i, 5, "")
     }
     
-    /*func testPrefixedEnumerations() {
+    func testPrefixedEnumerations() {
         guard let db = db else {
             print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
@@ -292,7 +292,7 @@ struct Foo: Codable, Equatable {
         db.removeAllValues()
         db.addEntriesFromDictionary(["tess:0": valueFor(0), "test:1": valueFor(1), "test:2": valueFor(2), "test:3": valueFor(3), "test:4": valueFor(4), "tesu:5": valueFor(5)])
         i = 4
-        db.enumerateKeysAndValues(backward: true, startingAtKey: nil, andPrefix: "test", callback: { lkey, value, stop in
+        /*db.enumerateKeysAndValues(backward: true, startingAtKey: nil, andPrefix: "test", callback: { lkey, value, stop in
             let key = "test:\(i)"
             XCTAssertEqual(lkey, key, "Keys should be restricted to the prefixed region")
             let dic = value as! [String : Int]
@@ -316,10 +316,10 @@ struct Foo: Codable, Equatable {
             XCTAssertEqual(dic["key"], i, "Values should be restricted to the prefixed region")
             i += 1
         })
-        XCTAssertEqual(i, 5, "")
+        XCTAssertEqual(i, 5, "")*/
     }
     
-    func testForwardKeyAndValueEnumerations() {
+    /*func testForwardKeyAndValueEnumerations() {
         guard let db = db else {
             print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
@@ -373,7 +373,7 @@ struct Foo: Codable, Equatable {
             XCTAssertEqual(NSObject.fromAny(_value), NSObject.fromAny(value), "Values should be equal, given the ordering worked")
             r -= 1
         })
-    }*/
+    }
     
     func testBackwardLazyKeyAndValueEnumerations() {
         guard let db = db else {
@@ -392,25 +392,7 @@ struct Foo: Codable, Equatable {
             r -= 1
         })*/
         db.removeAllValues()
-    }
-    
-    static var allTests : [(String, (MainTests) -> () throws -> Void)] {
-        return [
-            ("testDatabaseCreated", testDatabaseCreated),
-            ("testContentIntegrity", testContentIntegrity),
-            ("testKeysManipulation", testKeysManipulation),
-            ("testRemovingKeysWithPrefix", testRemovingKeysWithPrefix),
-            //("testDictionaryManipulations", testDictionaryManipulations),
-            //("testPredicateFiltering", testPredicateFiltering),
-            ("testForwardKeyEnumerations", testForwardKeyEnumerations),
-            ("testBackwardKeyEnumerations", testBackwardKeyEnumerations),
-            ("testBackwardPrefixedEnumerationsWithStartingKey", testBackwardPrefixedEnumerationsWithStartingKey),
-            //("testPrefixedEnumerations", testPrefixedEnumerations),
-            //("testForwardKeyAndValueEnumerations", testForwardKeyAndValueEnumerations),
-            //("testBackwardKeyAndValueEnumerations", testBackwardKeyAndValueEnumerations),
-            ("testBackwardLazyKeyAndValueEnumerations", testBackwardLazyKeyAndValueEnumerations),
-        ]
-    }
+    }*/
 }
 
 extension Date {
@@ -431,4 +413,3 @@ extension Date {
         return Int(Date().timeIntervalSince1970)
     }
 }
-*/
