@@ -7,9 +7,9 @@ let package = Package(
     name: "SwiftLevelDB",
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
-        //.library(
-          //  name: "SwiftLevelDB",
-            //targets: ["SwiftLevelDB"]),
+        .library(
+            name: "SwiftLevelDB",
+            targets: ["SwiftLevelDB"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -24,9 +24,6 @@ let package = Package(
     ]
 )
 #if os(Linux)
-package.products.append(.library(
-                            name: "SwiftLevelDB",
-                            targets: ["SwiftLevelDB", "CLevelDB", "leveldb",  "leveldb_linux"]))
 package.targets.append(.target(
                         name: "leveldb",
                         dependencies: ["leveldb_linux"],
@@ -36,9 +33,6 @@ package.targets.append(.target(
                         dependencies: [],
                         exclude: ["README"]))
 #else
-package.products.append(.library(
-                            name: "SwiftLevelDB",
-                            targets: ["SwiftLevelDB", "CLevelDB", "leveldb",  "leveldb_macos"]))
 package.targets.append(.target(
                         name: "leveldb",
                         dependencies: ["leveldb_macos"],
