@@ -1,6 +1,0 @@
-#!/bin/bash
-
-swift package clean
-rm Package.resolved
-rm -rf .build
-rm -r TestDB

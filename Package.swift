@@ -9,11 +9,12 @@ let package = Package(
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "SwiftLevelDB",
-            targets: ["SwiftLevelDB", "leveldb"])
+            targets: ["SwiftLevelDB"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/amraboelela/leveldb", .branch("main")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -23,19 +24,3 @@ let package = Package(
         .testTarget(name: "SwiftLevelDBTests", dependencies: ["SwiftLevelDB"]),
     ]
 )
-#if os(Linux)
-package.targets.append(.target(
-                        name: "leveldb",
-                        dependencies: ["leveldb_linux"],
-                        exclude: ["README"]))
-package.targets.append(.target(
-                        name: "leveldb_linux",
-                        dependencies: [],
-                        exclude: ["README"]))
-#else
-package.targets.append(.target(
-                        name: "leveldb",
-                        dependencies: ["leveldb_macos"],
-                        exclude: ["README"]))
-package.targets.append(.target(name: "leveldb_macos", dependencies: []))
-#endif

@@ -1,9 +1,0 @@
-#!/bin/bash
-
-PARAM=x$1
-
-if [ $PARAM = "xrelease" ]; then
-    swift test
-else
-    swift test -Xswiftc -DDEBUG
-fi
