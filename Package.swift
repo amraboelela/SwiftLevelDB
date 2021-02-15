@@ -22,19 +22,3 @@ let package = Package(
         .testTarget(name: "SwiftLevelDBTests", dependencies: ["SwiftLevelDB"]),
     ]
 )
-#if os(Linux)
-package.targets.append(.target(
-                        name: "leveldb",
-                        dependencies: ["leveldb_linux"],
-                        exclude: ["README"]))
-package.targets.append(.target(
-                        name: "leveldb_linux",
-                        dependencies: [],
-                        exclude: ["README"]))
-#else
-/*package.targets.append(.target(
-                        name: "leveldb",
-                        dependencies: ["leveldb_macos"],
-                        exclude: ["README"]))
-package.targets.append(.target(name: "leveldb_macos", dependencies: []))*/
-#endif
