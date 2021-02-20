@@ -1,7 +1,9 @@
 //
-// Copyright (c) 2016 Amr Aboelela <amraboelela@gmail.com>
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+//  TwisterCoreWrapper.cc
+//  CLevelDB
+//
+//  Created by Amr Aboelela on 8/22/16.
+//
 
 #include <fcntl.h>
 #include "db/db_impl.h"

@@ -4,20 +4,6 @@
 //
 //  Created by Amr Aboelela on 8/22/16.
 //
-// Copyright (c) 2016 Amr Aboelela <amraboelela@gmail.com>
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-//
-
-//! Project version number for CLevelDB.
-//FOUNDATION_EXPORT double CLevelDBVersionNumber;
-
-//! Project version string for CLevelDB.
-//FOUNDATION_EXPORT const unsigned char CLevelDBVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <CLevelDB/PublicHeader.h>
-
-
 
 #include <stdbool.h>
 
