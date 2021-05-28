@@ -11,11 +11,14 @@ let package = Package(
             targets: ["SwiftLevelDB"])
     ],
     dependencies: [
-        .package(url: "https://github.com/amraboelela/leveldb", .branch("master")),
+        .package(
+            name: "amrleveldb",
+            url: "https://github.com/amraboelela/amrleveldb",
+            .branch("master")),
     ],
     targets: [
         .target(name: "SwiftLevelDB", dependencies: ["CLevelDB"]),
-        .target(name: "CLevelDB", dependencies: ["leveldb"]),
+        .target(name: "CLevelDB", dependencies: ["amrleveldb"]),
         .testTarget(name: "SwiftLevelDBTests", dependencies: ["SwiftLevelDB"]),
     ]
 )
