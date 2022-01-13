@@ -456,7 +456,7 @@ open class LevelDB {
     }
     
     open func close() {
-        serialQueue.sync {
+        serialQueue.smartSync {
             if let db = db {
                 levelDBDelete(db)
                 self.db = nil
