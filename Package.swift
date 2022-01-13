@@ -5,10 +5,6 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftLevelDB",
-    platforms: [
-        .macOS(.v10_15),
-        .iOS(.v13)
-    ],
     products: [
         .library(
             name: "SwiftLevelDB",
