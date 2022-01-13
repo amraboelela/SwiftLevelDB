@@ -12,7 +12,7 @@ import Dispatch
 
 extension DispatchQueue {
     
-    static var currentQueueName: String? {
+    public static var currentQueueName: String? {
         #if os(Linux)
         return ""
         #else
