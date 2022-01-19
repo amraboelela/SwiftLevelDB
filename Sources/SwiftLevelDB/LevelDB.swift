@@ -99,13 +99,16 @@ open class LevelDB {
     // MARK: - Class methods
     
     public class func getLibraryPath() -> String {
-        #if os(Linux)
-            let paths = SearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
-            return paths[0]
-        #else
+#if os(Linux)
+        let paths = SearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
+        return paths[0]
+#elseif os(macOS)
+        let libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+        return libraryDirectory.absoluteString
+#else
         let libraryDirectory = URL(fileURLWithPath: #file.replacingOccurrences(of: "Sources/SwiftLevelDB/LevelDB.swift", with: ".build/debug/Library"))
         return libraryDirectory.absoluteString
-        #endif
+#endif
     }
     
     // MARK: - Accessors
