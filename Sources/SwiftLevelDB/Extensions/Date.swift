@@ -78,14 +78,14 @@ extension Date {
         }
     }
     
-    // MARK: - Private functions
-    
-    func dayOfWeek() -> Int {
+    public func dayOfWeek() -> Int {
         //logger.log("dayOfWeek")
         let seconds = Int(self.timeIntervalSinceReferenceDate)
         let days = seconds / 60 / 60 / 24
         return (days + 1) % 7 // Reference date is 1/1/2001 which was Monday, so we need to add one, as the week starts on Sunday
     }
+    
+    // MARK: - Private functions
     
     static func friendlyDateStringFrom(timeInterval: TimeInterval) -> String {
         let now = Date.timeIntervalSinceReferenceDate
