@@ -11,6 +11,11 @@
 import Foundation
 
 public extension String {
+    static let characters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_"))
+    static let hashtagCharacters = characters.union(CharacterSet(charactersIn: "#"))
+    static let mentionCharacters = characters.union(CharacterSet(charactersIn: "@"))
+    
+    // MARK: - Accessors
     
     var dataFromHexadecimal: Data {
         var hex = self
@@ -32,6 +37,43 @@ public extension String {
     var cString: UnsafeMutablePointer<Int8> {
         return UnsafeMutablePointer<Int8>(mutating: NSString(string: self).utf8String)!
     }
+    
+    var hashtags: [String] {
+        var result = Set<String>()
+
+        let words = self.lowercased().components(separatedBy: String.hashtagCharacters.inverted)
+        // tag each word if it has a hashtag
+        for word in words {
+            if word.count < 3 {
+                continue
+            }
+            // found a word that is prepended by a hashtag!
+            if word.hasPrefix("#") {
+                // drop the hashtag
+                let stringifiedWord = word.dropFirst()
+                if let firstChar = stringifiedWord.unicodeScalars.first, NSCharacterSet.decimalDigits.contains(firstChar) {
+                    // hashtag contains a number, like "#1"
+                    // so don't add it
+                } else {
+                    result.insert(word)
+                }
+            }
+        }
+        return Array(result)
+    }
+
+    var mentions: [String] {
+        var result = Set<String>()
+        let words = self.lowercased().components(separatedBy: String.mentionCharacters.inverted)
+        for word in words {
+            if word.hasPrefix("@") {
+                result.insert(word)
+            }
+        }
+        return Array(result)
+    }
+    
+    // MARK: - Static functions
     
     static func fromCString(_ cString: UnsafeRawPointer, length: Int) -> String {
         /*#if os(Linux)
@@ -60,6 +102,7 @@ public extension String {
             return self
         }
     }
+    
 }
 
 func DLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
