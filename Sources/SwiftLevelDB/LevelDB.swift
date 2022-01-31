@@ -162,7 +162,7 @@ open class LevelDB {
     
     open func valueForKey<T: Codable>(_ key: String) -> T? {
         var result: T?
-        serialQueue.sync {
+        serialQueue.smartSync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -193,7 +193,7 @@ open class LevelDB {
     
     open func valueExistsForKey(_ key: String) -> Bool {
         var result = false
-        serialQueue.sync {
+        serialQueue.smartSync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -210,7 +210,7 @@ open class LevelDB {
     }
     
     open func removeValueForKey(_ key: String) {
-        serialQueue.sync {
+        serialQueue.smartSync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -233,7 +233,7 @@ open class LevelDB {
     }
     
     open func removeAllValuesWithPrefix(_ prefix: String) {
-        serialQueue.sync {
+        serialQueue.smartSync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -284,7 +284,7 @@ open class LevelDB {
     }
     
     open func enumerateKeysWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyCallback) {
-        serialQueue.sync {
+        serialQueue.smartSync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -347,7 +347,7 @@ open class LevelDB {
     }
     
 	open func enumerateKeysAndDictionariesWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void) {
-        serialQueue.sync {
+        serialQueue.smartSync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -393,7 +393,7 @@ open class LevelDB {
     }
 	
     open func enumerateKeysAndValuesWith<T:Codable>(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
-        serialQueue.sync {
+        serialQueue.smartSync {
             guard let db = db else {
                 NSLog("Database reference is not existent (it has probably been closed)")
                 return
@@ -442,7 +442,7 @@ open class LevelDB {
     
     open func deleteDatabaseFromDisk() {
         self.close()
-        serialQueue.sync {
+        serialQueue.smartSync {
             do {
                 let fileManager = FileManager.default
                 try fileManager.removeItem(atPath: path)
@@ -453,7 +453,7 @@ open class LevelDB {
     }
     
     public func open() {
-        serialQueue.sync {
+        serialQueue.smartSync {
             self.db = levelDBOpen(path.cString)
         }
     }
