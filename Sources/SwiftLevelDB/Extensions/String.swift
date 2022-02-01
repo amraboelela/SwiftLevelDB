@@ -34,6 +34,10 @@ public extension String {
         return data
     }
     
+    var isVacant: Bool {
+        return trimmingCharacters(in: .whitespaces).isEmpty
+    }
+    
     var cString: UnsafeMutablePointer<Int8> {
         return UnsafeMutablePointer<Int8>(mutating: NSString(string: self).utf8String)!
     }
