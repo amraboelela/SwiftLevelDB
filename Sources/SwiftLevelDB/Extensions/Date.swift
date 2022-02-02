@@ -64,10 +64,12 @@ extension Date {
             if timeDiff < Date.oneYear {
                 if formatter.locale.identifier == "en_US" {
                     formatter.dateFormat = "MMM dd"
-                } else {
+                } else if locale?.identifier == "ar_EG" {
                     let days = Int(timeDiff / Date.oneDay)
                     formatter.dateFormat = "MMM"
-                    return "\(days) " + formatter.string(from: date)
+                    return formatter.string(from: date) + " \(days)"
+                } else {
+                    formatter.dateFormat = "dd MMM"
                 }
             } else {
                 if formatter.locale.identifier == "en_US" {
