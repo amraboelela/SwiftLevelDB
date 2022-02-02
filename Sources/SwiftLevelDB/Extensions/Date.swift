@@ -47,10 +47,10 @@ extension Date {
         return TimeInterval(24*60*60*numberOfDays)
     }
     
-    public static func friendlyDateStringFrom(epochTime: TimeInterval) -> String {
+    public static func friendlyDateStringFrom(epochTime: TimeInterval, locale: Locale? = nil) -> String {
         let date = Date(timeIntervalSince1970: epochTime)
         let formatter = DateFormatter()
-        formatter.locale = Locale.current
+        formatter.locale = locale ?? Locale.current
         let now = Date().timeIntervalSince1970
         
         let timeDiff = now - epochTime
