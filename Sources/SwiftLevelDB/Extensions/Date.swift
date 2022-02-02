@@ -65,12 +65,17 @@ extension Date {
                 if formatter.locale.identifier == "en_US" {
                     formatter.dateFormat = "MMM dd"
                 } else {
-                    formatter.dateFormat = "dd MMM"
+                    let days = Int(timeDiff / Date.oneDay)
+                    formatter.dateFormat = "MMM"
+                    return "\(days) " + formatter.string(from: date)
                 }
             } else {
                 if formatter.locale.identifier == "en_US" {
                     formatter.dateFormat = "MMM dd, yyyy"
                 } else {
+                    if locale?.identifier == "ar_EG" {
+                        formatter.locale = Locale(identifier: "de_DE")
+                    }
                     formatter.dateFormat = "dd MMM yyyy"
                 }
             }
