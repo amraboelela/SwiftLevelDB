@@ -56,26 +56,14 @@ extension Date {
         let timeDiff = now - epochTime
         if timeDiff < Date.oneHour {
             let minutes = Int(timeDiff / Date.oneMinute)
-            if locale?.identifier == "ar_EG" {
-                return "د\(minutes)"
-            } else {
-                return "\(minutes)m"
-            }
+            return "\(minutes)m"
         } else if timeDiff < Date.oneDay {
             let hours = Int(timeDiff / Date.oneHour)
-            if locale?.identifier == "ar_EG" {
-                return "س\(hours)"
-            } else {
-                return "\(hours)h"
-            }
+            return "\(hours)h"
         } else {
             if timeDiff < Date.oneYear {
                 if formatter.locale.identifier == "en_US" {
                     formatter.dateFormat = "MMM dd"
-                } else if locale?.identifier == "ar_EG" {
-                    let days = Int(timeDiff / Date.oneDay)
-                    formatter.dateFormat = "MMM"
-                    return formatter.string(from: date) + " \(days)"
                 } else {
                     formatter.dateFormat = "dd MMM"
                 }
@@ -83,9 +71,6 @@ extension Date {
                 if formatter.locale.identifier == "en_US" {
                     formatter.dateFormat = "MMM dd, yyyy"
                 } else {
-                    if locale?.identifier == "ar_EG" {
-                        formatter.locale = Locale(identifier: "de_DE")
-                    }
                     formatter.dateFormat = "dd MMM yyyy"
                 }
             }
