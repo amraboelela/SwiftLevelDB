@@ -56,10 +56,18 @@ extension Date {
         let timeDiff = now - epochTime
         if timeDiff < Date.oneHour {
             let minutes = Int(timeDiff / Date.oneMinute)
-            return "\(minutes)m"
+            if locale?.identifier == "ar_EG" {
+                return "د\(minutes)"
+            } else {
+                return "\(minutes)m"
+            }
         } else if timeDiff < Date.oneDay {
             let hours = Int(timeDiff / Date.oneHour)
-            return "\(hours)h"
+            if locale?.identifier == "ar_EG" {
+                return "س\(hours)"
+            } else {
+                return "\(hours)h"
+            }
         } else {
             if timeDiff < Date.oneYear {
                 if formatter.locale.identifier == "en_US" {
