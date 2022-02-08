@@ -334,7 +334,7 @@ open class LevelDB {
         enumerateKeysAndDictionariesWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, callback: callback)
     }
 	
-    open func enumerateKeysAndValues<T:Codable>(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
+    open func enumerateKeysAndValues<T:Codable>(backward: Bool, startingAtKey key: String? = nil, andPrefix prefix: String?, callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
         enumerateKeysAndValuesWith(predicate: nil, backward: backward, startingAtKey: key, andPrefix: prefix, callback: callback)
     }
     
