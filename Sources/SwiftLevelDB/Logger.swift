@@ -1,6 +1,6 @@
 //
 //  Logger.swift
-//  TwisterFoundation
+//  SwiftLevelDB
 //
 //  Created by Amr Aboelela on 5/6/20.
 //  Copyright © 2020 Amr Aboelela. All rights reserved.
