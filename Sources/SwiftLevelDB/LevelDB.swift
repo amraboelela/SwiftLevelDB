@@ -47,7 +47,7 @@ open class LevelDB {
         //NSLog("LevelDB init")
         self.name = name
         //NSLog("LevelDB self.name: \(name)")
-        self.path = path
+        self.path = path + "/" + name
         //NSLog("LevelDB path: \(path)")
         self.dictionaryEncoder = { key, value in
             #if DEBUG
