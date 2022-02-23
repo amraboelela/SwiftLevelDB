@@ -53,7 +53,6 @@ open class LevelDB {
         self.parentPath = parentPath
         self.name = name
         //NSLog("LevelDB self.name: \(name)")
-        //self.path = parentPath + "/" + name
         //NSLog("LevelDB path: \(path)")
         self.dictionaryEncoder = { key, value in
             #if DEBUG
@@ -80,7 +79,7 @@ open class LevelDB {
         //NSLog("LevelDB self.decoder")
         #if os(Linux)
         do {
-            let dirpath =  NSURL(fileURLWithPath:path).deletingLastPathComponent?.path ?? ""
+            let dirpath =  NSURL(fileURLWithPath:dbPath).deletingLastPathComponent?.path ?? ""
             //NSLog("LevelDB dirpath: \(dirpath)")
             let fileManager = FileManager.default
             if !fileManager.fileExists(atPath: dirpath) {
