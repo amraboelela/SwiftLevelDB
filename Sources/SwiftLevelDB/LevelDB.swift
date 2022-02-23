@@ -33,21 +33,27 @@ public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPat
 open class LevelDB {
     public let serialQueue = DispatchQueue(label: "org.amr.leveldb")
     
-    var path: String
-    var name: String
+    public var parentPath = ""
+    public var name = "Database"
 	public var dictionaryEncoder: (String, [String : Any]) -> Data?
     public var dictionaryDecoder: (String, Data) -> [String : Any]?
     public var encoder: (String, Data) -> Data?
     public var decoder: (String, Data) -> Data?
     public var db: UnsafeMutableRawPointer?
     
+    var dbPath: String {
+        return parentPath + "/" + name
+    }
+    
     // MARK: - Life cycle
+    
     
     required public init(parentPath: String, name: String) {
         //NSLog("LevelDB init")
+        self.parentPath = parentPath
         self.name = name
         //NSLog("LevelDB self.name: \(name)")
-        self.path = parentPath + "/" + name
+        //self.path = parentPath + "/" + name
         //NSLog("LevelDB path: \(path)")
         self.dictionaryEncoder = { key, value in
             #if DEBUG
@@ -86,6 +92,7 @@ open class LevelDB {
         }
         #endif
         self.open()
+        setupCoders()
     }
     
     convenience public init(name: String) {
@@ -94,6 +101,23 @@ open class LevelDB {
     
     deinit {
         self.close()
+    }
+    
+    open func setupCoders() {
+        if self.db == nil {
+            //restore()
+            //self.open()
+            logger.log("db == nil")
+        } else {
+            backupIfNeeded()
+        }
+        self.encoder = {(key: String, value: Data) -> Data? in
+            let data = value
+            return data
+        }
+        self.decoder = {(key: String, data: Data) -> Data? in
+            return data
+        }
     }
     
     // MARK: - Class methods
@@ -114,7 +138,7 @@ open class LevelDB {
     // MARK: - Accessors
     
     open func description() -> String {
-        return "<LevelDB:\(self) path: \(path)>"
+        return "<LevelDB:\(self) dbPath: \(dbPath)>"
     }
     
     open func setValue<T: Codable>(_ value: T, forKey key: String) {
@@ -440,21 +464,45 @@ open class LevelDB {
     
     // MARK: - Helper methods
     
+    public func backupIfNeeded() {
+        let dbBackupPath = dbPath + "1"
+        serialQueue.async {
+            let fileManager = FileManager.default
+            let dbTempPath = dbBackupPath + ".temp"
+            do {
+                //logger.log("dbPath: \(dbPath)")
+                try fileManager.copyItem(atPath: self.dbPath, toPath: dbTempPath)
+            }
+            catch {
+            }
+            do {
+                try fileManager.removeItem(atPath: dbBackupPath)
+            }
+            catch {
+            }
+            do {
+                try fileManager.moveItem(atPath: dbTempPath, toPath: dbBackupPath)
+            }
+            catch {
+            }
+        }
+    }
+    
     open func deleteDatabaseFromDisk() {
         self.close()
         serialQueue.smartSync {
             do {
                 let fileManager = FileManager.default
-                try fileManager.removeItem(atPath: path)
+                try fileManager.removeItem(atPath: dbPath)
             } catch {
-                NSLog("error deleting database at path \(path), \(error)")
+                NSLog("error deleting database at dbPath \(dbPath), \(error)")
             }
         }
     }
     
     public func open() {
         serialQueue.smartSync {
-            self.db = levelDBOpen(path.cString)
+            self.db = levelDBOpen(dbPath.cString)
         }
     }
     
