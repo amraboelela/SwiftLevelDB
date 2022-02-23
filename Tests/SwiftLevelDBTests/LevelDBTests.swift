@@ -27,7 +27,7 @@ class LevelDBTests: BaseTestClass {
             print("\(Date.now) Database reference is not existent, failed to open / create database")
             return
         }
-        let dbPath = LevelDB.getLibraryPath()
-        XCTAssertNotEqual(dbPath, "")
+        //let dbPath = LevelDB.getLibraryPath()
+        //XCTAssertNotEqual(dbPath, "")
     }
 }

@@ -33,8 +33,8 @@ public func SearchPathForDirectoriesInDomains(_ directory: FileManager.SearchPat
 open class LevelDB {
     public let serialQueue = DispatchQueue(label: "org.amr.leveldb")
     
-    var name: String
     var path: String
+    var name: String
 	public var dictionaryEncoder: (String, [String : Any]) -> Data?
     public var dictionaryDecoder: (String, Data) -> [String : Any]?
     public var encoder: (String, Data) -> Data?
@@ -43,11 +43,11 @@ open class LevelDB {
     
     // MARK: - Life cycle
     
-    required public init(path: String, name: String) {
+    required public init(parentPath: String, name: String) {
         //NSLog("LevelDB init")
         self.name = name
         //NSLog("LevelDB self.name: \(name)")
-        self.path = path + "/" + name
+        self.path = parentPath + "/" + name
         //NSLog("LevelDB path: \(path)")
         self.dictionaryEncoder = { key, value in
             #if DEBUG
@@ -89,7 +89,7 @@ open class LevelDB {
     }
     
     convenience public init(name: String) {
-        self.init(path: name, name: name)
+        self.init(parentPath: LevelDB.getLibraryPath(), name: name)
     }
     
     deinit {
@@ -97,19 +97,19 @@ open class LevelDB {
     }
     
     // MARK: - Class methods
-    /*
-    public class func getLibraryPath() -> String {
+    
+    class func getLibraryPath() -> String {
 #if os(Linux)
         let paths = SearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
         return paths[0]
 #elseif os(macOS)
         let libraryDirectory = URL(fileURLWithPath: #file.replacingOccurrences(of: "Sources/SwiftLevelDB/LevelDB.swift", with: "Library"))
-        return libraryDirectory.absoluteString
+        return libraryDirectory.absoluteString.replacingOccurrences(of: "file:///", with: "/")
 #else
         let libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
         return libraryDirectory.absoluteString
 #endif
-    }*/
+    }
     
     // MARK: - Accessors
     
