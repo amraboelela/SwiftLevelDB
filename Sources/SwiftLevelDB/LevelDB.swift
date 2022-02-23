@@ -41,7 +41,7 @@ open class LevelDB {
     public var decoder: (String, Data) -> Data?
     public var db: UnsafeMutableRawPointer?
     
-    var dbPath: String {
+    public var dbPath: String {
         return parentPath + "/" + name
     }
     
