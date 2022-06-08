@@ -19,6 +19,10 @@ extension Date {
     
     // MARK: - Accessors
     
+    public static var secondsSinceReferenceDate: Int {
+        return Int(Date.timeIntervalSinceReferenceDate)
+    }
+    
     public static var millisecondsSinceReferenceDate: Int {
         return Int(Date.timeIntervalSinceReferenceDate * 1000)
     }
