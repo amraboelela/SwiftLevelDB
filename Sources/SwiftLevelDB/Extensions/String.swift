@@ -11,13 +11,13 @@
 import Foundation
 
 public extension String {
-    //static let characters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_"))
-    //static let hashtagCharacters = characters.union(CharacterSet(charactersIn: "#"))
-    //static let mentionCharacters = characters.union(CharacterSet(charactersIn: "@"))
+    static let characters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_"))
+    static let hashtagCharacters = characters.union(CharacterSet(charactersIn: "#"))
+    static let mentionCharacters = characters.union(CharacterSet(charactersIn: "@"))
     
     // MARK: - Accessors
     
-    /*var dataFromHexadecimal: Data {
+    var dataFromHexadecimal: Data {
         var hex = self
         var data = Data()
         while(hex.count > 0) {
@@ -32,17 +32,17 @@ public extension String {
             }
         }
         return data
-    }*/
+    }
     
-    /*var isVacant: Bool {
+    var isVacant: Bool {
         return trimmingCharacters(in: .whitespaces).isEmpty
-    }*/
+    }
     
     var cString: UnsafeMutablePointer<Int8> {
         return UnsafeMutablePointer<Int8>(mutating: NSString(string: self).utf8String)!
     }
     
-    /*var hashtags: [String] {
+    var hashtags: [String] {
         var result = Set<String>()
 
         let words = self.lowercased().components(separatedBy: String.hashtagCharacters.inverted)
@@ -75,11 +75,19 @@ public extension String {
             }
         }
         return Array(result)
-    }*/
+    }
     
     // MARK: - Static functions
     
     static func fromCString(_ cString: UnsafeRawPointer, length: Int) -> String {
+        /*#if os(Linux)
+            if let result =  NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)?._bridgeToSwift() {
+                return result
+            } else {
+                let data = Data(bytes: cString, count: length)
+                return String(decoding: data, as: UTF8.self)
+            }
+        #else*/
         if let result = NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue) {
             return result as String
         } else {
@@ -88,6 +96,7 @@ public extension String {
             NSLog("fromCString error result: \(result)")
             return result
         }
+        //#endif
     }
 
     func truncate(length: Int, trailing: String = "…") -> String {
@@ -100,7 +109,7 @@ public extension String {
     
 }
 
-/*func DLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
+func DLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
     #if DEBUG
         logger.log("[\(NSString(string: filename).lastPathComponent):\(line)] \(function) - \(message)")
     #endif
@@ -108,4 +117,4 @@ public extension String {
 
 func ALog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
     logger.log("[\(NSString(string: filename).lastPathComponent):\(line)] \(function) - \(message)")
-}*/
+}
