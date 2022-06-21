@@ -515,9 +515,6 @@ open class LevelDB {
     }
     
     open func closed() -> Bool {
-        if db != nil {
-            close()
-        }
         return db == nil
     }
     
