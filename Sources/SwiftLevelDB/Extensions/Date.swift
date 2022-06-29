@@ -19,16 +19,16 @@ extension Date {
     
     // MARK: - Accessors
     
+    public static var secondsSince1970: Int {
+        return Int(Date().timeIntervalSince1970)
+    }
+    
     public static var secondsSinceReferenceDate: Int {
         return Int(Date.timeIntervalSinceReferenceDate)
     }
     
     public static var millisecondsSinceReferenceDate: Int {
         return Int(Date.timeIntervalSinceReferenceDate * 1000)
-    }
-    
-    public static var now: Int {
-        return Int(Date().timeIntervalSince1970)
     }
     
     // MARK: - Public functions
