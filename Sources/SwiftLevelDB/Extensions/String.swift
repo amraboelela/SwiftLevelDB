@@ -80,14 +80,6 @@ public extension String {
     // MARK: - Static functions
     
     static func fromCString(_ cString: UnsafeRawPointer, length: Int) -> String {
-        /*#if os(Linux)
-            if let result =  NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)?._bridgeToSwift() {
-                return result
-            } else {
-                let data = Data(bytes: cString, count: length)
-                return String(decoding: data, as: UTF8.self)
-            }
-        #else*/
         if let result = NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue) {
             return result as String
         } else {
@@ -96,7 +88,6 @@ public extension String {
             NSLog("fromCString error result: \(result)")
             return result
         }
-        //#endif
     }
 
     func truncate(length: Int, trailing: String = "…") -> String {
