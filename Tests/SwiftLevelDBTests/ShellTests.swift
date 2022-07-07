@@ -22,9 +22,9 @@ class ShellTests: BaseTestClass {
     }
     
     func testShellWithPipe() {
-        let result = shellWithPipes("top -l 1 -s 0", "grep PhysMem", "awk '{print $2}'")
+        let result = shellWithPipes("top -l 1 -s 0", "grep PhysMem", "awk '{print $2 \" of \" $1}'")
         XCTAssertTrue(result?.contains("error") == false)
-        print("result: \(result)")
+        print("result: \(result ?? "")")
     }
     
     func testReportMemory() {
