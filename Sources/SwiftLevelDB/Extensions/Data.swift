@@ -33,6 +33,11 @@ extension Data {
     }
     
     public static func reportMemory() {
+#if os(Linux)
+        if let usage = shell("free", "|", "grep Mem", "|", "awk", "'{print $3}'") {
+            NSLog("Memory used: \(usage)")
+        }
+#else
         var taskInfo = task_vm_info_data_t()
         var count = mach_msg_type_number_t(MemoryLayout<task_vm_info>.size) / 4
         _ = withUnsafeMutablePointer(to: &taskInfo) {
@@ -45,5 +50,6 @@ extension Data {
         //result != KERN_SUCCESS ? print("Memory used: ? of \(totalMb)") :
         
         print("Memory used: \(usedMb) of \(totalMb)")
+#endif
     }
 }
