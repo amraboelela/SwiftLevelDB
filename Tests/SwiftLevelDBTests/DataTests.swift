@@ -22,6 +22,6 @@ class DataTests: BaseTestClass {
     }
     
     func testReportMemory() {
-        Data.reportMemory()
+        reportMemory()
     }
 }
