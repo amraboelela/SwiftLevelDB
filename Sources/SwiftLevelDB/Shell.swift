@@ -85,8 +85,8 @@ public func shellWithPipes(_ args: String...) -> String? {
 
 #if os(Linux)
 public func reportMemory() {
-    if let usage = shellWithPipes("free -m", "grep Mem", "awk '{print $3 \" of \" $2}'") {
-        NSLog("Memory used MB: \(usage)")
+    if let usage = shellWithPipes("free -m", "grep Mem", "awk '{print $3 \"MB of \" $2 \"MB\"}'") {
+        NSLog("Memory used: \(usage)")
     }
 }
 #elseif os(macOS)
