@@ -6,6 +6,7 @@
 //  Copyright © 2021 Amr Aboelela. All rights reserved.
 //
 
+import CoreFoundation
 import Foundation
 
 extension Data {
@@ -23,6 +24,26 @@ extension Data {
             return result.truncate(length:500)
         } else {
             return String(decoding: self, as: UTF8.self).truncate(length:500)
+        }
+    }
+    
+    public static func reportMemory() {
+        var info = mach_task_basic_info()
+        let MACH_TASK_BASIC_INFO_COUNT = MemoryLayout<mach_task_basic_info>.stride/MemoryLayout<natural_t>.stride
+        var count = mach_msg_type_number_t(MACH_TASK_BASIC_INFO_COUNT)
+        let kerr: kern_return_t = withUnsafeMutablePointer(to: &info) {
+            $0.withMemoryRebound(to: integer_t.self, capacity: MACH_TASK_BASIC_INFO_COUNT) {
+                task_info(mach_task_self_,
+                          task_flavor_t(MACH_TASK_BASIC_INFO),
+                          $0,
+                          &count)
+            }
+        }
+        if kerr == KERN_SUCCESS {
+            print("Memory in use (in bytes): \(info.resident_size)")
+        } else {
+            print("Error with task_info(): " +
+                (String(cString: mach_error_string(kerr), encoding: String.Encoding.ascii) ?? "unknown error"))
         }
     }
 }
