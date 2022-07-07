@@ -38,12 +38,11 @@ public func shell(_ args: String...) -> String? {
 }
 
 public func reportMemory() {
-    if let usage = shell("free", "|", "grep Mem", "|", "awk", "'{print $3}'") {
+    if let usage = shell("free | grep Mem | awk '{print $3 \" of \" $2}'") {
         NSLog("Memory used: \(usage)")
     }
 }
 #elseif os(macOS)
-//@discardableResult
 public func shell(_ args: String...) -> String? {
     let task = Process()
     task.launchPath = "/usr/bin/env"
@@ -78,7 +77,6 @@ public func reportMemory() {
     }
     let usedMb = Float(taskInfo.phys_footprint) / 1048576.0
     let totalMb = Float(ProcessInfo.processInfo.physicalMemory) / 1048576.0
-    //result != KERN_SUCCESS ? print("Memory used: ? of \(totalMb)") :
     
     print("Memory used: \(usedMb) of \(totalMb)")
 }
