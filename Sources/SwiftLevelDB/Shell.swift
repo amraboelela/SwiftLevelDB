@@ -33,30 +33,51 @@ public func shell(_ args: String...) -> String? {
 }
 
 public func shellWithPipes(_ args: String...) -> String? {
-    var tasks = [Process]()
-    var pipes = [Pipe]()
-    for i in 0..<args.count {
-        tasks.append(Process())
-        tasks[i].launchPath = "/usr/bin/env"
-        let taskArgs = args[i].components(separatedBy: " ")
-        tasks[i].arguments = taskArgs
-        
-        pipes.append(Pipe())
-        if i>0 {
-            tasks[i].standardInput = pipes[i-1]
-        }
-        tasks[i].standardOutput = pipes[i]
-        tasks[i].standardError = pipes[i]
-        tasks[i].launch()
+    var task: Process!
+    var prevPipe: Pipe? = nil
+    guard args.count > 0 else {
+        return nil
     }
-    if let data = pipes.last?.fileHandleForReading.readDataToEndOfFile(),
+    for i in 0..<args.count {
+        task = Process()
+        task.launchPath = "/usr/bin/env"
+        let taskArgs = args[i].components(separatedBy: " ")
+        var refinedArgs = [String]()
+        var refinedArg = ""
+        for arg in taskArgs {
+            if !refinedArg.isEmpty {
+                refinedArg += " " + arg
+                if arg.suffix(1) == "'" {
+                    refinedArgs.append(refinedArg.replacingOccurrences(of: "\'", with: ""))
+                    refinedArg = ""
+                }
+            } else {
+                if arg.prefix(1) == "'" {
+                    refinedArg = arg
+                } else {
+                    refinedArgs.append(arg)
+                }
+            }
+        }
+        task.arguments = refinedArgs
+        
+        let pipe = Pipe()
+        if let prevPipe = prevPipe {
+            task.standardInput = prevPipe
+        }
+        task.standardOutput = pipe
+        task.standardError = pipe
+        task.launch()
+        prevPipe = pipe
+    }
+    if let data = prevPipe?.fileHandleForReading.readDataToEndOfFile(),
        let output = String(data: data, encoding: String.Encoding.utf8) {
         if output.count > 0 {
             //remove newline character.
             let lastIndex = output.index(before: output.endIndex)
             return String(output[output.startIndex ..< lastIndex])
         }
-        tasks.last?.waitUntilExit()
+        task.waitUntilExit()
         return output
     }
     return nil

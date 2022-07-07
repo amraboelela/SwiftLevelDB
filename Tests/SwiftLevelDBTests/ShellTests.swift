@@ -22,7 +22,8 @@ class ShellTests: BaseTestClass {
     }
     
     func testShellWithPipe() {
-        let result = shellWithPipes("ls -l", "grep root", "grep dotnet")
+        let result = shellWithPipes("top -l 1 -s 0", "grep PhysMem", "awk '{print $2}'")
+        XCTAssertTrue(result?.contains("error") == false)
         print("result: \(result)")
     }
     
