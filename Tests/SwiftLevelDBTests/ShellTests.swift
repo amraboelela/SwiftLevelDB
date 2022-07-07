@@ -1,5 +1,5 @@
 //
-//  DataTests.swift
+//  ShellTests.swift
 //  SwiftLevelDBAppTests
 //
 //  Created by Amr Aboelela on 7/6/22.
@@ -11,7 +11,7 @@ import Dispatch
 
 @testable import SwiftLevelDB
 
-class DataTests: BaseTestClass {
+class ShellTests: BaseTestClass {
     
     override func setUp() {
         super.setUp()
@@ -19,6 +19,11 @@ class DataTests: BaseTestClass {
     
     override func tearDown() {
         super.tearDown()
+    }
+    
+    func testShellWithPipe() {
+        let result = shellWithPipes("ls -l", "grep root", "grep dotnet")
+        print("result: \(result)")
     }
     
     func testReportMemory() {
