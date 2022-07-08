@@ -96,13 +96,13 @@ public func reportMemory() {
     }
 }
 
-public func availableMemory() -> Int? {
+public func availableMemory() -> Int {
     do {
         if let avaiable = try shellWithPipes("free -m", "grep Mem", "awk '{print $7}'") {
-            return Int(avaiable)
+            return Int(avaiable) ?? -1
         }
     } catch {
-        return nil
+        return -1
         NSLog("availableMemory error: \(error)")
     }
 }
