@@ -8,7 +8,8 @@
 
 import Foundation
 
-public func shell(_ args: String...) -> String? {
+@available(macOS 10.13, *)
+public func shell(_ args: String...) throws -> String? {
     let task = Process()
     task.launchPath = "/usr/bin/env"
     task.arguments = args
@@ -17,7 +18,7 @@ public func shell(_ args: String...) -> String? {
     task.standardOutput = pipe
     task.standardError = pipe
     
-    task.launch()
+    try task.run()
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     if let output = String(data: data, encoding: String.Encoding.utf8) {
         if output.count > 0 {
