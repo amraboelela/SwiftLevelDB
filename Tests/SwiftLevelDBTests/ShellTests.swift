@@ -30,4 +30,9 @@ class ShellTests: BaseTestClass {
     func testReportMemory() {
         reportMemory()
     }
+    
+    func testAvailableMemory() {
+        let available = availableMemory()
+        XCTAssertTrue(available > 200)
+    }
 }

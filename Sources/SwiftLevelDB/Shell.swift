@@ -95,8 +95,19 @@ public func reportMemory() {
         NSLog("reportMemory error: \(error)")
     }
 }
+
+public func availableMemory() -> Int? {
+    do {
+        if let avaiable = try shellWithPipes("free -m", "grep Mem", "awk '{print $7}'") {
+            return Int(avaiable)
+        }
+    } catch {
+        return nil
+        NSLog("availableMemory error: \(error)")
+    }
+}
 #elseif os(macOS)
-public func reportMemory() {
+public func getMemory() -> (Float, Float) {
     var taskInfo = task_vm_info_data_t()
     var count = mach_msg_type_number_t(MemoryLayout<task_vm_info>.size) / 4
     _ = withUnsafeMutablePointer(to: &taskInfo) {
@@ -106,8 +117,17 @@ public func reportMemory() {
     }
     let usedMb = Float(taskInfo.phys_footprint) / 1048576.0
     let totalMb = Float(ProcessInfo.processInfo.physicalMemory) / 1048576.0
-    
+    return (usedMb, totalMb)
+}
+
+public func reportMemory() {
+    let (usedMb, totalMb) = getMemory()
     print("Memory used MB: \(usedMb) of \(totalMb)")
+}
+
+public func availableMemory() -> Int {
+    let (usedMb, totalMb) = getMemory()
+    return Int(totalMb - usedMb)
 }
 #endif
 
