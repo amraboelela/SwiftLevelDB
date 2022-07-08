@@ -102,9 +102,9 @@ public func availableMemory() -> Int {
             return Int(avaiable) ?? -1
         }
     } catch {
-        return -1
         NSLog("availableMemory error: \(error)")
     }
+    return -1
 }
 #elseif os(macOS)
 public func getMemory() -> (Float, Float) {
