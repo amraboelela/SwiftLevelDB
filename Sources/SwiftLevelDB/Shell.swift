@@ -32,7 +32,8 @@ public func shell(_ args: String...) -> String? {
     }
 }
 
-public func shellWithPipes(_ args: String...) -> String? {
+@available(macOS 10.13, *)
+public func shellWithPipes(_ args: String...) throws -> String? {
     var task: Process!
     var prevPipe: Pipe? = nil
     guard args.count > 0 else {
@@ -67,7 +68,7 @@ public func shellWithPipes(_ args: String...) -> String? {
         }
         task.standardOutput = pipe
         task.standardError = pipe
-        task.launch()
+        try task.run()
         prevPipe = pipe
     }
     if let data = prevPipe?.fileHandleForReading.readDataToEndOfFile(),
@@ -85,8 +86,12 @@ public func shellWithPipes(_ args: String...) -> String? {
 
 #if os(Linux)
 public func reportMemory() {
-    if let usage = shellWithPipes("free -m", "grep Mem", "awk '{print $3 \"MB of \" $2 \"MB\"}'") {
-        NSLog("Memory used: \(usage)")
+    do {
+        if let usage = try shellWithPipes("free -m", "grep Mem", "awk '{print $3 \"MB of \" $2 \"MB\"}'") {
+            NSLog("Memory used: \(usage)")
+        }
+    } catch {
+        NSLog("reportMemory error: \(error)")
     }
 }
 #elseif os(macOS)
