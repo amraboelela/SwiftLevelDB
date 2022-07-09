@@ -106,6 +106,17 @@ public func availableMemory() -> Int {
     }
     return -1
 }
+
+public func freeMemory() -> Int {
+    do {
+        if let result = try shellWithPipes("free -m", "grep Mem", "awk '{print $4}'") {
+            return Int(result) ?? -1
+        }
+    } catch {
+        NSLog("freeMemory error: \(error)")
+    }
+    return -1
+}
 #elseif os(macOS)
 public func getMemory() -> (Float, Float) {
     var taskInfo = task_vm_info_data_t()
@@ -126,6 +137,11 @@ public func reportMemory() {
 }
 
 public func availableMemory() -> Int {
+    let (usedMb, totalMb) = getMemory()
+    return Int(totalMb - usedMb)
+}
+
+public func freeMemory() -> Int {
     let (usedMb, totalMb) = getMemory()
     return Int(totalMb - usedMb)
 }

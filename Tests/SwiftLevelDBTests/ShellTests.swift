@@ -35,4 +35,9 @@ class ShellTests: BaseTestClass {
         let available = availableMemory()
         XCTAssertTrue(available > 200)
     }
+    
+    func testFreeMemory() {
+        let freeM = freeMemory()
+        XCTAssertTrue(freeM > 200)
+    }
 }
