@@ -141,27 +141,16 @@ open class LevelDB {
     }
     
     open func setValue<T: Codable>(_ value: T, forKey key: String) {
-        serialQueue.async {
-            guard let db = self.db else {
-                NSLog("Database reference is not existent (it has probably been closed)")
-                return
-            }
-            do {
-                let newData = try JSONEncoder().encode(value)
-                var status = 0
-                if let data = self.encoder(key, newData) {
-                    var localData = data
-                    localData.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
-                        status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
-                    }
-                    if status != 0 {
-                        NSLog("setValue: Problem storing key/value pair in database, status: \(status), key: \(key), value: \(value)")
-                    }
-                } else {
-                    NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), value: \(value)")
-                }
-            } catch {
-                NSLog("LevelDB setValue error: \(error)")
+        serialQueue.smartSync {
+            self.saveValue(value, forKey: key)
+        }
+    }
+    
+    open func save<T: Codable>(array: [(String, T)]) {
+        serialQueue.smartSync {
+            let toBeSavedArray = array.sorted { $0.0 < $1.0 }
+            for item in toBeSavedArray {
+                saveValue(item.1, forKey: item.0)
             }
         }
     }
@@ -462,6 +451,30 @@ open class LevelDB {
     }
     
     // MARK: - Helper methods
+    
+    func saveValue<T: Codable>(_ value: T, forKey key: String) {
+        guard let db = self.db else {
+            NSLog("Database reference is not existent (it has probably been closed)")
+            return
+        }
+        do {
+            let newData = try JSONEncoder().encode(value)
+            var status = 0
+            if let data = self.encoder(key, newData) {
+                var localData = data
+                localData.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
+                    status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
+                }
+                if status != 0 {
+                    NSLog("setValue: Problem storing key/value pair in database, status: \(status), key: \(key), value: \(value)")
+                }
+            } else {
+                NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), value: \(value)")
+            }
+        } catch {
+            NSLog("LevelDB setValue error: \(error)")
+        }
+    }
     
     public func backupIfNeeded() {
         let dbBackupPath = dbPath + "1"
