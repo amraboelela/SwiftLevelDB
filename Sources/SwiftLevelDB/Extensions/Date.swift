@@ -110,7 +110,7 @@ extension Date {
         }
     }
     
-    public func dayOfWeek() -> Int {
+    public var dayOfWeek: Int {
         //logger.log("dayOfWeek")
         let seconds = Int(self.timeIntervalSinceReferenceDate)
         let days = seconds / 60 / 60 / 24

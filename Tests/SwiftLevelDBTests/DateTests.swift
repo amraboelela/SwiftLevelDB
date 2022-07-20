@@ -32,4 +32,14 @@ class DateTests: BaseTestClass {
         let now2 = Date.secondsSinceReferenceDate
         XCTAssertTrue(now - now2 > (1970 - 2001) * 360 * 24 * 60 * 60)
     }
+    
+    func testDayOfWeek() {
+        var date = Date(timeIntervalSince1970: 1658086329) // Sunday 7/17/22
+        var dayOfWeek = date.dayOfWeek
+        XCTAssertEqual(dayOfWeek, 0)
+        
+        date = Date(timeIntervalSince1970: 1658345529) // Wednesday 7/20/22
+        dayOfWeek = date.dayOfWeek
+        XCTAssertEqual(dayOfWeek, 3)
+    }
 }

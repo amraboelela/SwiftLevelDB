@@ -477,7 +477,7 @@ open class LevelDB {
     }
     
     public func backupIfNeeded() {
-        let dbBackupPath = dbPath + "1"
+        let dbBackupPath = dbPath + String(Date().dayOfWeek)
         serialQueue.async {
             let fileManager = FileManager.default
             let dbTempPath = dbBackupPath + ".temp"
