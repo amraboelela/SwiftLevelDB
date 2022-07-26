@@ -8,6 +8,7 @@
 
 import Foundation
 
+#if os(Linux) || os(macOS)
 @available(macOS 10.13, *)
 public func shell(_ args: String...) throws -> String? {
     let task = Process()
@@ -84,6 +85,7 @@ public func shellWithPipes(_ args: String...) throws -> String? {
     }
     return nil
 }
+#endif
 
 #if os(Linux)
 public func reportMemory() {
@@ -146,4 +148,3 @@ public func freeMemory() -> Int {
     return Int(totalMb - usedMb)
 }
 #endif
-
