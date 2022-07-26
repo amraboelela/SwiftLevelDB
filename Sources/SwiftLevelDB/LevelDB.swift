@@ -129,8 +129,9 @@ open class LevelDB {
         let libraryDirectory = URL(fileURLWithPath: #file.replacingOccurrences(of: "Sources/SwiftLevelDB/LevelDB.swift", with: "Library"))
         return libraryDirectory.absoluteString.replacingOccurrences(of: "file:///", with: "/")
 #else
-        let libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
-        return libraryDirectory.absoluteString
+        var libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!.absoluteString
+        libraryDirectory.removeLast()
+        return libraryDirectory
 #endif
     }
     
