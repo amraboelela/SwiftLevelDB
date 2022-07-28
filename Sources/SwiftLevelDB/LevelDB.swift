@@ -319,19 +319,22 @@ open class LevelDB {
                             break
                         }
                     }
-                    let iKeyString = String.fromCString(iKey, length: iKeyLength)
-                    if predicate != nil {
-                        var iData: UnsafeMutableRawPointer? = nil
-                        var iDataLength: Int = 0
-                        levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                        if let iData = iData {
-                            let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
-                            if predicate!.evaluate(with: v) {
-                                callback(iKeyString, &stop)
+                    if let iKeyString = String(data: Data(bytes: iKey, count: iKeyLength), encoding: .utf8) {
+                        if predicate != nil {
+                            var iData: UnsafeMutableRawPointer? = nil
+                            var iDataLength: Int = 0
+                            levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                            if let iData = iData {
+                                let v = decoder(iKeyString, Data(bytes: iData, count: iDataLength))
+                                if predicate!.evaluate(with: v) {
+                                    callback(iKeyString, &stop)
+                                }
                             }
+                        } else {
+                            callback(iKeyString, &stop)
                         }
                     } else {
-                        callback(iKeyString, &stop)
+                        NSLog("Couldn't get iKeyString")
                     }
                 }
                 if stop {
@@ -382,18 +385,21 @@ open class LevelDB {
                             break
                         }
                     }
-                    let iKeyString = String.fromCString(iKey, length: iKeyLength)
-                    var iData: UnsafeMutableRawPointer? = nil
-                    var iDataLength: Int = 0
-                    levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                    if let iData = iData, let v = dictionaryDecoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
-                        if predicate != nil {
-                            if predicate!.evaluate(with: v) {
+                    if let iKeyString = String(data: Data(bytes: iKey, count: iKeyLength), encoding: .utf8) {
+                        var iData: UnsafeMutableRawPointer? = nil
+                        var iDataLength: Int = 0
+                        levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                        if let iData = iData, let v = dictionaryDecoder(iKeyString, Data(bytes: iData, count: iDataLength)) {
+                            if predicate != nil {
+                                if predicate!.evaluate(with: v) {
+                                    callback(iKeyString, v, &stop)
+                                }
+                            } else {
                                 callback(iKeyString, v, &stop)
                             }
-                        } else {
-                            callback(iKeyString, v, &stop)
                         }
+                    } else {
+                        NSLog("Couldn't get iKeyString")
                     }
                 }
                 if (stop) {
@@ -428,18 +434,21 @@ open class LevelDB {
                             break
                         }
                     }
-                    let iKeyString = String.fromCString(iKey, length: iKeyLength)
-                    var iData: UnsafeMutableRawPointer? = nil
-                    var iDataLength: Int = 0
-                    levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                    if let iData = iData, let data = decoder(iKeyString, Data(bytes: iData, count: iDataLength)), let v = try? JSONDecoder().decode(T.self, from: data) {
-                        if predicate != nil {
-                            if predicate!.evaluate(with: v) {
+                    if let iKeyString = String(data: Data(bytes: iKey, count: iKeyLength), encoding: .utf8) {
+                        var iData: UnsafeMutableRawPointer? = nil
+                        var iDataLength: Int = 0
+                        levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                        if let iData = iData, let data = decoder(iKeyString, Data(bytes: iData, count: iDataLength)), let v = try? JSONDecoder().decode(T.self, from: data) {
+                            if predicate != nil {
+                                if predicate!.evaluate(with: v) {
+                                    callback(iKeyString, v, &stop)
+                                }
+                            } else {
                                 callback(iKeyString, v, &stop)
                             }
-                        } else {
-                            callback(iKeyString, v, &stop)
                         }
+                    } else {
+                        NSLog("Couldn't get iKeyString")
                     }
                 }
                 if (stop) {
