@@ -38,6 +38,7 @@ enum LevelDBError: Error {
 }
 
 @available(iOS 13.0.0, *)
+@available(macOS 10.15.0, *)
 public actor LevelDB {
     //public let serialQueue = DispatchQueue(label: "org.amr.leveldb")
     
