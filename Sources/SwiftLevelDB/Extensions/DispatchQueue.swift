@@ -23,7 +23,7 @@ extension DispatchQueue {
         #endif
     }
     
-    public func smartSync(execute closure: () -> Swift.Void) {
+    public func smartSync(execute closure: () -> Swift.Void) throws {
         #if os(Linux)
         self.sync {
             closure()
