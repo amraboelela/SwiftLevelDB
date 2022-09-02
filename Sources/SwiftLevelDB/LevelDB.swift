@@ -49,6 +49,10 @@ public actor LevelDB {
     var decoder: (String, Data) -> Data?
     var db: UnsafeMutableRawPointer?
     
+    public func setParentPath(_ parentPath: String) {
+        self.parentPath = parentPath
+    }
+    
     public var dbPath: String {
         return parentPath + "/" + name
     }
@@ -62,7 +66,6 @@ public actor LevelDB {
     }
     
     // MARK: - Life cycle
-    
     
     public init(parentPath: String, name: String) {
         //NSLog("LevelDB init")
