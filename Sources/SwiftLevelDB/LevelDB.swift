@@ -41,7 +41,7 @@ enum LevelDBError: Error {
 @available(macOS 10.15.0, *)
 public actor LevelDB {
     
-    var parentPath = ""
+    public var parentPath = ""
     var name = "Database"
     var dictionaryEncoder: (String, [String : Any]) -> Data?
     var dictionaryDecoder: (String, Data) -> [String : Any]?
