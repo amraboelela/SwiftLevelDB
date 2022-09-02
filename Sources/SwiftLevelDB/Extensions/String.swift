@@ -3,7 +3,7 @@
 //  SwiftLevelDB
 //
 //  Created by Amr Aboelela on 7/31/18.
-//  Copyright © 2018 Amr Aboelela. All rights reserved.
+//  Copyright © 2018 Amr Aboelela.
 //
 //  See LICENCE for details.
 //

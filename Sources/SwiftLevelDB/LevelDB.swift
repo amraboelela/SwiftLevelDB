@@ -1,7 +1,7 @@
 //
 //  LevelDB.swift
 //
-//  Copyright 2011-2016 Pave Labs. All rights reserved.
+//  Copyright 2011-2016 Pave Labs.
 //
 //  Modified by: Amr Aboelela <amraboelela@gmail.com>
 //  Date: Aug 2016

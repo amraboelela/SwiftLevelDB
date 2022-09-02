@@ -3,7 +3,7 @@
 //  SwiftLevelDB
 //
 //  Created by Amr Aboelela on 5/7/21.
-//  Copyright © 2021 Amr Aboelela. All rights reserved.
+//  Copyright © 2021 Amr Aboelela.
 //
 
 import CoreFoundation
