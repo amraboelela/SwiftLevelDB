@@ -49,11 +49,11 @@ public actor LevelDB {
     var decoder: (String, Data) -> Data?
     var db: UnsafeMutableRawPointer?
     
-    func getParentPath() -> String {
+    public func getParentPath() -> String {
         return parentPath
     }
     
-    func setParentPath(_ parentPath: String) {
+    public func setParentPath(_ parentPath: String) {
         self.parentPath = parentPath
     }
     
