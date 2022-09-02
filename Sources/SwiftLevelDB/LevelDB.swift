@@ -41,21 +41,13 @@ enum LevelDBError: Error {
 @available(macOS 10.15.0, *)
 public actor LevelDB {
     
-    var parentPath = ""
+    public var parentPath = ""
     var name = "Database"
     var dictionaryEncoder: (String, [String : Any]) -> Data?
     var dictionaryDecoder: (String, Data) -> [String : Any]?
     var encoder: (String, Data) -> Data?
     var decoder: (String, Data) -> Data?
     var db: UnsafeMutableRawPointer?
-    
-    public func getParentPath() -> String {
-        return parentPath
-    }
-    
-    public func setParentPath(_ parentPath: String) {
-        self.parentPath = parentPath
-    }
     
     public var dbPath: String {
         return parentPath + "/" + name
