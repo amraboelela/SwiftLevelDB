@@ -40,9 +40,8 @@ enum LevelDBError: Error {
 @available(iOS 13.0.0, *)
 @available(macOS 10.15.0, *)
 public actor LevelDB {
-    //public let serialQueue = DispatchQueue(label: "org.amr.leveldb")
     
-    var parentPath = ""
+    public var parentPath = ""
     var name = "Database"
     var dictionaryEncoder: (String, [String : Any]) -> Data?
     var dictionaryDecoder: (String, Data) -> [String : Any]?
@@ -159,41 +158,24 @@ public actor LevelDB {
     }
     
     public func setValue<T: Codable>(_ value: T, forKey key: String) throws {
-        //serialQueue.smartSync {
         try self.saveValue(value, forKey: key)
-        //}
     }
     
     public func save<T: Codable>(array: [(String, T)]) throws {
-        //serialQueue.smartSync {
         let toBeSavedArray = array.sorted { $0.0 < $1.0 }
         for item in toBeSavedArray {
             try saveValue(item.1, forKey: item.0)
         }
-        //}
     }
-    
-    /*public subscript<T:Codable>(key: String) -> () throws -> T? {
-        get {
-            // return an appropriate subscript value here
-            return { self.valueForKey(key) }
-        }
-        set (newValue) {
-            // perform a suitable setting action here
-            return { try setValue(newValue, forKey: key) }
-        }
-    }*/
     
     public func addEntriesFromDictionary<T: Codable>(_ dictionary: [String : T]) throws {
         for (key, value) in dictionary {
             try self.setValue(value, forKey: key)
-            //self[key] = value
         }
     }
     
     public func valueForKey<T: Codable>(_ key: String) -> T? {
         var result: T?
-        //serialQueue.smartSync {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return result
