@@ -127,7 +127,7 @@ public actor LevelDB {
             //self.open()
             logger.log("db == nil")
         } else {
-            backupIfNeeded()
+            try? backupIfNeeded()
         }
         self.encoder = {(key: String, value: Data) -> Data? in
             let data = value
@@ -474,37 +474,20 @@ public actor LevelDB {
         }
     }
     
-    public func backupIfNeeded() {
+    public func backupIfNeeded() throws {
         let dbBackupPath = dbPath + String(Date().dayOfWeek)
-        //serialQueue.async {
         let fileManager = FileManager.default
         let dbTempPath = dbBackupPath + ".temp"
-        do {
-            //logger.log("dbPath: \(dbPath)")
-            try fileManager.copyItem(atPath: self.dbPath, toPath: dbTempPath)
-        }
-        catch {
-        }
-        do {
-            try fileManager.removeItem(atPath: dbBackupPath)
-        }
-        catch {
-        }
-        do {
-            try fileManager.moveItem(atPath: dbTempPath, toPath: dbBackupPath)
-        }
-        catch {
-        }
+        //logger.log("dbPath: \(dbPath)")
+        try fileManager.copyItem(atPath: self.dbPath, toPath: dbTempPath)
+        try fileManager.removeItem(atPath: dbBackupPath)
+        try fileManager.moveItem(atPath: dbTempPath, toPath: dbBackupPath)
     }
     
-    public func deleteDatabaseFromDisk() {
+    public func deleteDatabaseFromDisk() throws {
         self.close()
-        do {
-            let fileManager = FileManager.default
-            try fileManager.removeItem(atPath: dbPath)
-        } catch {
-            NSLog("error deleting database at dbPath \(dbPath), \(error)")
-        }
+        let fileManager = FileManager.default
+        try fileManager.removeItem(atPath: dbPath)
     }
     
     public func open() {
