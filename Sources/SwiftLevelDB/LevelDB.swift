@@ -47,7 +47,7 @@ public actor LevelDB {
     var dictionaryDecoder: (String, Data) -> [String : Any]?
     var encoder: (String, Data) -> Data?
     var decoder: (String, Data) -> Data?
-    var db: UnsafeMutableRawPointer?
+    public var db: UnsafeMutableRawPointer?
     
     public func setParentPath(_ parentPath: String) {
         self.parentPath = parentPath
@@ -195,7 +195,6 @@ public actor LevelDB {
                 result = try? JSONDecoder().decode(T.self, from: decodedData)
             }
         }
-        //}
         return result
     }
     
@@ -209,7 +208,6 @@ public actor LevelDB {
     
     public func valueExistsForKey(_ key: String) -> Bool {
         var result = false
-        //serialQueue.smartSync {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return result
@@ -221,12 +219,10 @@ public actor LevelDB {
             free(rawData)
             result = true
         }
-        //}
         return result
     }
     
     public func removeValueForKey(_ key: String) {
-        //serialQueue.smartSync {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -235,7 +231,6 @@ public actor LevelDB {
         if status != 0 {
             NSLog("Problem removing value with key: \(key) in database")
         }
-        //}
     }
     
     public func removeValuesForKeys(_ keys: [String]) {
@@ -249,7 +244,6 @@ public actor LevelDB {
     }
     
     public func removeAllValuesWithPrefix(_ prefix: String) {
-        //serialQueue.smartSync {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -278,7 +272,6 @@ public actor LevelDB {
             levelDBIteratorMoveForward(iterator)
         }
         levelDBIteratorDelete(iterator)
-        //}
     }
     
     public func allKeys() -> [String] {
@@ -300,7 +293,6 @@ public actor LevelDB {
     }
     
     public func enumerateKeysWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: LevelDBKeyCallback) {
-        //serialQueue.smartSync {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -346,7 +338,6 @@ public actor LevelDB {
             backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
         }
         levelDBIteratorDelete(iterator)
-        //}
     }
     
     public func enumerateKeysAndDictionaries(backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void) {
@@ -366,7 +357,6 @@ public actor LevelDB {
     }
     
     public func enumerateKeysAndDictionariesWith(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, [String : Any], UnsafeMutablePointer<Bool>) -> Void) {
-        //serialQueue.smartSync {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -410,12 +400,10 @@ public actor LevelDB {
             }
             backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
         }
-        levelDBIteratorDelete(iterator);
-        //}
+        levelDBIteratorDelete(iterator)
     }
 	
     public func enumerateKeysAndValuesWith<T:Codable>(predicate: NSPredicate?, backward: Bool, startingAtKey key: String?, andPrefix prefix: String?, callback: (String, T, UnsafeMutablePointer<Bool>) -> Void) {
-        //serialQueue.smartSync {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -459,8 +447,7 @@ public actor LevelDB {
             }
             backward ? levelDBIteratorMoveBackward(iterator) : levelDBIteratorMoveForward(iterator)
         }
-        levelDBIteratorDelete(iterator);
-        //}
+        levelDBIteratorDelete(iterator)
     }
     
     // MARK: - Helper methods
@@ -508,34 +495,27 @@ public actor LevelDB {
         }
         catch {
         }
-        //}
     }
     
     public func deleteDatabaseFromDisk() {
         self.close()
-        //serialQueue.smartSync {
         do {
             let fileManager = FileManager.default
             try fileManager.removeItem(atPath: dbPath)
         } catch {
             NSLog("error deleting database at dbPath \(dbPath), \(error)")
         }
-        //}
     }
     
     public func open() {
-        //serialQueue.smartSync {
         self.db = levelDBOpen(dbPath.cString)
-        //}
     }
     
     public func close() {
-        //serialQueue.smartSync {
         if let db = db {
             levelDBDelete(db)
             self.db = nil
         }
-        //}
     }
     
     public func closed() -> Bool {
