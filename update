@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "Updating SwiftLevelDB"
+
+git pull
+git commit -a -m "Update from server"
+git push
+if [ "$1" == "all" ]; then
+    echo
+    echo "Updating all packages by running swift package update"
+    swift package update
+fi

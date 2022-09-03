@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./update all
+swift test 2<&1 | tee || exit
+
