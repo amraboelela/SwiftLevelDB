@@ -8,8 +8,6 @@
 
 import Foundation
 
-@available(iOS 13.0, *)
-@available(macOS 10.15.0, *)
 extension Task where Success == Never, Failure == Never {
     public static func sleep(seconds: Double) async throws {
         let duration = UInt64(seconds * 1_000_000_000)

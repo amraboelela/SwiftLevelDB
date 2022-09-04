@@ -9,7 +9,6 @@
 import Foundation
 
 #if os(Linux) || os(macOS)
-@available(macOS 10.13, *)
 public func shell(_ args: String...) throws -> String? {
     let task = Process()
     task.launchPath = "/usr/bin/env"
@@ -34,7 +33,6 @@ public func shell(_ args: String...) throws -> String? {
     }
 }
 
-@available(macOS 10.13, *)
 public func shellWithPipes(_ args: String...) throws -> String? {
     var task: Process!
     var prevPipe: Pipe? = nil

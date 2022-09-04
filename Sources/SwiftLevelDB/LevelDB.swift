@@ -37,8 +37,6 @@ enum LevelDBError: Error {
     case otherError
 }
 
-@available(iOS 13.0.0, *)
-@available(macOS 10.15.0, *)
 public actor LevelDB {
     
     public var parentPath = ""
