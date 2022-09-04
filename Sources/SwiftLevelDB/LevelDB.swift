@@ -199,7 +199,7 @@ public actor LevelDB {
     public func valuesForKeys<T: Codable>(_ keys: [String]) -> [T?] {
         var result = [T?]()
         for key in keys {
-            result.append(self.valueForKey(key)) //[key])
+            result.append(self.valueForKey(key))
         }
         return result
     }
@@ -455,20 +455,22 @@ public actor LevelDB {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
-        let newData = try JSONEncoder().encode(value)
-        var status = 0
-        if let data = self.encoder(key, newData) {
-            var localData = data
-            localData.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
-                status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
-            }
-            if status != 0 {
-                NSLog("setValue: Problem storing key/value pair in database, status: \(status), key: \(key), value: \(value)")
+        Task {
+            let newData = try JSONEncoder().encode(value)
+            var status = 0
+            if let data = self.encoder(key, newData) {
+                var localData = data
+                localData.withUnsafeMutableBytes { (mutableBytes: UnsafeMutablePointer<UInt8>) -> () in
+                    status = levelDBItemPut(db, key.cString, key.count, mutableBytes, data.count)
+                }
+                if status != 0 {
+                    NSLog("setValue: Problem storing key/value pair in database, status: \(status), key: \(key), value: \(value)")
+                    throw LevelDBError.writingError
+                }
+            } else {
+                NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), value: \(value)")
                 throw LevelDBError.writingError
             }
-        } else {
-            NSLog("Error: setValue: encoder(key, newValue) returned nil, key: \(key), value: \(value)")
-            throw LevelDBError.writingError
         }
     }
     
