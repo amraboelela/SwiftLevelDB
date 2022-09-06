@@ -469,14 +469,14 @@ public actor LevelDB {
         }
     }
     
-    public func backupIfNeeded() throws {
+    public func backupIfNeeded() {
         let dbBackupPath = dbPath + String(Date().dayOfWeek)
         let fileManager = FileManager.default
         let dbTempPath = dbBackupPath + ".temp"
         //logger.log("dbPath: \(dbPath)")
-        try fileManager.copyItem(atPath: self.dbPath, toPath: dbTempPath)
-        try fileManager.removeItem(atPath: dbBackupPath)
-        try fileManager.moveItem(atPath: dbTempPath, toPath: dbBackupPath)
+        try? fileManager.copyItem(atPath: self.dbPath, toPath: dbTempPath)
+        try? fileManager.removeItem(atPath: dbBackupPath)
+        try? fileManager.moveItem(atPath: dbTempPath, toPath: dbBackupPath)
     }
     
     public func deleteDatabaseFromDisk() throws {
