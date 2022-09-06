@@ -41,19 +41,16 @@ class MainTests: BaseTestClass {
         let key = "dict1"
         let value1 = Foo(foo: "bar")
         try await db.setValue(value1, forKey: key)
-        //db[key] = value1
-        var fooValue: Foo? = await db.valueForKey(key) //db[key]
+        var fooValue: Foo? = await db.value(forKey: key)
         XCTAssertEqual(fooValue, value1, "Saving and retrieving should keep an dictionary intact")
-        await db.removeValueForKey("dict1")
-        fooValue = await db.valueForKey(key)
+        await db.removeValue(forKey: "dict1")
+        fooValue = await db.value(forKey: key)
         XCTAssertNil(fooValue, "A deleted key should return nil")
         let value2 = Foo(foo: "bar")
         try await db.setValue(FooContainer(foo: value2), forKey: key)
         //db[key] = FooContainer(foo: value2) //["array" : value2]
-        let fooContainerValue: FooContainer? = await db.valueForKey(key)
+        let fooContainerValue: FooContainer? = await db.value(forKey: key)
         XCTAssertEqual(fooContainerValue?.foo, value2, "Saving and retrieving should keep an array intact")
-        //db.removeValuesForKeys(["array1"])
-        //XCTAssertNil(db["array1"], "A key that was deleted in batch should return nil")
     }
     
     func testKeysManipulation() async throws {

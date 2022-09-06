@@ -175,7 +175,7 @@ public actor LevelDB {
         }
     }
     
-    public func valueForKey<T: Codable>(_ key: String) -> T? {
+    public func value<T: Codable>(forKey key: String) -> T? {
         var result: T?
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
@@ -196,10 +196,10 @@ public actor LevelDB {
         return result
     }
     
-    public func valuesForKeys<T: Codable>(_ keys: [String]) -> [T?] {
+    public func values<T: Codable>(forKeys keys: [String]) -> [T?] {
         var result = [T?]()
         for key in keys {
-            result.append(self.valueForKey(key))
+            result.append(self.value(forKey: key))
         }
         return result
     }
@@ -220,7 +220,7 @@ public actor LevelDB {
         return result
     }
     
-    public func removeValueForKey(_ key: String) {
+    public func removeValue(forKey key: String) {
         guard let db = db else {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
@@ -233,7 +233,7 @@ public actor LevelDB {
     
     public func removeValuesForKeys(_ keys: [String]) {
         for key in keys {
-            removeValueForKey(key)
+            removeValue(forKey: key)
         }
     }
     
