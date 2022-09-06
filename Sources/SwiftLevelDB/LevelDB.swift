@@ -63,6 +63,14 @@ public actor LevelDB {
         self.decoder = decoder
     }
     
+    public func setDictionaryEncoder(_ encoder: @escaping (String, [String : Any]) -> Data?) {
+        self.dictionaryEncoder = encoder
+    }
+    
+    public func setDictionaryDecoder(_ decoder: @escaping (String, Data) -> [String : Any]?) {
+        self.dictionaryDecoder = decoder
+    }
+    
     // MARK: - Life cycle
     
     public init(parentPath: String, name: String) {

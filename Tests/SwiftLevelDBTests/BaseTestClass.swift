@@ -16,10 +16,9 @@ import SwiftLevelDB
 @available(iOS 13.0.0, *)
 class BaseTestClass: XCTestCase {
     
-    var db : LevelDB?
+    var db : LevelDB!
     
-    func asyncSetUp() async {
-        //super.setUp()
+    func asyncSetup() async {
         
         db = LevelDB(name: "TestDB")
         guard let db = db else {
