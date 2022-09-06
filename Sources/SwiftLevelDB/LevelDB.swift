@@ -55,11 +55,11 @@ public actor LevelDB {
         return parentPath + "/" + name
     }
     
-    func setEncoder(_ encoder: @escaping (String, Data) -> Data?) {
+    public func setEncoder(_ encoder: @escaping (String, Data) -> Data?) {
         self.encoder = encoder
     }
     
-    func setDecoder(_ decoder: @escaping (String, Data) -> Data?) {
+    public func setDecoder(_ decoder: @escaping (String, Data) -> Data?) {
         self.decoder = decoder
     }
     
