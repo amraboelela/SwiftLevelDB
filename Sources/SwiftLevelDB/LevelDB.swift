@@ -138,7 +138,7 @@ public actor LevelDB {
     
     // MARK: - Class methods
     
-    static func getLibraryPath() -> String {
+    public static func getLibraryPath() -> String {
 #if os(Linux)
         let paths = SearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
         return paths[0]
