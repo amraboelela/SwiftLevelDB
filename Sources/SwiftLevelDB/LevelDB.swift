@@ -125,7 +125,7 @@ public actor LevelDB {
             //self.open()
             logger.log("db == nil")
         } else {
-            try? backupIfNeeded()
+            backupIfNeeded()
         }
         self.encoder = {(key: String, value: Data) -> Data? in
             let data = value
