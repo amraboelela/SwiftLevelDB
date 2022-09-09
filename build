@@ -5,6 +5,7 @@ PARAM=x$1
 if [ PARAM = "xrelease" ]; then
     swift build -c release
 else
-#    swift build -Xswiftc -DDEBUG
-    swift build -v -Xswiftc -DDEBUG -Xswiftc -emit-library -Xswiftc -o -Xswiftc .build/x86_64-unknown-linux/debug/libSwiftLevelDB.so
+    swift build 
+    #-Xswiftc -DDEBUG
+#    swift build -v -Xswiftc -DDEBUG -Xswiftc -emit-library -Xswiftc -o -Xswiftc .build/x86_64-unknown-linux/debug/libSwiftLevelDB.so
 fi
