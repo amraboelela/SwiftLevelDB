@@ -38,7 +38,7 @@ public func shell(timeout: TimeInterval = 60.0, _ args: String...) async throws 
         group.cancelAll()
         if task.isRunning {
             task.terminate()
-            NSLog("shell process timeout")
+            //NSLog("shell process timeout")
             throw ShellError.timeout
         }
     }
