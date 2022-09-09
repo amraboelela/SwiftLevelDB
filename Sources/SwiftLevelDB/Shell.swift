@@ -9,6 +9,11 @@
 @preconcurrency
 import Foundation
 
+enum ShellError: Error {
+    case timeout
+    case other
+}
+
 #if os(Linux) || os(macOS)
 public func shell(_ args: String...) async throws -> String? {
     let task = Process()
@@ -30,6 +35,7 @@ public func shell(_ args: String...) async throws -> String? {
         group.cancelAll()
         if task.isRunning {
             task.terminate()
+            throw ShellError.timeout
         }
     }
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
