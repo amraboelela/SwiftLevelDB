@@ -15,7 +15,7 @@ enum ShellError: Error {
 }
 
 #if os(Linux) || os(macOS)
-public func shell(_ args: String...) async throws -> String? {
+public func shell(timeout: TimeInterval, _ args: String...) async throws -> String? {
     let task = Process()
     task.executableURL = URL(fileURLWithPath: "/usr/bin/env")
     task.arguments = args
@@ -32,7 +32,7 @@ public func shell(_ args: String...) async throws -> String? {
             }
         }
         group.addTask {
-            try await Task.sleep(seconds: 5*60) // timeout after 5 minute
+            try await Task.sleep(seconds: timeout)
         }
         try await group.next()
         group.cancelAll()
