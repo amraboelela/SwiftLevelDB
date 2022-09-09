@@ -119,7 +119,7 @@ public actor LevelDB {
         setupCoders()
     }
     
-    convenience public init(name: String) {
+    public convenience init(name: String) {
         self.init(parentPath: LevelDB.getLibraryPath(), name: name)
     }
     
