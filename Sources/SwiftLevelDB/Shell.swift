@@ -18,7 +18,7 @@ public func shell(_ args: String...) throws -> String? {
     task.standardOutput = pipe
     task.standardError = pipe
     
-    try await withThrowingTaskGroup(of: String.self) { group in
+    try await withThrowingTaskGroup(of: Void.self) { group in
         group.addTask {
             try task.run()
         }
