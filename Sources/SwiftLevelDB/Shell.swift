@@ -9,7 +9,7 @@
 import Foundation
 
 #if os(Linux) || os(macOS)
-public func shell(_ args: String...) throws -> String? {
+public func shell(_ args: String...) async throws -> String? {
     let task = Process()
     task.launchPath = "/usr/bin/env"
     task.arguments = args

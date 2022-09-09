@@ -55,7 +55,7 @@ class LevelDBTests: BaseTestClass {
     func testInit() async {
         await asyncSetup()
         XCTAssertNotNil(db, "Database should not be nil")
-        guard let db = db else {
+        guard db != nil else {
             print("\(Date.now) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
