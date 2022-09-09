@@ -18,7 +18,19 @@ public func shell(_ args: String...) throws -> String? {
     task.standardOutput = pipe
     task.standardError = pipe
     
-    try task.run()
+    try await withThrowingTaskGroup(of: TimeoutResult.self) { group in
+        group.addTask {
+            try task.run()
+        }
+        group.addTask {
+            try await Task.sleep(seconds: 60) // timeout after 1 minute
+        }
+        try await group.next()
+        group.cancelAll()
+        if task.isRunning {
+            task.terminate()
+        }
+    }
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     if let output = String(data: data, encoding: String.Encoding.utf8) {
         if output.count > 0 {
@@ -26,7 +38,6 @@ public func shell(_ args: String...) throws -> String? {
             let lastIndex = output.index(before: output.endIndex)
             return String(output[output.startIndex ..< lastIndex])
         }
-        task.waitUntilExit()
         return output
     } else {
         return nil
