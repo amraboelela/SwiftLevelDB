@@ -15,7 +15,7 @@ enum ShellError: Error {
 }
 
 #if os(Linux) || os(macOS)
-public func shell(timeout: TimeInterval, _ args: String...) async throws -> String? {
+public func shell(timeout: TimeInterval = 60.0, _ args: String...) async throws -> String? {
     let task = Process()
     task.executableURL = URL(fileURLWithPath: "/usr/bin/env")
     task.arguments = args
