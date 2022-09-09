@@ -6,12 +6,13 @@
 //  Copyright © 2022 Amr Aboelela.
 //
 
+@preconcurrency
 import Foundation
 
 #if os(Linux) || os(macOS)
 public func shell(_ args: String...) async throws -> String? {
     let task = Process()
-    task.launchPath = "/usr/bin/env"
+    task.executableURL = URL(fileURLWithPath: "/usr/bin/env")
     task.arguments = args
     
     let pipe = Pipe()
@@ -52,7 +53,7 @@ public func shellWithPipes(_ args: String...) throws -> String? {
     }
     for i in 0..<args.count {
         task = Process()
-        task.launchPath = "/usr/bin/env"
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/env")
         let taskArgs = args[i].components(separatedBy: " ")
         var refinedArgs = [String]()
         var refinedArg = ""
