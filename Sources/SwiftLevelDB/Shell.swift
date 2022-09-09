@@ -27,6 +27,7 @@ public func shell(_ args: String...) async throws -> String? {
     try await withThrowingTaskGroup(of: Void.self) { group in
         group.addTask {
             try task.run()
+            task.waitUntilExit()
         }
         group.addTask {
             try await Task.sleep(seconds: 60) // timeout after 1 minute
