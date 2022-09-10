@@ -12,7 +12,7 @@ import Dispatch
 @testable import SwiftLevelDB
 
 #if os(Linux) || os(macOS)
-class ShellTests: BaseTestClass {
+class ShellTests: TestsBase {
     
     override func setUp() {
         super.setUp()

@@ -24,7 +24,7 @@ struct Foo: Codable, Equatable {
 }
     
 @available(iOS 15, *)
-class LevelDBTests: BaseTestClass {
+class LevelDBTests: TestsBase {
     
     override func asyncSetup() async {
         await super.asyncSetup()

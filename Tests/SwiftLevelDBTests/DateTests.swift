@@ -12,7 +12,7 @@ import Dispatch
 @testable import SwiftLevelDB
 
 @available(iOS 13.0.0, *)
-class DateTests: BaseTestClass {
+class DateTests: TestsBase {
     
     override func setUp() {
         super.setUp()

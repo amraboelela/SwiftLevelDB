@@ -14,7 +14,7 @@ import SwiftLevelDB
 @testable import SwiftLevelDB
 
 @available(iOS 13.0.0, *)
-class BaseTestClass: XCTestCase {
+class TestsBase: XCTestCase {
     
     var db : LevelDB!
     
@@ -61,6 +61,5 @@ class BaseTestClass: XCTestCase {
     func asyncTearDown() async {
         await db?.close()
         db = nil
-        //super.tearDown()
     }
 }
