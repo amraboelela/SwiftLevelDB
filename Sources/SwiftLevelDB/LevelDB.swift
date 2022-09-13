@@ -431,22 +431,25 @@ public actor LevelDB {
                         break
                     }
                 }
-                if let iKeyString = String(data: Data(bytes: iKey, count: iKeyLength), encoding: .utf8) {
-                    var iData: UnsafeMutableRawPointer? = nil
-                    var iDataLength: Int = 0
-                    levelDBIteratorGetValue(iterator, &iData, &iDataLength)
-                    if let iData = iData, let data = decoder(iKeyString, Data(bytes: iData, count: iDataLength)), let v = try? JSONDecoder().decode(T.self, from: data) {
-                        if predicate != nil {
-                            if predicate!.evaluate(with: v) {
-                                callback(iKeyString, v, &stop)
-                            }
-                        } else {
+                let keyData = Data(bytes: iKey, count: iKeyLength)
+                let iKeyString = keyData.simpleDescription
+                //String(decoding: self, as: UTF8.self)
+                //if let iKeyString = String(data: Data(bytes: iKey, count: iKeyLength), encoding: .utf8) {
+                var iData: UnsafeMutableRawPointer? = nil
+                var iDataLength: Int = 0
+                levelDBIteratorGetValue(iterator, &iData, &iDataLength)
+                if let iData = iData, let data = decoder(iKeyString, Data(bytes: iData, count: iDataLength)), let v = try? JSONDecoder().decode(T.self, from: data) {
+                    if predicate != nil {
+                        if predicate!.evaluate(with: v) {
                             callback(iKeyString, v, &stop)
                         }
+                    } else {
+                        callback(iKeyString, v, &stop)
                     }
-                } else {
-                    NSLog("Couldn't get iKeyString")
                 }
+                /*} else {
+                 NSLog("Couldn't get iKeyString")
+                 }*/
             }
             if (stop) {
                 break;
