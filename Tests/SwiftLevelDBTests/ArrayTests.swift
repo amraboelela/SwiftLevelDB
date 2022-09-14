@@ -52,4 +52,17 @@ final class ArrayTests: TestsBase {
         XCTAssertEqual(numbers[0], 10)
         XCTAssertEqual(numbers[1], 9)
     }
+    
+    func testQuickSort() async {
+        var numbers = [1, 4, 10, 3, -2, 7, 9]
+        print(numbers)
+        await numbers.quickSort { $0 < $1 }
+        XCTAssertEqual(numbers[0], -2)
+        XCTAssertEqual(numbers[1], 1)
+        print(numbers)
+        await numbers.quickSort { $0 > $1 }
+        print(numbers)
+        XCTAssertEqual(numbers[0], 10)
+        XCTAssertEqual(numbers[1], 9)
+    }
 }
