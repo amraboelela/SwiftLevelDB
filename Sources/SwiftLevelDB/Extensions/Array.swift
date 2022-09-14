@@ -38,7 +38,7 @@ extension Array where Element: Equatable {
     }
     
     // MARK: - Sorting
-    
+    /*
     public mutating func insertionSort(closure: (Element, Element) async -> Bool) async -> Void {
         for iterationIndex in 0 ..< self.count {
             var swapIndex = iterationIndex
@@ -112,5 +112,5 @@ extension Array where Element: Equatable {
         if await closure(array[midPoint], array[startPoint]) {
             array.swapAt(startPoint, midPoint)
         }
-    }
+    }*/
 }

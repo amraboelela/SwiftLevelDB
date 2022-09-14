@@ -39,7 +39,7 @@ final class ArrayTests: TestsBase {
         XCTAssertEqual(stringNumbers.count, 6)
         XCTAssertEqual(stringNumbers[0], "1")
     }
-    
+    /*
     func testInsertionSort() async {
         var numbers = [1, 4, 10, 3, -2, 7, 9]
         print(numbers)
@@ -64,5 +64,5 @@ final class ArrayTests: TestsBase {
         print(numbers)
         XCTAssertEqual(numbers[0], 10)
         XCTAssertEqual(numbers[1], 9)
-    }
+    }*/
 }
