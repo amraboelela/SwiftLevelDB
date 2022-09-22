@@ -36,4 +36,14 @@ extension Array where Element: Equatable {
         }
         return result
     }
+    
+    public func asyncRemoveAll(closure: (Element) async -> Bool) async -> Array {
+        var result = [Element]()
+        for item in self {
+            if await !closure(item) {
+                result.append(item)
+            }
+        }
+        return result
+    }
 }

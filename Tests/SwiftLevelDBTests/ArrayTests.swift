@@ -23,6 +23,15 @@ final class ArrayTests: TestsBase {
         XCTAssertEqual(oddNumbers.count, 4)
     }
     
+    func testAsyncRemoveAll() async {
+        let numbers = [1, 4, 10, 3, 2, 7, 9]
+        let evenNumbers = await numbers.asyncRemoveAll { number in
+            return await isOddNumber(number)
+        }
+        XCTAssertEqual(evenNumbers.count, 3)
+        XCTAssertEqual(evenNumbers[0], 4)
+    }
+    
     func getStringFrom(number: Int) async -> String? {
         if number > 0 {
             return "\(number)"
