@@ -21,10 +21,6 @@ class TestsBase: XCTestCase {
     func asyncSetup() async {
         
         db = LevelDB(name: "TestDB")
-        guard let db = db else {
-            print("Database reference is not existent, failed to open / create database")
-            return
-        }
         await db.removeAllValues()
 
         await db.setEncoder {(key: String, value: Data) -> Data? in
