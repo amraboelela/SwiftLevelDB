@@ -56,7 +56,7 @@ class LevelDBTests: TestsBase {
         await asyncSetup()
         XCTAssertNotNil(db, "Database should not be nil")
         guard db != nil else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -74,7 +74,7 @@ class LevelDBTests: TestsBase {
     func testContentIntegrity() async throws {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -96,7 +96,7 @@ class LevelDBTests: TestsBase {
     func testKeysManipulation() async throws {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -117,7 +117,7 @@ class LevelDBTests: TestsBase {
     func testEnumerateKeysAndDictionaries() async {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -137,7 +137,7 @@ class LevelDBTests: TestsBase {
     func testRemovingKeysWithPrefix() async {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -154,7 +154,7 @@ class LevelDBTests: TestsBase {
     
     func nPairs(_ n: Int) async throws -> [[Any]] {
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             return [[]]
         }
         var pairs = [[Any]]()
@@ -185,7 +185,7 @@ class LevelDBTests: TestsBase {
     func testForwardKeyEnumerations() async throws {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -213,7 +213,7 @@ class LevelDBTests: TestsBase {
     func testBackwardKeyEnumerations() async throws {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -240,7 +240,7 @@ class LevelDBTests: TestsBase {
     func testBackwardPrefixedEnumerationsWithStartingKey() async throws {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -262,7 +262,7 @@ class LevelDBTests: TestsBase {
     func testForwardPrefixedEnumerationsWithStartingKey() async throws {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
@@ -284,7 +284,7 @@ class LevelDBTests: TestsBase {
     func testPrefixedEnumerations() async throws {
         await asyncSetup()
         guard let db = db else {
-            print("\(Date.now) Database reference is not existent, failed to open / create database")
+            print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
         }
