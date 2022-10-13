@@ -110,6 +110,24 @@ extension Date {
         }
     }
     
+    public static func dateStringFrom(timeInterval: TimeInterval) -> String {
+        let now = Date.timeIntervalSinceReferenceDate
+        let diff = now - timeInterval
+        if diff < 60.0*60.0*24.0*30.0*6 {
+            let date = Date(timeIntervalSinceReferenceDate: timeInterval)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM dd"
+            formatter.locale = Locale.current
+            return formatter.string(from: date)
+        } else {
+            let date = Date(timeIntervalSinceReferenceDate: timeInterval)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM dd, yy"
+            formatter.locale = Locale.current
+            return formatter.string(from: date)
+        }
+    }
+    
     public var dayOfWeek: Int {
         //logger.log("dayOfWeek")
         let seconds = Int(self.timeIntervalSinceReferenceDate)
