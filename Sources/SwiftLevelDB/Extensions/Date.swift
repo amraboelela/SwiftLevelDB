@@ -16,6 +16,7 @@ extension Date {
     public static let oneDay = TimeInterval(60*60*24)
     public static let thirtyDays = TimeInterval(30*24*60*60)
     public static let oneYear = TimeInterval(60*60*24*365.25)
+    public static let sixMonths = TimeInterval(60*60*24*182.625)
     
     // MARK: - Accessors
     
@@ -65,7 +66,7 @@ extension Date {
             let hours = Int(timeDiff / Date.oneHour)
             return "\(hours)h"
         } else {
-            if timeDiff < Date.oneYear {
+            if timeDiff < Date.sixMonths {
                 if formatter.locale.identifier == "en_US" {
                     formatter.dateFormat = "MMM dd"
                 } else {
