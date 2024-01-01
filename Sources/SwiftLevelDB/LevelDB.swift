@@ -107,9 +107,9 @@ open class LevelDB {
             //restore()
             //self.open()
             logger.log("db == nil")
-        } else {
+        } /*else {
             backupIfNeeded()
-        }
+        }*/
         self.encoder = {(key: String, value: Data) -> Data? in
             let data = value
             return data
