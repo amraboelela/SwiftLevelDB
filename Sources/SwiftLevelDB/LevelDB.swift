@@ -77,7 +77,7 @@ public actor LevelDB {
         //NSLog("LevelDB init")
         self.parentPath = parentPath
         self.name = name
-        //NSLog("LevelDB self.name: \(name)")
+        NSLog("LevelDB self.name: \(name)")
         //NSLog("LevelDB path: \(path)")
         self.dictionaryEncoder = { key, value in
             #if DEBUG
@@ -450,10 +450,9 @@ public actor LevelDB {
                     } else {
                         callback(iKeyString, v, &stop)
                     }
+                } else {
+                    NSLog("Couldn't get iKeyString")
                 }
-                /*} else {
-                 NSLog("Couldn't get iKeyString")
-                 }*/
             }
             if (stop) {
                 break;
