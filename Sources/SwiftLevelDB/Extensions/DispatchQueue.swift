@@ -3,7 +3,7 @@
 //  SwiftLevelDB
 //
 //  Created by Amr Aboelela on 2/12/17.
-//  Copyright © 2017 Amr Aboelela. All rights reserved.
+//  Copyright © 2017 Amr Aboelela.
 //
 //
 
@@ -23,7 +23,7 @@ extension DispatchQueue {
         #endif
     }
     
-    public func smartSync(execute closure: () -> Swift.Void) {
+    public func smartSync(execute closure: () -> Swift.Void) throws {
         #if os(Linux)
         self.sync {
             closure()

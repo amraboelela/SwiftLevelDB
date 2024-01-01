@@ -3,7 +3,7 @@
 //  SwiftLevelDB
 //
 //  Created by Amr Aboelela on 7/31/18.
-//  Copyright © 2018 Amr Aboelela. All rights reserved.
+//  Copyright © 2018 Amr Aboelela.
 //
 //  See LICENCE for details.
 //
@@ -75,28 +75,6 @@ public extension String {
             }
         }
         return Array(result)
-    }
-    
-    // MARK: - Static functions
-    
-    static func fromCString(_ cString: UnsafeRawPointer, length: Int) -> String {
-        /*#if os(Linux)
-            if let result =  NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue)?._bridgeToSwift() {
-                return result
-            } else {
-                let data = Data(bytes: cString, count: length)
-                return String(decoding: data, as: UTF8.self)
-            }
-        #else*/
-        if let result = NSString(bytes: cString, length: length, encoding: String.Encoding.utf8.rawValue) {
-            return result as String
-        } else {
-            let data = Data(bytes: cString, count: length)
-            let result = String(decoding: data, as: UTF8.self)
-            NSLog("fromCString error result: \(result)")
-            return result
-        }
-        //#endif
     }
 
     func truncate(length: Int, trailing: String = "…") -> String {

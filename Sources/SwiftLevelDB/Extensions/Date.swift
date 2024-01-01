@@ -3,7 +3,7 @@
 //  SwiftLevelDB
 //
 //  Created by Amr Aboelela on 2/26/18.
-//  Copyright © 2018 Amr Aboelela. All rights reserved.
+//  Copyright © 2018 Amr Aboelela.
 //
 //
 
@@ -16,15 +16,20 @@ extension Date {
     public static let oneDay = TimeInterval(60*60*24)
     public static let thirtyDays = TimeInterval(30*24*60*60)
     public static let oneYear = TimeInterval(60*60*24*365.25)
+    public static let sixMonths = TimeInterval(60*60*24*182.625)
     
     // MARK: - Accessors
     
-    public static var millisecondsSinceReferenceDate: Int {
-        return Int(Date.timeIntervalSinceReferenceDate * 1000)
+    public static var secondsSince1970: Int {
+        return Int(Date().timeIntervalSince1970)
     }
     
-    public static var now: Int {
-        return Int(Date().timeIntervalSince1970)
+    public static var secondsSinceReferenceDate: Int {
+        return Int(Date.timeIntervalSinceReferenceDate)
+    }
+    
+    public static var millisecondsSinceReferenceDate: Int {
+        return Int(Date.timeIntervalSinceReferenceDate * 1000)
     }
     
     // MARK: - Public functions
@@ -61,7 +66,7 @@ extension Date {
             let hours = Int(timeDiff / Date.oneHour)
             return "\(hours)h"
         } else {
-            if timeDiff < Date.oneYear {
+            if timeDiff < Date.sixMonths {
                 if formatter.locale.identifier == "en_US" {
                     formatter.dateFormat = "MMM dd"
                 } else {
@@ -78,16 +83,7 @@ extension Date {
         }
     }
     
-    public func dayOfWeek() -> Int {
-        //logger.log("dayOfWeek")
-        let seconds = Int(self.timeIntervalSinceReferenceDate)
-        let days = seconds / 60 / 60 / 24
-        return (days + 1) % 7 // Reference date is 1/1/2001 which was Monday, so we need to add one, as the week starts on Sunday
-    }
-    
-    // MARK: - Private functions
-    
-    static func friendlyDateStringFrom(timeInterval: TimeInterval) -> String {
+    public static func friendlyDateStringFrom(timeInterval: TimeInterval) -> String {
         let now = Date.timeIntervalSinceReferenceDate
         let diff = now - timeInterval
         if diff < 0 {
@@ -113,6 +109,31 @@ extension Date {
             formatter.locale = Locale.current
             return formatter.string(from: date)
         }
+    }
+    
+    public static func dateStringFrom(timeInterval: TimeInterval) -> String {
+        let now = Date.timeIntervalSinceReferenceDate
+        let diff = now - timeInterval
+        if diff < 60.0*60.0*24.0*30.0*6 {
+            let date = Date(timeIntervalSinceReferenceDate: timeInterval)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM dd"
+            formatter.locale = Locale.current
+            return formatter.string(from: date)
+        } else {
+            let date = Date(timeIntervalSinceReferenceDate: timeInterval)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM dd, yy"
+            formatter.locale = Locale.current
+            return formatter.string(from: date)
+        }
+    }
+    
+    public var dayOfWeek: Int {
+        //logger.log("dayOfWeek")
+        let seconds = Int(self.timeIntervalSinceReferenceDate)
+        let days = seconds / 60 / 60 / 24
+        return (days + 1) % 7 // Reference date is 1/1/2001 which was Monday, so we need to add one, as the week starts on Sunday
     }
     
 }
