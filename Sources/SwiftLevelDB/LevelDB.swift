@@ -115,16 +115,20 @@ public actor LevelDB {
             NSLog("Problem creating parent directory: \(error)")
         }
         #endif
-        self.open()
-        setupCoders()
+        Task {
+            await self.open()
+            await setupCoders()
+        }
     }
     
-    public convenience init(name: String) {
+    public init(name: String) {
         self.init(parentPath: LevelDB.getLibraryPath(), name: name)
     }
     
     deinit {
-        self.close()
+        Task {
+            await self.close()
+        }
     }
     
     func setupCoders() {
@@ -466,6 +470,7 @@ public actor LevelDB {
             NSLog("Database reference is not existent (it has probably been closed)")
             return
         }
+         
         let newData = try JSONEncoder().encode(value)
         var status = 0
         if let data = self.encoder(key, newData) {

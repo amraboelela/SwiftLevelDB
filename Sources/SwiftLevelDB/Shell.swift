@@ -6,7 +6,7 @@
 //  Copyright © 2022 Amr Aboelela.
 //
 
-@preconcurrency
+//@preconcurrency
 import Foundation
 
 enum ShellError: Error {
