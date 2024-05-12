@@ -1,5 +1,5 @@
 //
-//  TwisterCoreWrapper.cc
+//  LevelDBWrapper.cc
 //  CLevelDB
 //
 //  Created by Amr Aboelela on 8/22/16.
@@ -36,7 +36,7 @@ extern "C" void *levelDBOpen(char *path) {
 #endif
     
     readOptions.fill_cache = true;
-    writeOptions.sync = false;
+    writeOptions.sync = true;
     leveldb::DB *db;
     leveldb::Status status = leveldb::DB::Open(options, path, &db);
     

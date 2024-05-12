@@ -85,6 +85,21 @@ public extension String {
         }
     }
     
+    func lastMatch(of pattern: String) -> NSRange? {
+        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+            return nil
+        }
+        let matches = regex.matches(in: self, range: NSRange(location: 0, length: self.count))
+        return matches.last?.range
+    }
+    
+    func replaceLastMentionWith(string: String) -> String {
+        let mentionPattern = "@[a-zA-z0-9]+\\b"
+        if let nsRange = self.lastMatch(of: mentionPattern), let range = Range(nsRange, in: self) {
+            return self.replacingCharacters(in: range, with: string)
+        }
+        return self
+    }
 }
 
 func DLog(_ message: String, filename: String = #file, function: String = #function, line: Int = #line) {
