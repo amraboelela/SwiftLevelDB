@@ -73,7 +73,7 @@ class LevelDBTests: TestsBase {
     
     func testContentIntegrity() async throws {
         await asyncSetup()
-        guard let db = db else {
+        guard let db else {
             print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
@@ -82,7 +82,7 @@ class LevelDBTests: TestsBase {
         let value1 = Foo(foo: "bar")
         try await db.setValue(value1, forKey: key)
         var fooValue: Foo? = await db.value(forKey: key)
-        XCTAssertEqual(fooValue, value1, "Saving and retrieving should keep an dictionary intact")
+        XCTAssertEqual(fooValue, value1, "Saving and retrieving should keep a dictionary intact")
         await db.removeValue(forKey: "dict1")
         fooValue = await db.value(forKey: key)
         XCTAssertNil(fooValue, "A deleted key should return nil")
@@ -95,7 +95,7 @@ class LevelDBTests: TestsBase {
     
     func testKeysManipulation() async throws {
         await asyncSetup()
-        guard let db = db else {
+        guard let db else {
             print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return
@@ -116,7 +116,7 @@ class LevelDBTests: TestsBase {
     
     func testEnumerateKeysAndDictionaries() async {
         await asyncSetup()
-        guard let db = db else {
+        guard let db else {
             print("\(Date.secondsSinceReferenceDate) Database reference is not existent, failed to open / create database")
             XCTFail()
             return

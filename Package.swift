@@ -17,9 +17,9 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            name: "amrleveldb",
             url: "https://github.com/amraboelela/amrleveldb",
-            .branch("master")),
+            branch: "master"
+        )
     ],
     targets: [
         .target(name: "SwiftLevelDB", dependencies: ["CLevelDB"]),

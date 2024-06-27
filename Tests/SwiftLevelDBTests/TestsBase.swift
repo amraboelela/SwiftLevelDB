@@ -55,7 +55,7 @@ class TestsBase: XCTestCase {
     }
     
     func asyncTearDown() async {
-        await db?.close()
+        try! await db?.deleteDatabaseFromDisk()
         db = nil
     }
 }

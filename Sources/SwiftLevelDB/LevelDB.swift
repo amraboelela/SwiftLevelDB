@@ -45,7 +45,7 @@ public actor LevelDB {
     var dictionaryDecoder: (String, Data) -> [String : Any]?
     var encoder: (String, Data) -> Data?
     var decoder: (String, Data) -> Data?
-    public var db: UnsafeMutableRawPointer?
+    private var db: UnsafeMutableRawPointer?
     
     public func setParentPath(_ parentPath: String) {
         self.parentPath = parentPath
@@ -123,12 +123,6 @@ public actor LevelDB {
     
     public init(name: String) {
         self.init(parentPath: LevelDB.getLibraryPath(), name: name)
-    }
-    
-    deinit {
-        Task {
-            await self.close()
-        }
     }
     
     func setupCoders() {
@@ -505,9 +499,9 @@ public actor LevelDB {
     }
     
     public func close() {
-        if let db = db {
-            levelDBDelete(db)
-            self.db = nil
+        if let theDB = db {
+            levelDBDelete(theDB)
+            db = nil
         }
     }
     
