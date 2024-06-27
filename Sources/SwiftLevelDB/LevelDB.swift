@@ -47,7 +47,7 @@ public actor LevelDB {
     var decoder: (String, Data) -> Data?
     private var db: UnsafeMutableRawPointer?
     
-    var exists: Bool {
+    public var exists: Bool {
         db != nil
     }
     
