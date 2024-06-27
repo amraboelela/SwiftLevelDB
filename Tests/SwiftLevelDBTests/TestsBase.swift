@@ -16,14 +16,14 @@ import SwiftLevelDB
 @available(iOS 13.0.0, *)
 class TestsBase: XCTestCase {
     
-    var db : LevelDB!
+    var levelDB : LevelDB!
     
     func asyncSetup() async {
         
-        db = LevelDB(name: "TestDB")
-        await db.removeAllValues()
+        levelDB = LevelDB(name: "TestDB")
+        await levelDB.removeAllValues()
 
-        await db.setEncoder {(key: String, value: Data) -> Data? in
+        await levelDB.setEncoder {(key: String, value: Data) -> Data? in
             do {
                 let data = value
                 #if TwisterServer || DEBUG
@@ -36,7 +36,7 @@ class TestsBase: XCTestCase {
                 return nil
             }
         }
-        await db.setDecoder {(key: String, data: Data) -> Data? in
+        await levelDB.setDecoder {(key: String, data: Data) -> Data? in
             do {
                 #if TwisterServer || DEBUG
                 return data
@@ -55,7 +55,7 @@ class TestsBase: XCTestCase {
     }
     
     func asyncTearDown() async {
-        try! await db?.deleteDatabaseFromDisk()
-        db = nil
+        try! await levelDB?.deleteDatabaseFromDisk()
+        levelDB = nil
     }
 }
