@@ -197,15 +197,16 @@ public actor LevelDB {
         if status != 0 {
             return result
         }
-        if let rawData = rawData {
+        if let rawData {
             let data = Data(bytes: rawData, count: rawDataLength)
+            free(rawData)
             if let decodedData = decoder(key, data) {
                 result = try? JSONDecoder().decode(T.self, from: decodedData)
             }
         }
         return result
     }
-    
+
     public func values<T: Codable>(forKeys keys: [String]) -> [T?] {
         var result = [T?]()
         for key in keys {
